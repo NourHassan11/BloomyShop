@@ -1,4 +1,4 @@
-﻿namespace BloomyShop.Models
+﻿namespace Project.DAL.Entities
 {
     public class Customer
     {

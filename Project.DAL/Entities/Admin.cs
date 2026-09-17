@@ -1,5 +1,6 @@
-﻿namespace BloomyShop.Models
+﻿namespace Project.DAL.Entities
 {
+   
     public class Admin
     {
         public int AdminID { get; set; }
