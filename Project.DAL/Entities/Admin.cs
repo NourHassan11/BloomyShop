@@ -11,12 +11,6 @@
 
 
 
-        // =========================================================
-        // Navigation Properties (Member 5 - Admin Relationships)
-        // =========================================================
-
-        public ICollection<EventRequest> EventRequests { get; set; }
-        = new List<EventRequest>();
 
         // Relationship
         public virtual ICollection<EventRequest> ReviewedEventRequests { get; set; }
