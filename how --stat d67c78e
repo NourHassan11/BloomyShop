@@ -1,0 +1,17 @@
+[33mfa79ece[m[33m ([m[1;32mdevelop[m[33m)[m Merge remote-tracking branch 'origin/feature/customer' into develop
+[33m645d148[m[33m ([m[1;31morigin/feature/customer[m[33m)[m Add Ready-Made Bouquet Entities
+[33m844b734[m Merge remote-tracking branch 'origin/ShimaaReda' into develop
+[33m55d10b3[m[33m ([m[1;31morigin/ShimaaReda[m[33m)[m Merge remote-tracking branch 'origin/develop' into ShimaaReda
+[33md67c78e[m Add Customized Bouquet entities
+[33m5d8c993[m Merge pull request #3 from NourHassan11/feature/nour-event-request
+[33m8f419d7[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Delete Project.DAL/Entities directory
+[33m547b9f5[m[33m ([m[1;32mShimaaReda[m[33m)[m UUpdated Admin and Customer modelspdate Customer and Admin models
+[33mc006451[m Merge remote-tracking branch 'origin/feature/customer' into ShimaaReda
+[33m5ab9745[m Merge remote-tracking branch 'origin/feature/nour-event-request' into ShimaaReda
+[33m1fe88d3[m Update Customer and Admin models
+[33mbe0ef32[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfeature/CustomizedBouquet[m[33m, [m[1;31morigin/feature/bouquet[m[33m, [m[1;31morigin/feature/CustomizedBouquet[m[33m, [m[1;32mmain[m[33m)[m Add files via upload
+[33md4bd9ed[m Delete Project.DAL/Entities
+[33m541a8b9[m Create Entities
+[33md676974[m Add Cart, CartItem, Order, and OrderItem models
+[33m8b381dd[m Refactor: Move Entities to DAL
+[33m2fb0c1f[m[33m ([m[1;31morigin/feature/nour-event-request[m[33m)[m Add EventRequest, Occasion and DecorationType entities
