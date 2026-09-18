@@ -20,29 +20,17 @@
 
         public string street { get; set; } = string.Empty;
 
-        ////////////////////////
-        ///
-        public Cart Cart { get; set; }
+   
+        // Relationships
+        public virtual Cart? Cart { get; set; }
 
+        public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 
-        // 1 : M
-        public ICollection<Order> Orders { get; set; }
-            = new List<Order>();
+        public virtual ICollection<CustomizedBouquet> CustomizedBouquets { get; set; } = new List<CustomizedBouquet>();
 
+        public virtual ICollection<EventRequest> EventRequests { get; set; } = new List<EventRequest>();
 
-        // 1 : M
-        public ICollection<CustomizedBouquet> CustomizedBouquets { get; set; }
-            = new List<CustomizedBouquet>();
-
-
-        // 1 : M
-        public ICollection<EventRequest> EventRequests { get; set; }
-            = new List<EventRequest>();
-
-
-        // M : N
-        public ICollection<CustomerBouquet> CustomerBouquets { get; set; }
-            = new List<CustomerBouquet>();
+        public virtual ICollection<Bouquet> SelectedBouquets { get; set; } = new List<Bouquet>();
     }
 }
 

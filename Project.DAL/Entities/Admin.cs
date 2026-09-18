@@ -17,5 +17,9 @@
 
         public ICollection<EventRequest> EventRequests { get; set; }
         = new List<EventRequest>();
+
+        // Relationship
+        public virtual ICollection<EventRequest> ReviewedEventRequests { get; set; }
+            = new List<EventRequest>();
     }
 }
