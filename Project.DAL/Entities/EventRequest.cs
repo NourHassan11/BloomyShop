@@ -20,6 +20,27 @@ namespace Project.DAL.Entities
 
         public decimal Budget { get; set; }
 
-        public string? AdminResponse { get; set; } 
+        public string? AdminResponse { get; set; }
+
+
+        // M : 1 Customer
+        public int CustomerId { get; set; }
+        public Customer Customer { get; set; }
+
+
+        // M : 1 Occasion
+        public int OccasionId { get; set; }
+        public Occasion Occasion { get; set; }
+
+
+        // M : 1 Admin
+        public int? AdminId { get; set; }
+        public Admin Admin { get; set; }
+
+
+        // M : N
+        public ICollection<EventRequestDecoration> EventRequestDecorations { get; set; }
+            = new List<EventRequestDecoration>();
+
     }
 }
