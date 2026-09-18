@@ -20,23 +20,24 @@
 
         public string street { get; set; } = string.Empty;
 
-        // =========================================================
-        // Navigation Properties (Member 5 - Customer Relationships)
-        // =========================================================
+        ////////////////////////
+        ///
+        // 1-to-1: Customer owns Cart
+        public Cart? Cart { get; set; }
 
-        // 1-to-1: Customer owns Cart (Will be un-commented when Nouran adds Cart.cs)
-        // public Cart? Cart { get; set; }
+        // 1-to-Many: Customer places Orders
+        public ICollection<Order> Orders { get; set; } = new List<Order>();
 
-        // 1-to-Many: Customer places Orders (Will be un-commented when Nouran adds Order.cs)
-        // public ICollection<Order> Orders { get; set; } = new List<Order>();
-
-        // 1-to-Many: Customer creates CustomizedBouquets (Will be un-commented when Shahd adds CustomizedBouquet.cs)
+        // 1-to-Many: Customer creates CustomizedBouquets
         // public ICollection<CustomizedBouquet> CustomizedBouquets { get; set; } = new List<CustomizedBouquet>();
 
-        // 1-to-Many: Customer submits EventRequests (Will be un-commented when Nour adds EventRequest.cs)
-        // public ICollection<EventRequest> EventRequests { get; set; } = new List<EventRequest>();
+        // 1-to-Many: Customer submits EventRequests
+        public ICollection<EventRequest> EventRequests { get; set; } = new List<EventRequest>();
 
-        // Many-to-Many: Customer selects Ready-Made Bouquets (Will be un-commented when Nada adds Bouquet.cs)
+        // Many-to-Many: Customer selects Ready-Made Bouquets
         // public ICollection<Bouquet> SelectedBouquets { get; set; } = new List<Bouquet>();
+
     }
 }
+
+
