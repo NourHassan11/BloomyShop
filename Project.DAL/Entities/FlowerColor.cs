@@ -20,4 +20,5 @@ namespace Project.DAL.Entities
         public ICollection<CustomizedBouquet> CustomizedBouquets { get; set; }
             = new List<CustomizedBouquet>();
     }
+
 }
