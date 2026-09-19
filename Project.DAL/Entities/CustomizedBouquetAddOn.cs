@@ -6,7 +6,14 @@ using System.Threading.Tasks;
 
 namespace Project.DAL.Entities
 {
-    internal class CustomizedBouquetAddOn
+    public class CustomizedBouquetAddOn
     {
+        public int CustomizationID { get; set; }
+
+        public CustomizedBouquet CustomizedBouquet { get; set; } = null!;
+
+        public int AddOnID { get; set; }
+
+        public AddOn AddOn { get; set; } = null!;
     }
 }
