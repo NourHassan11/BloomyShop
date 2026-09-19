@@ -13,5 +13,10 @@ namespace Project.DAL.Entities
         public string? Name { get; set; }
 
         public string? Description { get; set; }
+
+
+        // M : N
+        public ICollection<EventRequestDecoration> EventRequestDecorations { get; set; }
+            = new List<EventRequestDecoration>();
     }
 }

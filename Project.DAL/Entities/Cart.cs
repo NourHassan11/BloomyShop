@@ -11,7 +11,11 @@ namespace Project.DAL.Entities
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
+        // 1 : 1 Relation with Customer
         public int CustomerID { get; set; }
+        public virtual Customer Customer { get; set; }
+
+        // 1 : M Relation with CartItem
         public virtual ICollection<CartItem> CartItems { get; set; } = new HashSet<CartItem>();
     }
 }
