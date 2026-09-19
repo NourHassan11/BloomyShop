@@ -31,8 +31,12 @@
         public virtual ICollection<EventRequest> EventRequests { get; set; } = new List<EventRequest>();
 
         public virtual ICollection<Bouquet> SelectedBouquets { get; set; } = new List<Bouquet>();
-    }
-}
+        
+        //ICollection<CustomerBouquet> CustomerBouquets { get; set; }
+        //= new List<CustomerBouquet>();
+ }
+ 
+  }
 
 
 
