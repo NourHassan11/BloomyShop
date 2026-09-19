@@ -11,5 +11,9 @@ namespace Project.DAL.Entities
         public int OccasionID { get; set; }
 
         public string? Name { get; set; }
+
+        // 1 : M
+        public ICollection<EventRequest> EventRequests { get; set; }
+            = new List<EventRequest>();
     }
 }
