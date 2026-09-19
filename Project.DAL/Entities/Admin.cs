@@ -9,14 +9,11 @@
 
         public string Password { get; set; } = string.Empty;
 
-        
 
-        // =========================================================
-        // Navigation Properties (Member 5 - Admin Relationships)
-        // =========================================================
 
-        // 1-to-Many: Admin reviews EventRequests
-        public ICollection<EventRequest> ReviewedEventRequests { get; set; } = new List<EventRequest>();
 
+        // Relationship
+        public virtual ICollection<EventRequest> ReviewedEventRequests { get; set; }
+            = new List<EventRequest>();
     }
 }

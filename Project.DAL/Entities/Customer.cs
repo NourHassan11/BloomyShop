@@ -20,24 +20,25 @@
 
         public string street { get; set; } = string.Empty;
 
-        ////////////////////////
-        ///
-        // 1-to-1: Customer owns Cart
-        public Cart? Cart { get; set; }
+   
+        // Relationships
+        public virtual Cart? Cart { get; set; }
 
-        // 1-to-Many: Customer places Orders
-        public ICollection<Order> Orders { get; set; } = new List<Order>();
+        public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 
-        // 1-to-Many: Customer creates CustomizedBouquets
-        // public ICollection<CustomizedBouquet> CustomizedBouquets { get; set; } = new List<CustomizedBouquet>();
+        public virtual ICollection<CustomizedBouquet> CustomizedBouquets { get; set; } = new List<CustomizedBouquet>();
 
-        // 1-to-Many: Customer submits EventRequests
-        public ICollection<EventRequest> EventRequests { get; set; } = new List<EventRequest>();
+        public virtual ICollection<EventRequest> EventRequests { get; set; } = new List<EventRequest>();
 
-        // Many-to-Many: Customer selects Ready-Made Bouquets
-        // public ICollection<Bouquet> SelectedBouquets { get; set; } = new List<Bouquet>();
+        public virtual ICollection<Bouquet> SelectedBouquets { get; set; } = new List<Bouquet>();
+        
+        //ICollection<CustomerBouquet> CustomerBouquets { get; set; }
+        //= new List<CustomerBouquet>();
+ }
+ 
+  }
 
-    }
-}
+
+
 
 
