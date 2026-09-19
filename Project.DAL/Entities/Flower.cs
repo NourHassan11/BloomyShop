@@ -27,7 +27,9 @@ namespace Project.DAL.Entities
             = new List<BouquetFlower>();
 
         // CustomizedBouquet
-        public ICollection<CustomizedBouquet> CustomizedBouquets { get; set; }
-            = new List<CustomizedBouquet>();
+        //public ICollection<CustomizedBouquet> CustomizedBouquets { get; set; }
+        //    = new List<CustomizedBouquet>();
+        public ICollection<CustomizedBouquetFlower> CustomizedBouquetFlowers { get; set; }
+    = new List<CustomizedBouquetFlower>();
     }
 }

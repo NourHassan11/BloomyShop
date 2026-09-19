@@ -16,7 +16,7 @@ namespace Project.DAL.Entities
 
         public string Image { get; set; } = null!;
 
-        public string Size { get; set; } = null!;
+        //public string Size { get; set; } = null!;
 
         public string PreparationTime { get; set; } = null!;
 

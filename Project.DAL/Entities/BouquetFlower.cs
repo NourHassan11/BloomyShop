@@ -8,7 +8,7 @@ namespace Project.DAL.Entities
 {
     public class BouquetFlower
     {
-        public int ProductID { get; set; }
+        public int BouquetID { get; set; }
 
         public Bouquet Bouquet { get; set; } = null!;
 

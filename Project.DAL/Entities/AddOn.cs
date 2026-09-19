@@ -13,5 +13,8 @@ namespace Project.DAL.Entities
         public string Name { get; set; } = string.Empty;
 
         public decimal Price { get; set; }
+
+        public ICollection<CustomizedBouquetAddOn> CustomizedBouquetAddOns { get; set; }
+            = new List<CustomizedBouquetAddOn>();
     }
 }
