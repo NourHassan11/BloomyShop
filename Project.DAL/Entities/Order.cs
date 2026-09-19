@@ -22,7 +22,12 @@ namespace Project.DAL.Entities
         [Required]
         public string DeliveryAddress { get; set; } = string.Empty;
 
+        // M : 1 Customer
         public int CustomerID { get; set; }
+        [ForeignKey("CustomerID")]
+        public virtual Customer Customer { get; set; }
+
+        // 1 : M
         public virtual ICollection<OrderItem> OrderItems { get; set; } = new HashSet<OrderItem>();
     }
 }
