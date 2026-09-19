@@ -8,11 +8,10 @@ namespace Project.DAL.Entities
 {
     public class EventRequestDecoration
     {
-        public int EventRequestId { get; set; }
-        public EventRequest EventRequest { get; set; }
+        public int EventRequestID { get; set; }
+        public EventRequest EventRequest { get; set; } = null!;
 
-
-        public int DecorationTypeId { get; set; }
-        public DecorationType DecorationType { get; set; }
+        public int DecorationTypeID { get; set; }
+        public DecorationType DecorationType { get; set; } = null!;
     }
 }
