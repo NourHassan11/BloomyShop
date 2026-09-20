@@ -1,0 +1,148 @@
+﻿@model Project.ViewModels.CustomizedBouquetViewModel
+
+@{
+    ViewData["Title"] = "Customize Bouquet";
+}
+
+<h1>Customize Your Bouquet</h1>
+
+<form asp-action="Customize" method="post">
+
+    <input type="hidden" asp-for="CustomerID" />
+
+
+    <h3>Choose Size</h3>
+
+    <select asp-for="SizeID">
+
+        <option value="">-- Select Size --</option>
+
+        @foreach (var size in ViewBag.Sizes)
+        {
+            <option value="@size.SizeID">
+
+                @size.Size - @size.BasePrice
+
+            </option>
+        }
+
+    </select>
+
+    <span asp-validation-for="SizeID"></span>
+
+
+    <br />
+    <br />
+
+
+    <h3>Choose Wrapping</h3>
+
+    <select asp-for="WrappingID">
+
+        <option value="">-- Select Wrapping --</option>
+
+        @foreach (var wrapping in ViewBag.Wrappings)
+        {
+            <option value="@wrapping.WrappingID">
+
+                @wrapping.Name - @wrapping.Price
+
+            </option>
+        }
+
+    </select>
+
+    <span asp-validation-for="WrappingID"></span>
+
+
+    <br />
+    <br />
+
+
+    <h3>Choose Flowers</h3>
+
+    @foreach (var flower in ViewBag.Flowers)
+    {
+        <div>
+
+            <input type="checkbox"
+                   name="FlowerIDs"
+                   value="@flower.FlowerID" />
+
+            <label>
+                @flower.Name
+                -
+                @flower.BasePrice
+            </label>
+
+        </div>
+    }
+
+    <span asp-validation-for="FlowerIDs"></span>
+
+
+    <br />
+
+
+    <h3>Choose Colors</h3>
+
+    @foreach (var color in ViewBag.Colors)
+    {
+        <div>
+
+            <input type="checkbox"
+                   name="FlowerColorIDs"
+                   value="@color.FlowerColorID" />
+
+            <label>
+                @color.Color
+            </label>
+
+        </div>
+    }
+
+
+    <br />
+
+
+    <h3>Choose Add Ons</h3>
+
+    @foreach (var addon in ViewBag.AddOns)
+    {
+        <div>
+
+            <input type="checkbox"
+                   name="AddOnIDs"
+                   value="@addon.AddOnID" />
+
+            <label>
+
+                @addon.Name
+                -
+                @addon.Price
+
+            </label>
+
+        </div>
+    }
+
+
+    <br />
+    <br />
+
+
+    <button type="submit">
+        Create Bouquet
+    </button>
+
+</form>
+
+
+@section Scripts
+{
+    @{
+        await Html.RenderPartialAsync(
+            "_ValidationScriptsPartial"
+        );
+    }
+}
