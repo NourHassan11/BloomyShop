@@ -1,0 +1,30 @@
+﻿@model IEnumerable<Project.DAL.Entities.EventRequest>
+
+<h1>Event Requests</h1>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Location</th>
+            <th>Guests</th>
+            <th>Event Date</th>
+            <th>Theme</th>
+            <th>Budget</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.EventRequestID</td>
+                <td>@item.LocationType</td>
+                <td>@item.NumberOfGuests</td>
+                <td>@item.EventDate</td>
+                <td>@item.Theme</td>
+                <td>@item.Budget</td>
+            </tr>
+        }
+    </tbody>
+</table>
