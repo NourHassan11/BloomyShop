@@ -49,6 +49,727 @@ namespace Project.DAL.Entities.Data
         {
             base.OnModelCreating(modelBuilder);
 
+
+            modelBuilder.Entity<BouquetSize>().HasData(
+                new BouquetSize
+                {
+                    SizeID = 1,
+                    Size = "Small",
+                    BasePrice = 100
+                 },
+                 new BouquetSize
+                 {
+                    SizeID = 2,
+                    Size = "Medium",
+                    BasePrice = 200
+                 },
+                 new BouquetSize
+                 {
+                    SizeID = 3,
+                    Size = "Large",
+                    BasePrice = 300
+                  }
+                  );
+
+            modelBuilder.Entity<Occasion>().HasData(
+                 new Occasion
+                 {
+                    OccasionID = 1,
+                    Name = "Wedding"
+                 },
+                new Occasion
+                {
+                    OccasionID = 2,
+                    Name = "Birthday"
+                },
+                new Occasion
+                {
+                    OccasionID = 3,
+                    Name = "Engagement"
+                },
+                new Occasion
+                {
+                    OccasionID = 4,
+                    Name = "Graduation"
+                }
+                );
+
+            modelBuilder.Entity<DecorationType>().HasData(
+               new DecorationType
+               {
+                   DecorationTypeID = 1,
+                   Name = "Balloon Decoration",
+                   Description = "Balloon decorations for events"
+               },
+               new DecorationType
+               {
+                   DecorationTypeID = 2,
+                   Name = "Table Decoration",
+                   Description = "Decorations for tables and dining areas"
+               },
+               new DecorationType
+               {
+                   DecorationTypeID = 3,
+                   Name = "Flower Decoration",
+                   Description = "Flower arrangements for events"
+               },
+               new DecorationType
+               {
+                  DecorationTypeID = 4,
+                  Name = "Wedding Decoration",
+                  Description = "Special decorations for weddings"
+               }
+               );
+
+            modelBuilder.Entity<Wrapping>().HasData(
+                new Wrapping
+                {
+                    WrappingID = 1,
+                    Name = "Classic",
+                    Price = 50
+                },
+                new Wrapping
+                {
+                    WrappingID = 2,
+                    Name = "Luxury",
+                    Price = 100
+                },
+                new Wrapping
+                {
+                    WrappingID = 3,
+                    Name = "Premium",
+                    Price = 150
+                }
+            );
+
+            modelBuilder.Entity<AddOn>().HasData(
+                new AddOn
+                {
+                    AddOnID = 1,
+                    Name = "Teddy Bear",
+                    Price = 200
+                },
+                new AddOn
+                {
+                    AddOnID = 2,
+                    Name = "Chocolate Box",
+                    Price = 150
+                },
+                new AddOn
+                {
+                    AddOnID = 3,
+                    Name = "Greeting Card",
+                    Price = 50
+                }
+            );
+
+            modelBuilder.Entity<Flower>().HasData(
+                new Flower
+                {
+                    FlowerID = 1,
+                    Name = "Rose",
+                    BasePrice = 50,
+                    Quantity = 100,
+                    Image = "rose.jpg"
+                },
+                new Flower
+                {
+                    FlowerID = 2,
+                    Name = "Tulip",
+                    BasePrice = 40,
+                    Quantity = 80,
+                    Image = "tulip.jpg"
+                },
+                new Flower
+                {
+                    FlowerID = 3,
+                    Name = "Lily",
+                    BasePrice = 45,
+                    Quantity = 70,
+                    Image = "lily.jpg"
+                },
+                new Flower
+                {
+                    FlowerID = 4,
+                    Name = "Sunflower",
+                    BasePrice = 35,
+                    Quantity = 60,
+                    Image = "sunflower.jpg"
+                }
+            );
+
+            modelBuilder.Entity<FlowerColor>().HasData(
+                new FlowerColor
+                {
+                    FlowerColorID = 1,
+                    Color = "Red",
+                    FlowerID = 1
+                },
+                new FlowerColor
+                {
+                    FlowerColorID = 2,
+                    Color = "White",
+                    FlowerID = 1
+                },
+                new FlowerColor
+                {
+                    FlowerColorID = 3,
+                    Color = "Pink",
+                    FlowerID = 1
+                },
+                new FlowerColor
+                {
+                    FlowerColorID = 4,
+                    Color = "Yellow",
+                    FlowerID = 2
+                },
+                new FlowerColor
+                {
+                    FlowerColorID = 5,
+                    Color = "Pink",
+                    FlowerID = 2
+                },
+                new FlowerColor
+                {
+                    FlowerColorID = 6,
+                    Color = "White",
+                    FlowerID = 3
+                },
+                new FlowerColor
+                {
+                    FlowerColorID = 7,
+                    Color = "Orange",
+                    FlowerID = 4
+                }
+            );
+
+            modelBuilder.Entity<Bouquet>().HasData(
+                new Bouquet
+                {
+                    BouquetID = 1,
+                    Name = "Romantic Roses",
+                    Description = "A beautiful bouquet of fresh red roses.",
+                    Image = "romantic-roses.jpg",
+                    PreparationTime = "30 minutes",
+                    Price = 300,
+                    IsActive = true,
+                    SizeID = 2
+                },
+                new Bouquet
+                {
+                    BouquetID = 2,
+                    Name = "Spring Garden",
+                    Description = "A colorful bouquet of fresh seasonal flowers.",
+                    Image = "spring-garden.jpg",
+                    PreparationTime = "40 minutes",
+                    Price = 400,
+                    IsActive = true,
+                    SizeID = 3
+                },
+                new Bouquet
+                {
+                    BouquetID = 3,
+                    Name = "Sunny Bouquet",
+                    Description = "A cheerful bouquet featuring bright sunflowers.",
+                    Image = "sunny-bouquet.jpg",
+                    PreparationTime = "25 minutes",
+                    Price = 250,
+                    IsActive = true,
+                    SizeID = 1
+                },
+                new Bouquet
+                {
+                    BouquetID = 4,
+                    Name = "Elegant White",
+                    Description = "An elegant bouquet of white lilies and flowers.",
+                    Image = "elegant-white.jpg",
+                    PreparationTime = "35 minutes",
+                    Price = 350,
+                    IsActive = true,
+                    SizeID = 2
+                }
+            );
+
+            modelBuilder.Entity<BouquetFlower>().HasData(
+                new BouquetFlower
+                {
+                    BouquetID = 1,
+                    FlowerID = 1
+                },
+                new BouquetFlower
+                {
+                    BouquetID = 2,
+                    FlowerID = 2
+                },
+                new BouquetFlower
+                {
+                    BouquetID = 2,
+                    FlowerID = 4
+                },
+                new BouquetFlower
+                {
+                    BouquetID = 3,
+                    FlowerID = 4
+                },
+                new BouquetFlower
+                {
+                    BouquetID = 4,
+                    FlowerID = 3
+                },
+                new BouquetFlower
+                {
+                    BouquetID = 4,
+                    FlowerID = 1
+                }
+            );
+
+            modelBuilder.Entity<Admin>().HasData(
+                new Admin
+                {
+                    AdminID = 1,
+                    FullName = "Bloomy Admin",
+                    Password = "Admin@123"
+                }
+            );
+
+            modelBuilder.Entity<Customer>().HasData(
+                new Customer
+                {
+                    CustomerID = 1,
+                    FName = "Noor",
+                    Lname = "Hassan",
+                    FullName = "Noor Hassan",
+                    Email = "noor@example.com",
+                    Password = "Customer@123",
+                    Phone = "01000000001",
+                    City = "Damietta",
+                    street = "Main Street"
+                },
+                new Customer
+                {
+                    CustomerID = 2,
+                    FName = "Sara",
+                    Lname = "Ahmed",
+                    FullName = "Sara Ahmed",
+                    Email = "sara@example.com",
+                    Password = "Customer@123",
+                    Phone = "01000000002",
+                    City = "Cairo",
+                    street = "Nile Street"
+                },
+            new Customer
+            {
+                CustomerID = 3,
+                FName = "Mariam",
+                Lname = "Ali",
+                FullName = "Mariam Ali",
+                Email = "mariam@example.com",
+                Password = "Customer@123",
+                Phone = "01000000003",
+                City = "Alexandria",
+                street = "Corniche Street"
+            },
+            new Customer
+            {
+                CustomerID = 4,
+                FName = "Omar",
+                Lname = "Mohamed",
+                FullName = "Omar Mohamed",
+                Email = "omar@example.com",
+                Password = "Customer@123",
+                Phone = "01000000004",
+                City = "Mansoura",
+                street = "University Street"
+            }
+            );
+
+            modelBuilder.Entity<CustomerBouquet>().HasData(
+                new CustomerBouquet
+                {
+                    CustomerID = 1,
+                    BouquetID = 1
+                },
+                new CustomerBouquet
+                {
+                    CustomerID = 1,
+                    BouquetID = 3
+                },
+                new CustomerBouquet
+                {
+                    CustomerID = 2,
+                    BouquetID = 2
+                },
+                new CustomerBouquet
+                {
+                    CustomerID = 3,
+                    BouquetID = 4
+                },
+                new CustomerBouquet
+                {
+                    CustomerID = 4,
+                    BouquetID = 1
+                },
+                new CustomerBouquet
+                {
+                    CustomerID = 4,
+                    BouquetID = 2
+                }
+            );
+
+            modelBuilder.Entity<CustomizedBouquet>().HasData(
+                new CustomizedBouquet
+                {
+                    CustomizationID = 1,
+                    CreatedAt = new DateTime(2026, 1, 10),
+                    PreparationTime = 45,
+                    CustomerID = 1,
+                    SizeID = 2,
+                    WrappingID = 1
+                },
+                new CustomizedBouquet
+                {
+                    CustomizationID = 2,
+                    CreatedAt = new DateTime(2026, 1, 12),
+                    PreparationTime = 60,
+                    CustomerID = 2,
+                    SizeID = 3,
+                    WrappingID = 2
+                },
+                new CustomizedBouquet
+                {
+                    CustomizationID = 3,
+                    CreatedAt = new DateTime(2026, 1, 15),
+                    PreparationTime = 30,
+                    CustomerID = 3,
+                    SizeID = 1,
+                    WrappingID = 3
+                },
+                new CustomizedBouquet
+                {
+                    CustomizationID = 4,
+                    CreatedAt = new DateTime(2026, 1, 18),
+                    PreparationTime = 50,
+                    CustomerID = 4,
+                    SizeID = 2,
+                    WrappingID = 1
+                }
+            );
+
+            modelBuilder.Entity<CustomizedBouquetFlower>().HasData(
+                new CustomizedBouquetFlower
+                {
+                    CustomizationID = 1,
+                    FlowerID = 1
+                },
+                new CustomizedBouquetFlower
+                {
+                    CustomizationID = 1,
+                    FlowerID = 3
+                },
+                new CustomizedBouquetFlower
+                {
+                    CustomizationID = 2,
+                    FlowerID = 2
+                },
+                new CustomizedBouquetFlower
+                {
+                    CustomizationID = 2,
+                    FlowerID = 4
+                },
+                new CustomizedBouquetFlower
+                {
+                    CustomizationID = 3,
+                    FlowerID = 1
+                },
+                new CustomizedBouquetFlower
+                {
+                    CustomizationID = 4,
+                    FlowerID = 3
+                }
+            );
+
+            modelBuilder.Entity<CustomizedBouquetFlowerColor>().HasData(
+                new CustomizedBouquetFlowerColor
+                {
+                    CustomizationID = 1,
+                    FlowerColorID = 1
+                },
+                new CustomizedBouquetFlowerColor
+                {
+                    CustomizationID = 1,
+                    FlowerColorID = 6
+                },
+                new CustomizedBouquetFlowerColor
+                {
+                    CustomizationID = 2,
+                    FlowerColorID = 5
+                },
+                new CustomizedBouquetFlowerColor
+                {
+                    CustomizationID = 2,
+                    FlowerColorID = 7
+                },
+                new CustomizedBouquetFlowerColor
+                {
+                    CustomizationID = 3,
+                    FlowerColorID = 3
+                },
+                new CustomizedBouquetFlowerColor
+                {
+                    CustomizationID = 4,
+                    FlowerColorID = 2
+                }
+            );
+
+            modelBuilder.Entity<CustomizedBouquetAddOn>().HasData(
+                new CustomizedBouquetAddOn
+                {
+                    CustomizationID = 1,
+                    AddOnID = 1
+                },
+                new CustomizedBouquetAddOn
+                {
+                    CustomizationID = 1,
+                    AddOnID = 3
+                },
+                new CustomizedBouquetAddOn
+                {
+                    CustomizationID = 2,
+                    AddOnID = 2
+                },
+                new CustomizedBouquetAddOn
+                {
+                    CustomizationID = 3,
+                    AddOnID = 3
+                },
+                new CustomizedBouquetAddOn
+                {
+                    CustomizationID = 4,
+                    AddOnID = 1
+                },
+                new CustomizedBouquetAddOn
+                {
+                    CustomizationID = 4,
+                    AddOnID = 2
+                }
+            );
+
+            modelBuilder.Entity<Cart>().HasData(
+                new Cart
+                {
+                    CartID = 1,
+                    CreatedAt = new DateTime(2026, 1, 10),
+                    CustomerID = 1
+                },
+                new Cart
+                {
+                    CartID = 2,
+                    CreatedAt = new DateTime(2026, 1, 12),
+                    CustomerID = 2
+                },
+                new Cart
+                {
+                    CartID = 3,
+                    CreatedAt = new DateTime(2026, 1, 15),
+                    CustomerID = 3
+                },
+                new Cart
+                {
+                    CartID = 4,
+                    CreatedAt = new DateTime(2026, 1, 18),
+                    CustomerID = 4
+                }
+            );
+
+
+            modelBuilder.Entity<CartItem>().HasData(
+                new CartItem
+                {
+                    CartItemID = 1,
+                    Quantity = 2,
+                    UnitPrice = 300,
+                    CartID = 1,
+                    BouquetID = 1,
+                    CustomizedBouquetID = null
+                },
+                new CartItem
+                {
+                    CartItemID = 2,
+                    Quantity = 1,
+                    UnitPrice = 250,
+                    CartID = 2,
+                    BouquetID = 3,
+                    CustomizedBouquetID = null
+                },
+                new CartItem
+                {
+                    CartItemID = 3,
+                    Quantity = 1,
+                    UnitPrice = 0,
+                    CartID = 3,
+                    BouquetID = null,
+                    CustomizedBouquetID = 3
+                },
+                new CartItem
+                {
+                    CartItemID = 4,
+                    Quantity = 1,
+                    UnitPrice = 0,
+                    CartID = 4,
+                    BouquetID = null,
+                    CustomizedBouquetID = 4
+                }
+            );
+
+            modelBuilder.Entity<Order>().HasData(
+                new Order
+                {
+                    OrderID = 1,
+                    OrderDate = new DateTime(2026, 1, 20),
+                    Status = "Pending",
+                    TotalPrice = 600,
+                    DeliveryAddress = "Main Street, Damietta",
+                    CustomerID = 1
+                },
+                new Order
+                {
+                    OrderID = 2,
+                    OrderDate = new DateTime(2026, 1, 22),
+                    Status = "Confirmed",
+                    TotalPrice = 250,
+                    DeliveryAddress = "Nile Street, Cairo",
+                    CustomerID = 2
+                },
+                new Order
+                {
+                    OrderID = 3,
+                    OrderDate = new DateTime(2026, 1, 25),
+                    Status = "Delivered",
+                    TotalPrice = 350,
+                    DeliveryAddress = "Corniche Street, Alexandria",
+                    CustomerID = 3
+                },
+                new Order
+                {
+                    OrderID = 4,
+                    OrderDate = new DateTime(2026, 1, 28),
+                    Status = "Pending",
+                    TotalPrice = 400,
+                    DeliveryAddress = "University Street, Mansoura",
+                    CustomerID = 4
+                }
+            );
+
+            modelBuilder.Entity<OrderItem>().HasData(
+                new OrderItem
+                {
+                    OrderItemID = 1,
+                    Quantity = 2,
+                    UnitPrice = 300,
+                    OrderID = 1,
+                    BouquetID = 1,
+                    CustomizedBouquetID = null
+                },
+                new OrderItem
+                {
+                    OrderItemID = 2,
+                    Quantity = 1,
+                    UnitPrice = 250,
+                    OrderID = 2,
+                    BouquetID = 3,
+                    CustomizedBouquetID = null
+                },
+                new OrderItem
+                {
+                    OrderItemID = 3,
+                    Quantity = 1,
+                    UnitPrice = 350,
+                    OrderID = 3,
+                    BouquetID = null,
+                    CustomizedBouquetID = 3
+                },
+                new OrderItem
+                {
+                    OrderItemID = 4,
+                    Quantity = 1,
+                    UnitPrice = 400,
+                    OrderID = 4,
+                    BouquetID = 2,
+                    CustomizedBouquetID = null
+                }
+            );
+
+            modelBuilder.Entity<EventRequest>().HasData(
+                new EventRequest
+                {
+                    EventRequestID = 1,
+                    LocationType = "Indoor",
+                    NumberOfGuests = 50,
+                    EventDate = new DateTime(2026, 2, 14),
+                    Theme = "Romantic",
+                    Budget = 5000,
+                    AdminResponse = "Request received and under review.",
+                    CustomerID = 1,
+                    OccasionID = 1,
+                    AdminID = 1
+                },
+                new EventRequest
+                {
+                    EventRequestID = 2,
+                    LocationType = "Outdoor",
+                    NumberOfGuests = 100,
+                    EventDate = new DateTime(2026, 3, 20),
+                    Theme = "Elegant Garden",
+                    Budget = 10000,
+                    AdminResponse = "Request approved.",
+                    CustomerID = 2,
+                    OccasionID = 2,
+                    AdminID = 1
+                },
+                new EventRequest
+                {
+                    EventRequestID = 3,
+                    LocationType = "Indoor",
+                    NumberOfGuests = 30,
+                    EventDate = new DateTime(2026, 4, 5),
+                    Theme = "Simple and Elegant",
+                    Budget = 3000,
+                    AdminResponse = null,
+                    CustomerID = 3,
+                    OccasionID = 3,
+                    AdminID = null
+                }
+            );
+
+            modelBuilder.Entity<EventRequestDecoration>().HasData(
+                new EventRequestDecoration
+                {
+                    EventRequestID = 1,
+                    DecorationTypeID = 1
+                },
+                new EventRequestDecoration
+                {
+                    EventRequestID = 1,
+                    DecorationTypeID = 2
+                },
+                new EventRequestDecoration
+                {
+                    EventRequestID = 2,
+                    DecorationTypeID = 3
+                },
+                new EventRequestDecoration
+                {
+                    EventRequestID = 2,
+                    DecorationTypeID = 4
+                },
+                new EventRequestDecoration
+                {
+                    EventRequestID = 3,
+                    DecorationTypeID = 1
+                }
+            );
+
+
             // Decimal Precision
             modelBuilder.Entity<AddOn>()
                 .Property(a => a.Price)
