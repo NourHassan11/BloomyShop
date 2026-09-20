@@ -1,0 +1,60 @@
+﻿@model IEnumerable<Project.DAL.Entities.Order>
+
+@{
+    ViewData["Title"] = "Admin - Manage Orders";
+}
+
+<div class="container mt-5">
+    <h2>Admin Dashboard - All Customer Orders</h2>
+    <hr />
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">No orders found in the system.</div>
+    }
+    else
+    {
+        <table class="table table-bordered table-striped mt-3">
+            <thead class="table-dark">
+                <tr>
+                    <th>Order ID</th>
+                    <th>Customer</th>
+                    <th>Date</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th>Update Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var order in Model)
+                {
+                    <tr>
+                        <td>@order.OrderID</td>
+                        <td>@(order.Customer != null ? order.Customer.CustomerName : "N/A")</td>
+                        <td>@order.OrderDate.ToString("yyyy-MM-dd HH:mm")</td>
+                        <td>@order.TotalPrice EGP</td>
+                        <td>
+                            <span class="badge bg-secondary">@order.Status</span>
+                        </td>
+                        <td>
+                            <form asp-action="UpdateStatus" method="post" class="d-flex gap-2">
+                                <input type="hidden" name="orderId" value="@order.OrderID" />
+                                <select name="status" class="form-select form-select-sm">
+                                    <option value="Pending" selected="@(order.Status == "Pending")">Pending</option>
+                                    <option value="Processing" selected="@(order.Status == "Processing")">Processing</option>
+                                    <option value="Completed" selected="@(order.Status == "Completed")">Completed</option>
+                                    <option value="Cancelled" selected="@(order.Status == "Cancelled")">Cancelled</option>
+                                </select>
+                                <button type="submit" class="btn btn-primary btn-sm">Save</button>
+                            </form>
+                        </td>
+                        <td>
+                            <a asp-action="Details" asp-route-id="@order.OrderID" class="btn btn-info btn-sm">Details</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
