@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using Project.DAL.Entities.Data;
+
 namespace Project
 {
     public class Program
@@ -8,6 +11,10 @@ namespace Project
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            builder.Services.AddDbContext<BloomyShopDbContext>(options =>
+                options.UseSqlServer(
+                   builder.Configuration.GetConnectionString("DefaultConnection")));
 
             var app = builder.Build();
 

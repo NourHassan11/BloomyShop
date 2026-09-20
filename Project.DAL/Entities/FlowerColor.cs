@@ -17,6 +17,11 @@ namespace Project.DAL.Entities
 
         public Flower Flower { get; set; } = null!;
 
-        public ICollection<CustomizedBouquet> CustomizedBouquets { get; set; }
-            = new List<CustomizedBouquet>();
+        //public ICollection<CustomizedBouquet> CustomizedBouquets { get; set; }
+        //    = new List<CustomizedBouquet>();
+        public ICollection<CustomizedBouquetFlowerColor> CustomizedBouquetFlowerColors { get; set; }
+    = new List<CustomizedBouquetFlowerColor>();
     }
+
+}
+

@@ -10,7 +10,7 @@ namespace Project.DAL.Entities
     {
         public int SizeID { get; set; }
 
-        public string size { get; set; } = null!;
+        public string Size { get; set; } = null!;
 
         public decimal BasePrice { get; set; }
 

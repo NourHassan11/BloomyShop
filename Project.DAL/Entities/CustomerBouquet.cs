@@ -12,7 +12,7 @@ namespace Project.DAL.Entities
 
         public Customer Customer { get; set; } = null!;
 
-        public int ProductID { get; set; }
+        public int BouquetID { get; set; }
 
         public Bouquet Bouquet { get; set; } = null!;
     }
