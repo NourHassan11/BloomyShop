@@ -1,60 +1,86 @@
-﻿ 
-@model IEnumerable<Project.DAL.Entities.Admin>
+﻿@model Project.DAL.Entities.EventRequest
 
 @{
-    ViewData["Title"] = "Admins";
+    ViewData["Title"] = "Review Event Request";
 }
 
-<h1>Admins</h1>
+<h1>Review Event Request</h1>
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">
-        Create New Admin
+<hr />
+
+<div class="mb-3">
+    <strong>Customer:</strong>
+    @Model.Customer?.FullName
+</div>
+
+<div class="mb-3">
+    <strong>Occasion:</strong>
+    @Model.Occasion?.Name
+</div>
+
+<div class="mb-3">
+    <strong>Event Date:</strong>
+    @Model.EventDate.ToString("dd/MM/yyyy")
+</div>
+
+<div class="mb-3">
+    <strong>Location:</strong>
+    @Model.LocationType
+</div>
+
+<div class="mb-3">
+    <strong>Number of Guests:</strong>
+    @Model.NumberOfGuests
+</div>
+
+<div class="mb-3">
+    <strong>Theme:</strong>
+    @Model.Theme
+</div>
+
+<div class="mb-3">
+    <strong>Budget:</strong>
+    @Model.Budget
+</div>
+
+<hr />
+
+<form asp-action="ReviewEventRequest" method="post">
+
+    <input type="hidden"
+           name="EventRequestID"
+           value="@Model.EventRequestID" />
+
+    <div class="mb-3">
+        <label for="AdminID" class="form-label">
+            Admin ID
+        </label>
+
+        <input type="number"
+               name="AdminID"
+               id="AdminID"
+               class="form-control"
+               required />
+    </div>
+
+    <div class="mb-3">
+        <label for="AdminResponse" class="form-label">
+            Admin Response
+        </label>
+
+        <textarea name="AdminResponse"
+                  id="AdminResponse"
+                  class="form-control"
+                  rows="5"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-success">
+        Submit Review
+    </button>
+
+    <a asp-action="EventRequests"
+       class="btn btn-secondary">
+        Back
     </a>
-</p>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Admin ID</th>
-            <th>Full Name</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-
-    <tbody>
-        @foreach (var admin in Model)
-        {
-            <tr>
-                <td>@admin.AdminID</td>
-                <td>@admin.FullName</td>
-
-                <td>
-                    <a asp-action="Details"
-                       asp-route-id="@admin.AdminID"
-                       class="btn btn-info">
-                        Details
-                    </a>
-
-                    <a asp-action="Edit"
-                       asp-route-id="@admin.AdminID"
-                       class="btn btn-warning">
-                        Edit
-                    </a>
-
-                    <a asp-action="Delete"
-                       asp-route-id="@admin.AdminID"
-                       class="btn btn-danger">
-                        Delete
-                    </a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
-
-<p>
-    <a asp-action="EventRequests" class="btn btn-success">
-        Manage Event Requests
-    </a>
-</p>
+</form>
