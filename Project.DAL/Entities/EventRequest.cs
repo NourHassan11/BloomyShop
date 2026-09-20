@@ -21,6 +21,7 @@ namespace Project.DAL.Entities
         public decimal Budget { get; set; }
 
         public string? AdminResponse { get; set; }
+        public string Status { get; set; } = "Pending";
 
         // M : 1 Customer
         public int CustomerID { get; set; }

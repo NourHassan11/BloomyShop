@@ -1,0 +1,51 @@
+﻿@model Project.DAL.Entities.EventRequest
+
+@{
+    ViewData["Title"] = "Event Request Details";
+}
+
+<h1>Event Request Details</h1>
+
+<div>
+    <p><strong>ID:</strong> @Model.EventRequestID</p>
+
+    <p><strong>Customer:</strong> @Model.Customer.FullName</p>
+
+    <p><strong>Location:</strong> @Model.LocationType</p>
+
+    <p><strong>Number of Guests:</strong> @Model.NumberOfGuests</p>
+
+    <p><strong>Event Date:</strong> @Model.EventDate.ToShortDateString()</p>
+
+    <p><strong>Occasion:</strong> @Model.Occasion.Name</p>
+
+    <p><strong>Theme:</strong> @Model.Theme</p>
+
+    <p><strong>Budget:</strong> @Model.Budget</p>
+
+    <p><strong>Status:</strong> @Model.Status</p>
+
+    <p><strong>Admin Response:</strong> @Model.AdminResponse</p>
+
+    <p><strong>Admin:</strong> @(Model.Admin?.FullName ?? "Not reviewed yet")</p>
+
+    <h3>Decoration Types</h3>
+
+    @if (Model.EventRequestDecorations.Any())
+    {
+        <ul>
+            @foreach (var decoration in Model.EventRequestDecorations)
+            {
+                <li>@decoration.DecorationType.Name</li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>No decorations selected.</p>
+    }
+</div>
+
+<br />
+
+<a asp-action="Index">Back to Event Requests</a>
