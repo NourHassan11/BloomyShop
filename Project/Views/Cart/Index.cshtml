@@ -1,0 +1,54 @@
+﻿@model Project.DAL.Entities.Cart
+@{
+    ViewData["Title"] = "Shopping Cart";
+}
+
+<div class="container mt-5">
+    <h2>Your Shopping Cart</h2>
+    <hr />
+
+    <table class="table table-bordered table-striped mt-3">
+        <thead class="table-dark">
+            <tr>
+                <th>Product Image</th>
+                <th>Bouquet Name</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Total</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.CartItems)
+            {
+                <tr>
+                    <td>
+                        <img src="~/images/default-bouquet.png" alt="Bouquet" style="width: 50px; height: 50px;" />
+                    </td>
+                    <td>
+                        @(item.Bouquet != null ? item.Bouquet.Name : (item.CustomizedBouquet != null ? item.CustomizedBouquet.Name : "Custom Bouquet"))
+                    </td>
+                    <td>@item.UnitPrice EGP</td>
+                    <td>@item.Quantity</td>
+                    <td>@(item.UnitPrice* item.Quantity) EGP</td>
+                    <td>
+                        <form asp-action="RemoveFromCart" method="post">
+                            <input type="hidden" name="id" value="@item.CartItemID" />
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="text-end mt-4">
+        <h4>
+            Grand Total:
+            <span class="text-success">
+                @Model.CartItems.Sum(i => i.UnitPrice * i.Quantity) EGP
+            </span>
+        </h4>
+        <a href="#" class="btn btn-success btn-lg mt-2">Checkout</a>
+    </div>
+</div>

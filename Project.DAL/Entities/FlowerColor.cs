@@ -22,6 +22,4 @@ namespace Project.DAL.Entities
         public ICollection<CustomizedBouquetFlowerColor> CustomizedBouquetFlowerColors { get; set; }
     = new List<CustomizedBouquetFlowerColor>();
     }
-
 }
-
