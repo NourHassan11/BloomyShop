@@ -1,0 +1,104 @@
+﻿@model Project.DAL.Entities.Customer
+
+@{
+    ViewData["Title"] = "Register";
+}
+
+<h1>Create Account</h1>
+
+<form asp-action="Register" method="post">
+
+    <div class="mb-3">
+        <label asp-for="FName" class="form-label">
+            First Name
+        </label>
+
+        <input asp-for="FName" class="form-control" />
+
+        <span asp-validation-for="FName"
+              class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Lname" class="form-label">
+            Last Name
+        </label>
+
+        <input asp-for="Lname" class="form-control" />
+
+        <span asp-validation-for="Lname"
+              class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Email" class="form-label">
+            Email
+        </label>
+
+        <input asp-for="Email"
+               type="email"
+               class="form-control" />
+
+        <span asp-validation-for="Email"
+              class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Password" class="form-label">
+            Password
+        </label>
+
+        <input asp-for="Password"
+               type="password"
+               class="form-control" />
+
+        <span asp-validation-for="Password"
+              class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Phone" class="form-label">
+            Phone
+        </label>
+
+        <input asp-for="Phone" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="City" class="form-label">
+            City
+        </label>
+
+        <input asp-for="City" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="street" class="form-label">
+            Street
+        </label>
+
+        <input asp-for="street" class="form-control" />
+    </div>
+
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger">
+            @ViewBag.Error
+        </div>
+    }
+
+    <button type="submit" class="btn btn-success">
+        Register
+    </button>
+
+    <a asp-action="Login" class="btn btn-secondary">
+        Already have an account? Login
+    </a>
+
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

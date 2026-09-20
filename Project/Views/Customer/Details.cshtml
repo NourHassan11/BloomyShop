@@ -1,0 +1,53 @@
+﻿@model Project.DAL.Entities.Customer
+
+@{
+    ViewData["Title"] = "Customer Details";
+}
+
+<h1>Customer Details</h1>
+
+<div>
+    <h4>Customer</h4>
+    <hr />
+
+    <dl class="row">
+
+        <dt class="col-sm-3">Customer ID</dt>
+        <dd class="col-sm-9">@Model.CustomerID</dd>
+
+        <dt class="col-sm-3">First Name</dt>
+        <dd class="col-sm-9">@Model.FName</dd>
+
+        <dt class="col-sm-3">Last Name</dt>
+        <dd class="col-sm-9">@Model.Lname</dd>
+
+        <dt class="col-sm-3">Full Name</dt>
+        <dd class="col-sm-9">@Model.FullName</dd>
+
+        <dt class="col-sm-3">Email</dt>
+        <dd class="col-sm-9">@Model.Email</dd>
+
+        <dt class="col-sm-3">Phone</dt>
+        <dd class="col-sm-9">@Model.Phone</dd>
+
+        <dt class="col-sm-3">City</dt>
+        <dd class="col-sm-9">@Model.City</dd>
+
+        <dt class="col-sm-3">Street</dt>
+        <dd class="col-sm-9">@Model.street</dd>
+
+    </dl>
+</div>
+
+<div>
+    <a asp-action="Edit"
+       asp-route-id="@Model.CustomerID"
+       class="btn btn-warning">
+        Edit
+    </a>
+
+    <a asp-action="Index"
+       class="btn btn-secondary">
+        Back to List
+    </a>
+</div>

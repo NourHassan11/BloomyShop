@@ -1,0 +1,86 @@
+﻿@model Project.DAL.Entities.Customer
+
+@{
+    ViewData["Title"] = "My Profile";
+}
+
+<h1>My Profile</h1>
+
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+
+        <dl class="row">
+
+            <dt class="col-sm-4">
+                Customer ID
+            </dt>
+            <dd class="col-sm-8">
+                @Model.CustomerID
+            </dd>
+
+            <dt class="col-sm-4">
+                First Name
+            </dt>
+            <dd class="col-sm-8">
+                @Model.FName
+            </dd>
+
+            <dt class="col-sm-4">
+                Last Name
+            </dt>
+            <dd class="col-sm-8">
+                @Model.Lname
+            </dd>
+
+            <dt class="col-sm-4">
+                Full Name
+            </dt>
+            <dd class="col-sm-8">
+                @Model.FullName
+            </dd>
+
+            <dt class="col-sm-4">
+                Email
+            </dt>
+            <dd class="col-sm-8">
+                @Model.Email
+            </dd>
+
+            <dt class="col-sm-4">
+                Phone
+            </dt>
+            <dd class="col-sm-8">
+                @Model.Phone
+            </dd>
+
+            <dt class="col-sm-4">
+                City
+            </dt>
+            <dd class="col-sm-8">
+                @Model.City
+            </dd>
+
+            <dt class="col-sm-4">
+                Street
+            </dt>
+            <dd class="col-sm-8">
+                @Model.street
+            </dd>
+
+        </dl>
+
+        <a asp-action="Edit"
+           asp-route-id="@Model.CustomerID"
+           class="btn btn-warning">
+            Edit Profile
+        </a>
+
+        <a asp-action="Index"
+           class="btn btn-secondary">
+            Back
+        </a>
+
+    </div>
+</div>
