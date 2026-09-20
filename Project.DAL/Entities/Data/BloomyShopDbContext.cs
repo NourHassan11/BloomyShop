@@ -709,6 +709,7 @@ namespace Project.DAL.Entities.Data
                     Theme = "Romantic",
                     Budget = 5000,
                     AdminResponse = "Request received and under review.",
+                    Status = "Pending",
                     CustomerID = 1,
                     OccasionID = 1,
                     AdminID = 1
@@ -722,6 +723,7 @@ namespace Project.DAL.Entities.Data
                     Theme = "Elegant Garden",
                     Budget = 10000,
                     AdminResponse = "Request approved.",
+                    Status = "Approved",
                     CustomerID = 2,
                     OccasionID = 2,
                     AdminID = 1
@@ -735,6 +737,7 @@ namespace Project.DAL.Entities.Data
                     Theme = "Simple and Elegant",
                     Budget = 3000,
                     AdminResponse = null,
+                    Status = "Pending",
                     CustomerID = 3,
                     OccasionID = 3,
                     AdminID = null
