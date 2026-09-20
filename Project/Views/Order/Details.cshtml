@@ -30,7 +30,7 @@
             {
                 <tr>
                     <td>
-                        @(item.Bouquet != null ? item.Bouquet.Name : (item.CustomizedBouquet != null ? item.CustomizedBouquet.Name : "Custom Bouquet"))
+                        @(item.Bouquet != null ? item.Bouquet.Name : (item.CustomizedBouquet != null ? item.CustomizedBouquet.CustomizationID : "Custom Bouquet"))
                     </td>
                     <td>@item.UnitPrice EGP</td>
                     <td>@item.Quantity</td>
