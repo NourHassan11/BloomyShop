@@ -31,7 +31,7 @@
                 {
                     <tr>
                         <td>@order.OrderID</td>
-                        <td>@(order.Customer != null ? order.Customer.CustomerName : "N/A")</td>
+                        <td>@(order.Customer != null ? order.Customer.FullName : "N/A")</td>
                         <td>@order.OrderDate.ToString("yyyy-MM-dd HH:mm")</td>
                         <td>@order.TotalPrice EGP</td>
                         <td>
