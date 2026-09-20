@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using Project.BLL.Interfaces;
+using Project.BLL.Services;
 using Project.DAL.Entities.Data;
 
 namespace Project
@@ -11,6 +13,9 @@ namespace Project
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            // Register Admin Service
+            builder.Services.AddScoped<IAdminService, AdminService>();
 
             // Enable Session
             builder.Services.AddSession();
