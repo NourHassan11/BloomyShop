@@ -1,0 +1,70 @@
+﻿@model Project.DAL.Entities.Bouquet
+
+@{
+    ViewData["Title"] = "Edit Bouquet";
+}
+
+<h1>Edit Bouquet</h1>
+
+<form asp-action="Edit" method="post">
+
+    <input type="hidden" asp-for="BouquetID" />
+
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Description" class="form-label"></label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Image" class="form-label"></label>
+        <input asp-for="Image" class="form-control" />
+        <span asp-validation-for="Image" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="PreparationTime" class="form-label"></label>
+        <input asp-for="PreparationTime" class="form-control" />
+        <span asp-validation-for="PreparationTime" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Price" class="form-label"></label>
+        <input asp-for="Price" class="form-control" />
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="SizeID" class="form-label">Size</label>
+
+        <select asp-for="SizeID"
+                class="form-control"
+                asp-items="@(new SelectList(ViewBag.Sizes, "SizeID", "Size"))">
+            <option value="">-- Select Size --</option>
+        </select>
+
+        <span asp-validation-for="SizeID" class="text-danger"></span>
+    </div>
+
+    <div class="form-check mb-3">
+        <input asp-for="IsActive" class="form-check-input" />
+        <label asp-for="IsActive" class="form-check-label">
+            Active
+        </label>
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+        Save Changes
+    </button>
+
+    <a asp-action="Index" class="btn btn-secondary">
+        Back
+    </a>
+
+</form>

@@ -1,0 +1,63 @@
+﻿@model IEnumerable<Project.DAL.Entities.Bouquet>
+
+@{
+    ViewData["Title"] = "Manage Bouquets";
+}
+
+<h1>Manage Bouquets</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">
+        Add New Bouquet
+    </a>
+</p>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Size</th>
+            <th>Preparation Time</th>
+            <th>Active</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var bouquet in Model)
+        {
+            <tr>
+                <td>@bouquet.Name</td>
+                <td>@bouquet.Price</td>
+                <td>@bouquet.BouquetSize?.Size</td>
+                <td>@bouquet.PreparationTime</td>
+
+                <td>
+                    @if (bouquet.IsActive)
+                    {
+                        <span class="text-success">Yes</span>
+                    }
+                    else
+                    {
+                        <span class="text-danger">No</span>
+                    }
+                </td>
+
+                <td>
+                    <a asp-action="Edit"
+                       asp-route-id="@bouquet.BouquetID"
+                       class="btn btn-warning btn-sm">
+                        Edit
+                    </a>
+
+                    <a asp-action="Delete"
+                       asp-route-id="@bouquet.BouquetID"
+                       class="btn btn-danger btn-sm">
+                        Delete
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
