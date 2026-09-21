@@ -1,59 +1,189 @@
-﻿@model IEnumerable<Project.DAL.Entities.Admin>
-
-@{
-    ViewData["Title"] = "Admins";
+﻿@{
+    ViewData["Title"] = "Admin Dashboard";
 }
 
-<h1>Admins</h1>
+<div class="container mt-5">
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">
-        Create New Admin
-    </a>
-</p>
+    <div class="text-center mb-5">
+        <h1 class="display-5 fw-bold">
+            Admin Dashboard
+        </h1>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Admin ID</th>
-            <th>Full Name</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
+        <p class="text-muted">
+            Welcome to Bloomy Shop Administration
+        </p>
+    </div>
 
-    <tbody>
-        @foreach (var admin in Model)
-        {
-            <tr>
-                <td>@admin.AdminID</td>
-                <td>@admin.FullName</td>
+    <div class="row g-4">
 
-                <td>
-                    <a asp-action="Details"
-                       asp-route-id="@admin.AdminID"
-                       class="btn btn-info">
-                        Details
+        <!-- Ready-Made Bouquets -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+
+                    <h3 class="card-title">
+                        🌷 Ready-Made Bouquets
+                    </h3>
+
+                    <p class="card-text text-muted">
+                        Manage ready-made bouquets.
+                    </p>
+
+                    <a asp-controller="Bouquet"
+                       asp-action="Index"
+                       class="btn btn-primary">
+                        Manage Bouquets
                     </a>
 
-                    <a asp-action="Edit"
-                       asp-route-id="@admin.AdminID"
-                       class="btn btn-warning">
-                        Edit
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Customized Bouquet -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+
+                    <h3 class="card-title">
+                        💐 Customized Bouquet
+                    </h3>
+
+                    <p class="card-text text-muted">
+                        Manage customized bouquets.
+                    </p>
+
+                    <a 
+                       asp-controller="CustomizedBouquet"
+                       asp-action="Customize"
+                       class="btn btn-primary">
+                        Manage Customized Bouquet
                     </a>
 
-                    <a asp-action="Delete"
-                       asp-route-id="@admin.AdminID"
-                       class="btn btn-danger">
-                        Delete
-                    </a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+                </div>
+            </div>
+        </div>
 
-<p>
-    <a asp-action="EventRequests" class="btn btn-success">
-        Manage Event Requests
-    </a>
-</p>
+
+        <!-- Orders -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+
+                    <h3 class="card-title">
+                        📦 Orders
+                    </h3>
+
+                    <p class="card-text text-muted">
+                        View and manage customer orders.
+                    </p>
+
+                    <a asp-controller="Order"
+                       asp-action="Index"
+                       class="btn btn-primary">
+                        Manage Orders
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Cart -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+
+                    <h3 class="card-title">
+                        🛒 Carts
+                    </h3>
+
+                    <p class="card-text text-muted">
+                        View customer carts.
+                    </p>
+
+                    <a asp-controller="Cart"
+                       asp-action="Index"
+                       class="btn btn-primary">
+                        Manage Carts
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Event Requests -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+
+                    <h3 class="card-title">
+                        🎉 Event Requests
+                    </h3>
+
+                    <p class="card-text text-muted">
+                        Review customer event requests.
+                    </p>
+
+                    <a asp-controller="Admin"
+                       asp-action="EventRequests"
+                       class="btn btn-success">
+                        Manage Events
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Customers -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+
+                    <h3 class="card-title">
+                        👥 Customers
+                    </h3>
+
+                    <p class="card-text text-muted">
+                        Manage Bloomy Shop customers.
+                    </p>
+
+                    <a asp-controller="Customer"
+                       asp-action="Index"
+                       class="btn btn-primary">
+                        Manage Customers
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Admins -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+
+                    <h3 class="card-title">
+                        👤 Admins
+                    </h3>
+
+                    <p class="card-text text-muted">
+                        Manage system administrators.
+                    </p>
+
+                    <a asp-controller="Admin"
+                       asp-action="AdminList"
+                       class="btn btn-secondary">
+                        Manage Admins
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>

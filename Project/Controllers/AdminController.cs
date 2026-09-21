@@ -14,7 +14,15 @@ namespace Project.Controllers
         }
 
         // GET: Admin
-        public async Task<IActionResult> Index()
+        // Admin Dashboard
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        // GET: Admin/AdminList
+        // Manage Admins
+        public async Task<IActionResult> AdminList()
         {
             var admins = await _adminService.GetAllAsync();
 
@@ -50,7 +58,7 @@ namespace Project.Controllers
             {
                 await _adminService.AddAsync(admin);
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(AdminList));
             }
 
             return View(admin);
@@ -82,7 +90,7 @@ namespace Project.Controllers
             {
                 await _adminService.UpdateAsync(admin);
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(AdminList));
             }
 
             return View(admin);
@@ -109,7 +117,7 @@ namespace Project.Controllers
         {
             await _adminService.DeleteAsync(id);
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(AdminList));
         }
 
         // GET: Admin/EventRequests
@@ -145,7 +153,8 @@ namespace Project.Controllers
             string? AdminResponse)
         {
             var eventRequest =
-                await _adminService.GetEventRequestByIdAsync(EventRequestID);
+                await _adminService.GetEventRequestByIdAsync(
+                    EventRequestID);
 
             if (eventRequest == null)
                 return NotFound();
