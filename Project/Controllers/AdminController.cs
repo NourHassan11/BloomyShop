@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Project.BLL.Interfaces;
 using Project.DAL.Entities;
+using Project.ViewModels;
 
 namespace Project.Controllers
 {
@@ -15,9 +16,20 @@ namespace Project.Controllers
 
         // GET: Admin
         // Admin Dashboard
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var eventRequests = await _adminService.GetEventRequestsAsync();
+
+            var viewModel = new AdminDashboardViewModel
+            {
+                TotalRevenue = 48620.00m,
+                BouquetOrdersCount = 342,
+                PendingEventsCount = eventRequests?.Count() ?? 0,
+                TotalClientsCount = 1420,
+                RecentEventRequests = eventRequests?.Take(5)
+            };
+
+            return View(viewModel);
         }
 
         // GET: Admin/AdminList
