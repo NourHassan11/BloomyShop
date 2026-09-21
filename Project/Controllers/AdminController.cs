@@ -1,25 +1,22 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Project.BLL.Interfaces;
 using Project.DAL.Entities;
-using Project.DAL.Entities.Data;
 
 namespace Project.Controllers
 {
     public class AdminController : Controller
     {
-        private readonly BloomyShopDbContext _context;
+        private readonly IAdminService _adminService;
 
-        public AdminController(BloomyShopDbContext context)
+        public AdminController(IAdminService adminService)
         {
-            _context = context;
+            _adminService = adminService;
         }
 
         // GET: Admin
         public async Task<IActionResult> Index()
         {
-            var admins = await _context.Admins
-                .AsNoTracking()
-                .ToListAsync();
+            var admins = await _adminService.GetAllAsync();
 
             return View(admins);
         }
@@ -30,9 +27,7 @@ namespace Project.Controllers
             if (id == null)
                 return NotFound();
 
-            var admin = await _context.Admins
-                .AsNoTracking()
-                .FirstOrDefaultAsync(a => a.AdminID == id);
+            var admin = await _adminService.GetByIdAsync(id.Value);
 
             if (admin == null)
                 return NotFound();
@@ -53,8 +48,7 @@ namespace Project.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Admins.Add(admin);
-                await _context.SaveChangesAsync();
+                await _adminService.AddAsync(admin);
 
                 return RedirectToAction(nameof(Index));
             }
@@ -68,7 +62,7 @@ namespace Project.Controllers
             if (id == null)
                 return NotFound();
 
-            var admin = await _context.Admins.FindAsync(id);
+            var admin = await _adminService.GetByIdAsync(id.Value);
 
             if (admin == null)
                 return NotFound();
@@ -86,8 +80,7 @@ namespace Project.Controllers
 
             if (ModelState.IsValid)
             {
-                _context.Admins.Update(admin);
-                await _context.SaveChangesAsync();
+                await _adminService.UpdateAsync(admin);
 
                 return RedirectToAction(nameof(Index));
             }
@@ -101,9 +94,7 @@ namespace Project.Controllers
             if (id == null)
                 return NotFound();
 
-            var admin = await _context.Admins
-                .AsNoTracking()
-                .FirstOrDefaultAsync(a => a.AdminID == id);
+            var admin = await _adminService.GetByIdAsync(id.Value);
 
             if (admin == null)
                 return NotFound();
@@ -116,13 +107,7 @@ namespace Project.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var admin = await _context.Admins.FindAsync(id);
-
-            if (admin != null)
-            {
-                _context.Admins.Remove(admin);
-                await _context.SaveChangesAsync();
-            }
+            await _adminService.DeleteAsync(id);
 
             return RedirectToAction(nameof(Index));
         }
@@ -130,12 +115,8 @@ namespace Project.Controllers
         // GET: Admin/EventRequests
         public async Task<IActionResult> EventRequests()
         {
-            var eventRequests = await _context.EventRequests
-                .Include(e => e.Customer)
-                .Include(e => e.Occasion)
-                .Include(e => e.Admin)
-                .AsNoTracking()
-                .ToListAsync();
+            var eventRequests =
+                await _adminService.GetEventRequestsAsync();
 
             return View(eventRequests);
         }
@@ -146,10 +127,8 @@ namespace Project.Controllers
             if (id == null)
                 return NotFound();
 
-            var eventRequest = await _context.EventRequests
-                .Include(e => e.Customer)
-                .Include(e => e.Occasion)
-                .FirstOrDefaultAsync(e => e.EventRequestID == id);
+            var eventRequest =
+                await _adminService.GetEventRequestByIdAsync(id.Value);
 
             if (eventRequest == null)
                 return NotFound();
@@ -165,16 +144,16 @@ namespace Project.Controllers
             int AdminID,
             string? AdminResponse)
         {
-            var eventRequest = await _context.EventRequests
-                .FirstOrDefaultAsync(e => e.EventRequestID == EventRequestID);
+            var eventRequest =
+                await _adminService.GetEventRequestByIdAsync(EventRequestID);
 
             if (eventRequest == null)
                 return NotFound();
 
-            eventRequest.AdminID = AdminID;
-            eventRequest.AdminResponse = AdminResponse;
-
-            await _context.SaveChangesAsync();
+            await _adminService.ReviewEventRequestAsync(
+                EventRequestID,
+                AdminID,
+                AdminResponse);
 
             return RedirectToAction(nameof(EventRequests));
         }
