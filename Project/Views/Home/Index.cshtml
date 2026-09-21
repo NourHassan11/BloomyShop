@@ -1,8 +1,469 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@using Project.DAL.Entities
+@{
+    ViewData["Title"] = "Home";
+    var featured = ViewBag.FeaturedBouquets as List<Bouquet> ?? new List<Bouquet>();
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<!-- ══════════════════════════════════════════════════════
+     HERO SECTION
+══════════════════════════════════════════════════════ -->
+<section class="bloomy-hero" id="bloomy-hero" aria-label="Hero">
+    <div class="bloomy-hero-bg">
+        <img src="~/images/hero_floral.jpg"
+             alt="Premium floral arrangements by Bloomy Shop"
+             fetchpriority="high" />
+    </div>
+    <div class="bloomy-hero-overlay"></div>
+
+    <div class="bloomy-hero-content">
+        <div class="bloomy-hero-eyebrow">
+            <span></span>
+            Botanical Studio — Cairo, Egypt
+        </div>
+        <h1 class="bloomy-hero-title">
+            Where Every Bloom<br>
+            Tells a <em>Story</em>
+        </h1>
+        <p class="bloomy-hero-subtitle">
+            Handcrafted floral arrangements designed for moments that matter.
+            From intimate gifts to grand celebrations — we bring nature's elegance to you.
+        </p>
+        <div class="bloomy-hero-actions">
+            <a asp-controller="Bouquet" asp-action="Index" class="btn-hero-primary" id="hero-shop-btn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <path d="M16 10a4 4 0 0 1-8 0"></path>
+                </svg>
+                Shop Now
+            </a>
+            <a asp-controller="CustomizedBouquet" asp-action="Index" class="btn-hero-outline" id="hero-customize-btn">
+                Design Your Bouquet
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+            </a>
+        </div>
+    </div>
+
+    <!-- Scroll cue -->
+    <div class="bloomy-hero-scroll">
+        <div class="bloomy-hero-scroll-line"></div>
+        <span>Scroll</span>
+    </div>
+
+    <!-- Stats bar -->
+    <div class="bloomy-hero-stats" aria-label="Key statistics">
+        <div class="bloomy-hero-stats-inner">
+            <div class="bloomy-stat">
+                <span class="bloomy-stat-num">500+</span>
+                <span class="bloomy-stat-label">Happy Clients</span>
+            </div>
+            <div class="bloomy-stat">
+                <span class="bloomy-stat-num">50+</span>
+                <span class="bloomy-stat-label">Bouquet Designs</span>
+            </div>
+            <div class="bloomy-stat">
+                <span class="bloomy-stat-num">24h</span>
+                <span class="bloomy-stat-label">Fresh Delivery</span>
+            </div>
+            <div class="bloomy-stat">
+                <span class="bloomy-stat-num">4.9★</span>
+                <span class="bloomy-stat-label">Customer Rating</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     FEATURED STEMS / BESTSELLERS
+══════════════════════════════════════════════════════ -->
+<section class="bloomy-section" id="beloved-stems" aria-labelledby="stems-title">
+    <div class="bloomy-container">
+        <div class="bloomy-section-header">
+            <div class="bloomy-section-header-left">
+                <div class="bloomy-ornament">
+                    <div class="bloomy-ornament-line"></div>
+                    <div class="bloomy-ornament-dot"></div>
+                </div>
+                <p class="bloomy-subheading">Beloved Stems</p>
+                <h2 class="bloomy-section-title" id="stems-title">
+                    Our Most <em>Adored</em><br>Collections
+                </h2>
+            </div>
+            <div>
+                <p class="bloomy-section-desc">Explore our hand-picked selection of seasonal arrangements, crafted fresh each morning.</p>
+                <a asp-controller="Bouquet" asp-action="Index" class="btn-bloomy-ghost" style="margin-top:1.25rem;">
+                    View All Bouquets
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </a>
+            </div>
+        </div>
+
+        @if (featured.Count > 0)
+        {
+            <div class="bloomy-products-grid">
+                @foreach (var bouquet in featured)
+                {
+                    @await Html.PartialAsync("Partials/_ProductCard", bouquet)
+                }
+            </div>
+        }
+        else
+        {
+            <!-- Fallback: static showcase using existing stem images -->
+            <div class="bloomy-products-grid">
+                <article class="bloomy-product-card reveal">
+                    <div class="bloomy-product-img-wrap">
+                        <img src="~/images/stem_romantic_roses.jpg" alt="Romantic Roses Bouquet" loading="lazy" />
+                        <span class="bloomy-product-badge">Bestseller</span>
+                        <a asp-controller="Bouquet" asp-action="Index" class="bloomy-product-quick">View Details</a>
+                    </div>
+                    <div class="bloomy-product-info">
+                        <p class="bloomy-product-category">Ready Bouquet</p>
+                        <h3 class="bloomy-product-name">Romantic Roses</h3>
+                        <div class="bloomy-product-price-row">
+                            <span class="bloomy-product-price">EGP 450</span>
+                            <a asp-controller="Bouquet" asp-action="Index" class="bloomy-product-add" aria-label="Shop bouquets">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            </a>
+                        </div>
+                    </div>
+                </article>
+                <article class="bloomy-product-card reveal reveal-delay-1">
+                    <div class="bloomy-product-img-wrap">
+                        <img src="~/images/stem_spring_garden.jpg" alt="Spring Garden Bouquet" loading="lazy" />
+                        <a asp-controller="Bouquet" asp-action="Index" class="bloomy-product-quick">View Details</a>
+                    </div>
+                    <div class="bloomy-product-info">
+                        <p class="bloomy-product-category">Ready Bouquet</p>
+                        <h3 class="bloomy-product-name">Spring Garden</h3>
+                        <div class="bloomy-product-price-row">
+                            <span class="bloomy-product-price">EGP 380</span>
+                            <a asp-controller="Bouquet" asp-action="Index" class="bloomy-product-add" aria-label="Shop bouquets">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            </a>
+                        </div>
+                    </div>
+                </article>
+                <article class="bloomy-product-card reveal reveal-delay-2">
+                    <div class="bloomy-product-img-wrap">
+                        <img src="~/images/stem_sunny_bouquet.jpg" alt="Sunny Bouquet" loading="lazy" />
+                        <a asp-controller="Bouquet" asp-action="Index" class="bloomy-product-quick">View Details</a>
+                    </div>
+                    <div class="bloomy-product-info">
+                        <p class="bloomy-product-category">Ready Bouquet</p>
+                        <h3 class="bloomy-product-name">Sunny Bouquet</h3>
+                        <div class="bloomy-product-price-row">
+                            <span class="bloomy-product-price">EGP 520</span>
+                            <a asp-controller="Bouquet" asp-action="Index" class="bloomy-product-add" aria-label="Shop bouquets">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            </a>
+                        </div>
+                    </div>
+                </article>
+                <article class="bloomy-product-card reveal reveal-delay-3">
+                    <div class="bloomy-product-img-wrap">
+                        <img src="~/images/stem_white_lilies.jpg" alt="White Lilies" loading="lazy" />
+                        <a asp-controller="Bouquet" asp-action="Index" class="bloomy-product-quick">View Details</a>
+                    </div>
+                    <div class="bloomy-product-info">
+                        <p class="bloomy-product-category">Ready Bouquet</p>
+                        <h3 class="bloomy-product-name">White Lilies</h3>
+                        <div class="bloomy-product-price-row">
+                            <span class="bloomy-product-price">EGP 490</span>
+                            <a asp-controller="Bouquet" asp-action="Index" class="bloomy-product-add" aria-label="Shop bouquets">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            </a>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        }
+    </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     PROMO BANNER — Customize Your Bouquet CTA
+══════════════════════════════════════════════════════ -->
+<section class="bloomy-promo-banner" aria-label="Customize Promotion">
+    <div class="bloomy-container">
+        <p class="bloomy-promo-eyebrow">Limited Offer</p>
+        <h2 class="bloomy-promo-title">
+            Design Your Own<br><em>Signature</em> Arrangement
+        </h2>
+        <p class="bloomy-promo-desc">
+            Choose your flowers, size, and style. Our florists bring your vision to life with same-day preparation.
+        </p>
+        <a asp-controller="CustomizedBouquet" asp-action="Index" class="btn-promo" id="promo-customize-btn">
+            Start Customizing
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+        </a>
+    </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     SHOP BY OCCASION / CATEGORY GRID
+══════════════════════════════════════════════════════ -->
+<section class="bloomy-section" id="shop-occasions" aria-labelledby="occasions-title">
+    <div class="bloomy-container">
+        <div class="bloomy-section-header" style="justify-content:center;flex-direction:column;align-items:center;text-align:center;margin-bottom:var(--space-3xl);">
+            <div class="bloomy-ornament" style="justify-content:center;">
+                <div class="bloomy-ornament-line"></div>
+                <div class="bloomy-ornament-dot"></div>
+                <div class="bloomy-ornament-line"></div>
+            </div>
+            <p class="bloomy-subheading">Shop by Occasion</p>
+            <h2 class="bloomy-section-title" id="occasions-title">
+                Flowers for Every <em>Moment</em>
+            </h2>
+        </div>
+        <div class="bloomy-categories-grid">
+            <a asp-controller="Bouquet" asp-action="Index" class="bloomy-cat-card reveal">
+                <img src="~/images/cat_birthday.jpg" alt="Birthday bouquets" loading="lazy" />
+                <div class="bloomy-cat-card-overlay">
+                    <span class="bloomy-cat-card-label">Birthdays</span>
+                    <span class="bloomy-cat-card-count">Celebrate</span>
+                    <span class="bloomy-cat-card-arrow">→</span>
+                </div>
+            </a>
+            <a asp-controller="Bouquet" asp-action="Index" class="bloomy-cat-card reveal reveal-delay-1">
+                <img src="~/images/cat_weddings.jpg" alt="Wedding flowers" loading="lazy" />
+                <div class="bloomy-cat-card-overlay">
+                    <span class="bloomy-cat-card-label">Weddings</span>
+                    <span class="bloomy-cat-card-count">Romance</span>
+                    <span class="bloomy-cat-card-arrow">→</span>
+                </div>
+            </a>
+            <a asp-controller="Bouquet" asp-action="Index" class="bloomy-cat-card reveal reveal-delay-2">
+                <img src="~/images/cat_engagement.jpg" alt="Engagement flowers" loading="lazy" />
+                <div class="bloomy-cat-card-overlay">
+                    <span class="bloomy-cat-card-label">Engagement</span>
+                    <span class="bloomy-cat-card-count">Timeless</span>
+                    <span class="bloomy-cat-card-arrow">→</span>
+                </div>
+            </a>
+            <a asp-controller="Bouquet" asp-action="Index" class="bloomy-cat-card reveal reveal-delay-3">
+                <img src="~/images/cat_graduation.jpg" alt="Graduation flowers" loading="lazy" />
+                <div class="bloomy-cat-card-overlay">
+                    <span class="bloomy-cat-card-label">Graduation</span>
+                    <span class="bloomy-cat-card-count">Achievement</span>
+                    <span class="bloomy-cat-card-arrow">→</span>
+                </div>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     FEATURE SPLIT — Custom Bouquet Studio
+══════════════════════════════════════════════════════ -->
+<section class="bloomy-section-sm" id="custom-studio" aria-labelledby="studio-title">
+    <div class="bloomy-container">
+        <div class="bloomy-feature-split reveal">
+            <div class="bloomy-feature-img">
+                <img src="~/images/custom_peony_urn.jpg" alt="Custom bouquet arrangement studio" loading="lazy" />
+            </div>
+            <div class="bloomy-feature-body">
+                <div class="bloomy-ornament">
+                    <div class="bloomy-ornament-line"></div>
+                    <div class="bloomy-ornament-dot"></div>
+                </div>
+                <p class="bloomy-subheading">Bespoke Studio</p>
+                <h2 class="bloomy-section-title" id="studio-title">
+                    Your Vision,<br>Our <em>Craftsmanship</em>
+                </h2>
+                <ul class="bloomy-feature-perks">
+                    <li class="bloomy-feature-perk">
+                        <span class="bloomy-feature-perk-icon">✿</span>
+                        <span>Choose from 30+ premium flower varieties sourced daily</span>
+                    </li>
+                    <li class="bloomy-feature-perk">
+                        <span class="bloomy-feature-perk-icon">✦</span>
+                        <span>Select your preferred size, color palette, and wrapping style</span>
+                    </li>
+                    <li class="bloomy-feature-perk">
+                        <span class="bloomy-feature-perk-icon">♡</span>
+                        <span>Add a personal message card with every custom order</span>
+                    </li>
+                    <li class="bloomy-feature-perk">
+                        <span class="bloomy-feature-perk-icon">⊹</span>
+                        <span>Same-day preparation and express delivery available</span>
+                    </li>
+                </ul>
+                <a asp-controller="CustomizedBouquet" asp-action="Index" class="btn-bloomy-primary" id="studio-cta-btn">
+                    Design Your Bouquet
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     EVENTS SECTION
+══════════════════════════════════════════════════════ -->
+<section class="bloomy-section" id="events-section" aria-labelledby="events-title">
+    <div class="bloomy-container">
+        <div class="bloomy-section-header">
+            <div class="bloomy-section-header-left">
+                <div class="bloomy-ornament">
+                    <div class="bloomy-ornament-line"></div>
+                    <div class="bloomy-ornament-dot"></div>
+                </div>
+                <p class="bloomy-subheading">Event Floristry</p>
+                <h2 class="bloomy-section-title" id="events-title">
+                    Bloom Beyond<br>the <em>Ordinary</em>
+                </h2>
+            </div>
+            <div>
+                <p class="bloomy-section-desc">Transform any venue with our full-service event floristry. From intimate dinners to grand weddings.</p>
+                <a asp-controller="EventRequest" asp-action="Create" class="btn-bloomy-ghost" style="margin-top:1.25rem;">
+                    Request an Event
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </a>
+            </div>
+        </div>
+
+        <div class="bloomy-events-grid">
+            <a asp-controller="EventRequest" asp-action="Create" class="bloomy-event-card reveal">
+                <img src="~/images/event_weddings.jpg" alt="Wedding floristry by Bloomy" loading="lazy" />
+                <div class="bloomy-event-card-overlay">
+                    <span class="bloomy-event-tag">Weddings</span>
+                    <h3 class="bloomy-event-name">Wedding & Ceremonies</h3>
+                    <p class="bloomy-event-desc">Arch installations, table centrepieces, and bridal bouquets that make every frame picture-perfect.</p>
+                    <span class="bloomy-event-link">
+                        Request Now
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    </span>
+                </div>
+            </a>
+            <a asp-controller="EventRequest" asp-action="Create" class="bloomy-event-card reveal reveal-delay-1">
+                <img src="~/images/event_anniversaries.jpg" alt="Anniversary event floristry" loading="lazy" />
+                <div class="bloomy-event-card-overlay">
+                    <span class="bloomy-event-tag">Anniversaries</span>
+                    <h3 class="bloomy-event-name">Private Celebrations</h3>
+                    <p class="bloomy-event-desc">Intimate settings adorned with romantic florals for milestone moments.</p>
+                    <span class="bloomy-event-link">
+                        Request Now
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    </span>
+                </div>
+            </a>
+            <a asp-controller="EventRequest" asp-action="Create" class="bloomy-event-card reveal reveal-delay-2">
+                <img src="~/images/event_corporate.jpg" alt="Corporate event floristry" loading="lazy" />
+                <div class="bloomy-event-card-overlay">
+                    <span class="bloomy-event-tag">Corporate</span>
+                    <h3 class="bloomy-event-name">Corporate Events</h3>
+                    <p class="bloomy-event-desc">Sophisticated arrangements for conferences, product launches, and galas.</p>
+                    <span class="bloomy-event-link">
+                        Request Now
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    </span>
+                </div>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     TESTIMONIALS
+══════════════════════════════════════════════════════ -->
+<section class="bloomy-testimonials-section" id="testimonials" aria-labelledby="testimonials-title">
+    <div class="bloomy-container">
+        <div class="bloomy-section-header" style="justify-content:center;flex-direction:column;align-items:center;text-align:center;margin-bottom:var(--space-3xl);">
+            <div class="bloomy-ornament" style="justify-content:center;">
+                <div class="bloomy-ornament-line"></div>
+                <div class="bloomy-ornament-dot"></div>
+                <div class="bloomy-ornament-line"></div>
+            </div>
+            <p class="bloomy-subheading">Client Love</p>
+            <h2 class="bloomy-section-title" id="testimonials-title">
+                Words from Our <em>Community</em>
+            </h2>
+        </div>
+        <div class="bloomy-testimonials-grid">
+            <div class="bloomy-testimonial-card reveal">
+                <div class="bloomy-testimonial-stars">★★★★★</div>
+                <p class="bloomy-testimonial-quote">"The bouquet arrived absolutely fresh and beautifully wrapped. My mother was in tears — the best gift I've ever given her."</p>
+                <div class="bloomy-testimonial-author">
+                    <div class="bloomy-testimonial-avatar">S</div>
+                    <div>
+                        <div class="bloomy-testimonial-name">Sara Mohamed</div>
+                        <div class="bloomy-testimonial-date">Birthday Gift, Cairo</div>
+                    </div>
+                </div>
+            </div>
+            <div class="bloomy-testimonial-card reveal reveal-delay-1">
+                <div class="bloomy-testimonial-stars">★★★★★</div>
+                <p class="bloomy-testimonial-quote">"Bloomy handled our entire wedding floristry. Every arch, every centrepiece was a masterpiece. Our guests kept asking who did the flowers!"</p>
+                <div class="bloomy-testimonial-author">
+                    <div class="bloomy-testimonial-avatar">N</div>
+                    <div>
+                        <div class="bloomy-testimonial-name">Nadia & Karim</div>
+                        <div class="bloomy-testimonial-date">Wedding, Maadi</div>
+                    </div>
+                </div>
+            </div>
+            <div class="bloomy-testimonial-card reveal reveal-delay-2">
+                <div class="bloomy-testimonial-stars">★★★★★</div>
+                <p class="bloomy-testimonial-quote">"I customized a bouquet for my anniversary and the florist nailed exactly what I described. Fast delivery, stunning result."</p>
+                <div class="bloomy-testimonial-author">
+                    <div class="bloomy-testimonial-avatar">A</div>
+                    <div>
+                        <div class="bloomy-testimonial-name">Ahmed Samy</div>
+                        <div class="bloomy-testimonial-date">Custom Order, Zamalek</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     NEWSLETTER / CTA BAND
+══════════════════════════════════════════════════════ -->
+<section class="bloomy-newsletter" id="newsletter" aria-label="Newsletter signup">
+    <div class="bloomy-container">
+        <div class="bloomy-newsletter-inner">
+            <div>
+                <p class="bloomy-subheading" style="color:var(--bloomy-rose-light);margin-bottom:0.75rem;">Stay in Bloom</p>
+                <h2 class="bloomy-newsletter-title">
+                    Join Our <em>Floral</em><br>Community
+                </h2>
+                <p class="bloomy-newsletter-desc">
+                    Get seasonal inspiration, exclusive offers, and care tips for your blooms delivered straight to your inbox.
+                </p>
+            </div>
+            <div>
+                <form id="newsletter-form" class="bloomy-newsletter-form" onsubmit="return false;">
+                    <input type="email"
+                           id="newsletter-email"
+                           class="bloomy-newsletter-input"
+                           placeholder="Your email address"
+                           aria-label="Email address for newsletter"
+                           required />
+                    <button type="submit" class="btn-bloomy-primary" id="newsletter-submit-btn">
+                        Subscribe
+                    </button>
+                </form>
+                <p style="font-size:0.75rem;color:rgba(255,255,255,0.35);margin-top:0.75rem;font-family:var(--font-sans);">
+                    No spam, ever. Unsubscribe at any time.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
