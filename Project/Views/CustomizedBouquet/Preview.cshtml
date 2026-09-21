@@ -1,0 +1,107 @@
+﻿@model Project.DAL.Entities.CustomizedBouquet
+
+@{
+    ViewData["Title"] = "Bouquet Preview";
+}
+
+<h1>Bouquet Preview</h1>
+
+<hr />
+
+
+<h3>Size</h3>
+
+<p>
+    @Model.BouquetSize.Size
+</p>
+
+<p>
+    Base Price:
+    @Model.BouquetSize.BasePrice
+</p>
+
+
+<hr />
+
+
+<h3>Wrapping</h3>
+
+<p>
+    @Model.Wrapping.Name
+</p>
+
+<p>
+    Price:
+    @Model.Wrapping.Price
+</p>
+
+
+<hr />
+
+
+<h3>Flowers</h3>
+
+@foreach (var item in Model.CustomizedBouquetFlowers)
+{
+    <p>
+        @item.Flower.Name
+        -
+        @item.Flower.BasePrice
+    </p>
+}
+
+
+<hr />
+
+
+<h3>Colors</h3>
+
+@foreach (var item in Model.CustomizedBouquetFlowerColors)
+{
+    <p>
+        @item.FlowerColor.Color
+    </p>
+}
+
+
+<hr />
+
+
+<h3>Add Ons</h3>
+
+@foreach (var item in Model.CustomizedBouquetAddOns)
+{
+    <p>
+        @item.AddOn.Name
+        -
+        @item.AddOn.Price
+    </p>
+}
+
+
+<hr />
+
+
+<h3>Total Price</h3>
+
+<h2>
+    @ViewBag.TotalPrice
+</h2>
+
+
+<h3>Preparation Time</h3>
+
+<p>
+    @Model.PreparationTime minutes
+</p>
+
+
+<br />
+
+
+<a asp-controller="CustomizedBouquet"
+   asp-action="Customize">
+
+    Customize Another Bouquet
+
+</a>
