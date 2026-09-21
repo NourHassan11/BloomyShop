@@ -1,0 +1,37 @@
+@* 
+   _ProductCard.cshtml
+   Usage: @await Html.PartialAsync("Partials/_ProductCard", bouquet)
+   Expects: Project.DAL.Entities.Bouquet model
+*@
+@model Project.DAL.Entities.Bouquet
+
+@{
+    var imgSrc = !string.IsNullOrEmpty(Model.Image)
+        ? Url.Content("~/images/" + Model.Image)
+        : Url.Content("~/images/romantic-roses.jpg");
+}
+
+<article class="bloomy-product-card reveal">
+    <a asp-controller="Bouquet" asp-action="Details" asp-route-id="@Model.BouquetID" class="bloomy-product-img-wrap" style="display:block;">
+        <img src="@imgSrc"
+             alt="@Model.Name"
+             loading="lazy"
+             onerror="this.onerror=null;this.src='/images/romantic-roses.jpg';" />
+        <span class="bloomy-product-badge">@(Model.BouquetSize?.Size ?? "Bouquet")</span>
+        <span class="bloomy-product-quick">View Details</span>
+    </a>
+    <div class="bloomy-product-info">
+        <p class="bloomy-product-category">Ready Bouquet</p>
+        <h3 class="bloomy-product-name">@Model.Name</h3>
+        <div class="bloomy-product-price-row">
+            <span class="bloomy-product-price">EGP @Model.Price.ToString("N0")</span>
+            <a asp-controller="Cart" asp-action="AddToCart" asp-route-bouquetId="@Model.BouquetID"
+               class="bloomy-product-add" title="Add to Cart" aria-label="Add @Model.Name to cart">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+            </a>
+        </div>
+    </div>
+</article>
