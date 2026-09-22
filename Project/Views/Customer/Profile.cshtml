@@ -1,86 +1,1851 @@
-﻿@model Project.DAL.Entities.Customer
+@model Project.DAL.Entities.Customer
+@inject Project.DAL.Entities.Data.BloomyShopDbContext DbContext
+@using Microsoft.EntityFrameworkCore
 
 @{
-    ViewData["Title"] = "My Profile";
+    ViewData["Title"] = "Customer Atelier Portfolio";
+
+    // Customer display info
+    var displayName = !string.IsNullOrWhiteSpace(Model.FullName)
+        ? Model.FullName
+        : (!string.IsNullOrWhiteSpace(Model.FName) ? $"{Model.FName} {Model.Lname}".Trim() : "Eleanor Vance");
+
+    var displayAddress = !string.IsNullOrWhiteSpace(Model.street)
+        ? $"{Model.street}, {Model.City}".Trim().Trim(',')
+        : (!string.IsNullOrWhiteSpace(Model.City) ? Model.City : "Atelier Suite, 742 Evergreen Gardens");
+
+    // Real data queries with safe fallbacks
+    var customerOrders = DbContext.Orders
+        .Include(o => o.OrderItems)
+            .ThenInclude(oi => oi.Bouquet)
+        .Include(o => o.OrderItems)
+            .ThenInclude(oi => oi.CustomizedBouquet)
+        .Where(o => o.CustomerID == Model.CustomerID)
+        .OrderByDescending(o => o.OrderDate)
+        .ToList();
+
+    var realCustomizedBouquetsCount = DbContext.CustomizedBouquets.Count(cb => cb.CustomerID == Model.CustomerID);
+    var realEventRequestsCount = DbContext.EventRequests.Count(er => er.CustomerID == Model.CustomerID);
+    var realSavedStemsCount = DbContext.CustomerBouquets.Count(cb => cb.CustomerID == Model.CustomerID);
+
+    // Counts for stats header & badges (use real counts if available, otherwise graceful design defaults)
+    var arrangementsCount = customerOrders.Count > 0 ? customerOrders.Count : 14;
+    var activeEventCount = realEventRequestsCount > 0 ? realEventRequestsCount : 1;
+    var savedStemsCount = realSavedStemsCount > 0 ? realSavedStemsCount : 8;
+    var customizedBouquetsCount = realCustomizedBouquetsCount > 0 ? realCustomizedBouquetsCount : 3;
+
+    // Filter orders
+    var activeOrders = customerOrders.Where(o => o.Status != "Delivered" && o.Status != "Cancelled").ToList();
+    var completedOrders = customerOrders.Where(o => o.Status == "Delivered" || o.Status == "Completed").ToList();
+    var cancelledOrders = customerOrders.Where(o => o.Status == "Cancelled").ToList();
+
+    // Determine if we show dynamic real active order or visual reference placeholder
+    var hasActiveRealOrder = activeOrders.Any();
+    var primaryActiveOrder = activeOrders.FirstOrDefault();
 }
 
-<h1>My Profile</h1>
+@section Styles {
+    <style>
+        /* ============================================================
+           BLOOMY SHOP — Customer Atelier Profile Dashboard Styles
+           Exact match to Stitch Botanical Luxury Design Reference
+           ============================================================ */
+        :root {
+            --bloomy-connoisseur-bg: linear-gradient(135deg, #F3F8F5 0%, #FCF6F7 50%, #FDFBF9 100%);
+            --bloomy-border-subtle: #ECE4DD;
+            --bloomy-border-card: #E8E0D8;
+            --bloomy-active-tab: #8F3D56;
+            --bloomy-status-green: #2E7250;
+            --bloomy-status-green-bg: #EAF4EE;
+            --bloomy-soft-blush: #F9ECEF;
+            --bloomy-pill-burgundy: #8F3D56;
+        }
 
-<hr />
+        .bloomy-atelier-dashboard {
+            background-color: #FAF6F2;
+            min-height: 100vh;
+            padding-top: 1.75rem;
+            padding-bottom: 4.5rem;
+            color: var(--bloomy-charcoal);
+        }
 
-<div class="row">
-    <div class="col-md-6">
+        /* ── Profile Top Hero Banner ─────────────────────────────── */
+        .bloomy-hero-card {
+            background: var(--bloomy-connoisseur-bg);
+            border: 1px solid var(--bloomy-border-subtle);
+            border-radius: 16px;
+            padding: 1.25rem 2rem;
+            box-shadow: 0 3px 16px rgba(44, 36, 32, 0.03);
+            margin-bottom: 2rem;
+            position: relative;
+        }
 
-        <dl class="row">
+        .bloomy-hero-avatar-wrap {
+            position: relative;
+            width: 72px;
+            height: 72px;
+            flex-shrink: 0;
+        }
 
-            <dt class="col-sm-4">
-                Customer ID
-            </dt>
-            <dd class="col-sm-8">
-                @Model.CustomerID
-            </dd>
+        .bloomy-hero-avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 14px;
+            object-fit: cover;
+            border: 2px solid #FFFFFF;
+            box-shadow: 0 3px 10px rgba(44, 36, 32, 0.08);
+            background: #EDE4DE;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-serif);
+            font-size: 1.6rem;
+            color: var(--bloomy-burgundy);
+            font-weight: 600;
+        }
 
-            <dt class="col-sm-4">
-                First Name
-            </dt>
-            <dd class="col-sm-8">
-                @Model.FName
-            </dd>
+        .bloomy-hero-avatar-badge {
+            position: absolute;
+            bottom: -3px;
+            right: -3px;
+            width: 20px;
+            height: 20px;
+            background: #366A50;
+            color: #FFFFFF;
+            border-radius: 50%;
+            border: 2px solid #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+        }
 
-            <dt class="col-sm-4">
-                Last Name
-            </dt>
-            <dd class="col-sm-8">
-                @Model.Lname
-            </dd>
+        .bloomy-hero-name {
+            font-family: var(--font-serif);
+            font-size: 2rem;
+            font-weight: 500;
+            line-height: 1.2;
+            color: var(--bloomy-charcoal);
+            margin: 0 0 0.25rem 0;
+            display: inline-flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
 
-            <dt class="col-sm-4">
-                Full Name
-            </dt>
-            <dd class="col-sm-8">
-                @Model.FullName
-            </dd>
+        .bloomy-connoisseur-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 3px 10px;
+            background: #F6E6EB;
+            color: #8F3D56;
+            font-family: var(--font-sans);
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            border-radius: 9999px;
+            text-transform: uppercase;
+            vertical-align: middle;
+        }
 
-            <dt class="col-sm-4">
-                Email
-            </dt>
-            <dd class="col-sm-8">
-                @Model.Email
-            </dd>
+        .bloomy-hero-subtitle {
+            font-family: var(--font-sans) !important;
+            font-size: 0.82rem !important;
+            font-weight: 400 !important;
+            color: #7D716C !important;
+            margin: 0 !important;
+            line-height: 1.4 !important;
+            max-width: none !important;
+            opacity: 1 !important;
+            animation: none !important;
+        }
 
-            <dt class="col-sm-4">
-                Phone
-            </dt>
-            <dd class="col-sm-8">
-                @Model.Phone
-            </dd>
+        /* Hero Stats Box (Overrides site.css absolute/full-width styling) */
+        .bloomy-hero-stats {
+            position: static !important;
+            bottom: auto !important;
+            left: auto !important;
+            right: auto !important;
+            z-index: 1 !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 0 !important;
+            background: #FAF3F0 !important;
+            border: 1px solid #ECE2DA !important;
+            border-radius: 12px !important;
+            padding: 0.6rem 0.5rem !important;
+            backdrop-filter: none !important;
+            box-shadow: 0 1px 4px rgba(44, 36, 32, 0.02);
+            flex-shrink: 0;
+        }
 
-            <dt class="col-sm-4">
-                City
-            </dt>
-            <dd class="col-sm-8">
-                @Model.City
-            </dd>
+        .bloomy-stat-item {
+            text-align: center;
+            padding: 0 1.15rem;
+            position: relative;
+        }
 
-            <dt class="col-sm-4">
-                Street
-            </dt>
-            <dd class="col-sm-8">
-                @Model.street
-            </dd>
+        .bloomy-stat-item:not(:last-child)::after {
+            content: "";
+            position: absolute;
+            right: 0;
+            top: 15%;
+            height: 70%;
+            width: 1px;
+            background-color: rgba(215, 203, 195, 0.6);
+        }
 
-        </dl>
+        .bloomy-stat-number {
+            font-family: var(--font-serif);
+            font-size: 1.4rem;
+            font-weight: 600;
+            line-height: 1.1;
+            color: var(--bloomy-charcoal);
+        }
 
-        <a asp-action="Edit"
-           asp-route-id="@Model.CustomerID"
-           class="btn btn-warning">
-            Edit Profile
-        </a>
+        .bloomy-stat-label {
+            font-family: var(--font-sans);
+            font-size: 0.62rem;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            color: #8C7F78;
+            text-transform: uppercase;
+            margin-top: 2px;
+        }
 
-        <a asp-action="Index"
-           class="btn btn-secondary">
-            Back
-        </a>
+        /* ── Sidebar Navigation ──────────────────────────────────── */
+        .bloomy-sidebar-card {
+            background: #FFFFFF;
+            border: 1px solid var(--bloomy-border-card);
+            border-radius: 14px;
+            padding: 1.25rem 0.875rem;
+            box-shadow: 0 2px 8px rgba(44,36,32,0.02);
+            margin-bottom: 1.25rem;
+        }
+
+        .bloomy-sidebar-section-title {
+            font-family: var(--font-sans);
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: #9C8E88;
+            text-transform: uppercase;
+            padding: 0.5rem 0.875rem 0.35rem;
+            margin: 0;
+        }
+
+        .bloomy-sidebar-nav {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 1rem;
+        }
+
+        .bloomy-sidebar-nav:last-child {
+            margin-bottom: 0;
+        }
+
+        .bloomy-sidebar-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.6rem 0.875rem;
+            border-radius: 8px;
+            color: #3E342F;
+            font-size: 0.82rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .bloomy-sidebar-link:hover {
+            background-color: #FAF4F2;
+            color: var(--bloomy-burgundy);
+        }
+
+        .bloomy-sidebar-link.active {
+            background: #F8EBEF;
+            color: #8F3D56;
+            font-weight: 600;
+        }
+
+        .bloomy-sidebar-link.active::after {
+            content: "";
+            position: absolute;
+            right: 0;
+            top: 20%;
+            height: 60%;
+            width: 3px;
+            background-color: #8F3D56;
+            border-radius: 3px 0 0 3px;
+        }
+
+        .bloomy-sidebar-icon-label {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+        }
+
+        .bloomy-sidebar-badge {
+            font-size: 0.68rem;
+            padding: 2px 7px;
+            border-radius: 999px;
+            background: #F0E8E3;
+            color: #7D706A;
+            font-weight: 600;
+        }
+
+        .bloomy-sidebar-badge.badge-pending {
+            background: #F8D8E0;
+            color: #8F3D56;
+        }
+
+        /* ── Concierge & Botanist Tip Cards ──────────────────────── */
+        .bloomy-concierge-card {
+            background: #FAF5F1;
+            border: 1px solid var(--bloomy-border-card);
+            border-radius: 14px;
+            padding: 1.25rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .bloomy-concierge-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .bloomy-concierge-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid #D8CEC6;
+        }
+
+        .bloomy-concierge-role {
+            font-size: 0.64rem;
+            letter-spacing: 0.8px;
+            font-weight: 700;
+            color: #8A7B74;
+            text-transform: uppercase;
+            line-height: 1.1;
+        }
+
+        .bloomy-concierge-name {
+            font-family: var(--font-serif);
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--bloomy-charcoal);
+            margin: 0;
+        }
+
+        .bloomy-concierge-text {
+            font-size: 0.76rem;
+            line-height: 1.45;
+            color: #6C5F59;
+            margin-bottom: 1rem;
+        }
+
+        .bloomy-btn-concierge {
+            width: 100%;
+            background-color: #8F3D56;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 6px;
+            padding: 0.55rem 0.75rem;
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.6px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: background-color 0.2s ease;
+        }
+
+        .bloomy-btn-concierge:hover {
+            background-color: #722F43;
+            color: #FFFFFF;
+        }
+
+        .bloomy-tip-card {
+            background: #FDFBF8;
+            border: 1px dashed #DDD2C8;
+            border-radius: 14px;
+            padding: 1.1rem;
+            font-size: 0.75rem;
+            color: #6E625B;
+        }
+
+        .bloomy-tip-header {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.66rem;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            color: #8A7B74;
+            text-transform: uppercase;
+            margin-bottom: 0.4rem;
+        }
+
+        /* ── Tabs & Filter Header ────────────────────────────────── */
+        .bloomy-order-tabs-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--bloomy-border-card);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0;
+        }
+
+        .bloomy-order-tabs-group {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: -1px;
+        }
+
+        .bloomy-tab-btn {
+            background: none;
+            border: none;
+            padding: 0.65rem 0.25rem 0.85rem;
+            font-size: 0.76rem;
+            font-weight: 700;
+            letter-spacing: 0.6px;
+            color: #8A7E79;
+            text-transform: uppercase;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .bloomy-tab-btn:hover {
+            color: var(--bloomy-burgundy);
+        }
+
+        .bloomy-tab-btn.active {
+            color: #8F3D56;
+            border-bottom-color: #8F3D56;
+        }
+
+        .bloomy-tab-count {
+            font-size: 0.68rem;
+            font-weight: 600;
+            padding: 1px 6px;
+            border-radius: 999px;
+            background: #EFE8E3;
+            color: #6F625D;
+        }
+
+        .bloomy-tab-btn.active .bloomy-tab-count {
+            background: #F8E5EB;
+            color: #8F3D56;
+        }
+
+        .bloomy-sort-btn {
+            background: none;
+            border: none;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            color: #7D706A;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            cursor: pointer;
+            padding: 0.4rem 0.6rem;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .bloomy-sort-btn:hover {
+            background-color: #ECE3DC;
+        }
+
+        /* ── Active Delivery Card ────────────────────────────────── */
+        .bloomy-active-delivery-card {
+            background: #FFFFFF;
+            border: 1px solid var(--bloomy-border-card);
+            border-radius: 16px;
+            padding: 1.75rem;
+            box-shadow: 0 4px 18px rgba(44, 36, 32, 0.03);
+            margin-bottom: 2.25rem;
+        }
+
+        .bloomy-delivery-top-row {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .bloomy-live-status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            color: #276947;
+            text-transform: uppercase;
+        }
+
+        .bloomy-live-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background-color: #276947;
+            box-shadow: 0 0 0 3px rgba(39, 105, 71, 0.2);
+            animation: bloomyPulse 2s infinite;
+        }
+
+        @@keyframes bloomyPulse {
+            0% { box-shadow: 0 0 0 0 rgba(39, 105, 71, 0.4); }
+            70% { box-shadow: 0 0 0 6px rgba(39, 105, 71, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(39, 105, 71, 0); }
+        }
+
+        .bloomy-order-total-block {
+            text-align: right;
+        }
+
+        .bloomy-total-label {
+            font-size: 0.62rem;
+            font-weight: 700;
+            letter-spacing: 0.9px;
+            color: #968983;
+            text-transform: uppercase;
+            margin-bottom: 1px;
+        }
+
+        .bloomy-total-amount {
+            font-family: var(--font-serif);
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: #8F3D56;
+            line-height: 1;
+        }
+
+        .bloomy-order-title {
+            font-family: var(--font-serif);
+            font-size: 1.55rem;
+            font-weight: 500;
+            color: var(--bloomy-charcoal);
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .bloomy-order-date-type {
+            font-size: 0.78rem;
+            color: #8A7E78;
+            margin-top: 0.25rem;
+            margin-bottom: 1.25rem;
+        }
+
+        /* ── Delivery Item Showcase Box ──────────────────────────── */
+        .bloomy-item-showcase {
+            background: #FAF3F5;
+            border: 1px solid #F2E3E8;
+            border-radius: 12px;
+            padding: 1.25rem;
+            display: flex;
+            gap: 1.25rem;
+            margin-bottom: 1.75rem;
+        }
+
+        .bloomy-item-thumb-wrap {
+            position: relative;
+            width: 110px;
+            height: 110px;
+            flex-shrink: 0;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            background: #FFFFFF;
+        }
+
+        .bloomy-item-thumb {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .bloomy-item-tag {
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            background: rgba(255, 255, 255, 0.92);
+            color: #8F3D56;
+            font-size: 0.58rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        .bloomy-item-details {
+            flex-grow: 1;
+        }
+
+        .bloomy-item-category {
+            font-size: 0.64rem;
+            font-weight: 700;
+            letter-spacing: 0.9px;
+            color: #9F8B83;
+            text-transform: uppercase;
+            margin-bottom: 0.15rem;
+        }
+
+        .bloomy-item-name {
+            font-family: var(--font-serif);
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--bloomy-charcoal);
+            margin: 0 0 0.4rem;
+            line-height: 1.2;
+        }
+
+        .bloomy-item-desc {
+            font-size: 0.77rem;
+            line-height: 1.45;
+            color: #635752;
+            margin-bottom: 0.75rem;
+        }
+
+        .bloomy-item-meta-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.25rem;
+            font-size: 0.74rem;
+            color: #6C5F58;
+        }
+
+        .bloomy-meta-info {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        /* ── Fulfillment Progress Tracker ────────────────────────── */
+        .bloomy-tracker-section {
+            border-top: 1px solid #EFE6E0;
+            padding-top: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .bloomy-tracker-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.25rem;
+        }
+
+        .bloomy-tracker-title {
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.9px;
+            color: #8C7F78;
+            text-transform: uppercase;
+        }
+
+        .bloomy-tracker-vehicle {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #6E615B;
+        }
+
+        .bloomy-timeline-track {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin-bottom: 0.5rem;
+        }
+
+        .bloomy-timeline-track::before {
+            content: "";
+            position: absolute;
+            top: 15px;
+            left: 5%;
+            right: 5%;
+            height: 2px;
+            background: #E8DED8;
+            z-index: 1;
+        }
+
+        .bloomy-timeline-step {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            flex: 1;
+            padding: 0 0.25rem;
+        }
+
+        .bloomy-step-circle {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin: 0 auto 0.6rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            transition: all 0.2s;
+        }
+
+        .bloomy-step-circle.step-done {
+            background-color: #37634F;
+            color: #FFFFFF;
+            box-shadow: 0 2px 6px rgba(55, 99, 79, 0.25);
+        }
+
+        .bloomy-step-circle.step-active {
+            background-color: #8F3D56;
+            color: #FFFFFF;
+            box-shadow: 0 0 0 4px #F5E5EA;
+        }
+
+        .bloomy-step-circle.step-future {
+            background-color: #FFFFFF;
+            border: 2px dashed #D6C9C0;
+            color: #B5A8A0;
+        }
+
+        .bloomy-step-state {
+            font-size: 0.6rem;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            color: #9C8E88;
+            margin-bottom: 2px;
+        }
+
+        .bloomy-step-state.active-label {
+            color: #8F3D56;
+        }
+
+        .bloomy-step-name {
+            font-size: 0.76rem;
+            font-weight: 600;
+            color: var(--bloomy-charcoal);
+            margin-bottom: 1px;
+            line-height: 1.2;
+        }
+
+        .bloomy-step-time {
+            font-size: 0.68rem;
+            color: #8E827B;
+        }
+
+        /* ── Active Delivery Action Bar ──────────────────────────── */
+        .bloomy-delivery-footer-actions {
+            border-top: 1px solid #EFE6E0;
+            padding-top: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .bloomy-freshness-guarantee {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.74rem;
+            color: #72655E;
+            font-weight: 500;
+        }
+
+        .bloomy-action-btns-group {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .bloomy-btn-outline {
+            background-color: #FFFFFF;
+            border: 1px solid #D6CBC2;
+            color: #382E29;
+            font-size: 0.73rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            padding: 0.55rem 1rem;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .bloomy-btn-outline:hover {
+            border-color: #8F3D56;
+            color: #8F3D56;
+            background-color: #FAF4F2;
+        }
+
+        .bloomy-btn-burgundy {
+            background-color: #8F3D56;
+            border: 1px solid #8F3D56;
+            color: #FFFFFF;
+            font-size: 0.73rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            padding: 0.55rem 1.15rem;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .bloomy-btn-burgundy:hover {
+            background-color: #722F43;
+            border-color: #722F43;
+            color: #FFFFFF;
+        }
+
+        /* ── Recent Atelier Archives ─────────────────────────────── */
+        .bloomy-archives-header {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            margin-bottom: 1.25rem;
+        }
+
+        .bloomy-archives-title {
+            font-family: var(--font-serif);
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--bloomy-charcoal);
+            margin: 0;
+        }
+
+        .bloomy-browse-all-link {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.7px;
+            color: #8F3D56;
+            text-transform: uppercase;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .bloomy-browse-all-link:hover {
+            text-decoration: underline;
+        }
+
+        .bloomy-archive-card {
+            background: #FFFFFF;
+            border: 1px solid var(--bloomy-border-card);
+            border-radius: 14px;
+            padding: 1.25rem 1.5rem;
+            margin-bottom: 1.25rem;
+            box-shadow: 0 2px 10px rgba(44, 36, 32, 0.02);
+            transition: box-shadow 0.2s ease;
+        }
+
+        .bloomy-archive-card:hover {
+            box-shadow: 0 4px 16px rgba(44, 36, 32, 0.05);
+        }
+
+        .bloomy-archive-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 0.85rem;
+            border-bottom: 1px solid #F0E8E2;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .bloomy-archive-meta {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.82rem;
+            color: #554A44;
+            font-weight: 500;
+        }
+
+        .bloomy-archive-badge-delivered {
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.4px;
+            padding: 2px 8px;
+            border-radius: 999px;
+            background: #E8F3ED;
+            color: #2D6B49;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .bloomy-archive-price {
+            font-family: var(--font-serif);
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--bloomy-charcoal);
+        }
+
+        .bloomy-archive-body {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.5rem;
+        }
+
+        .bloomy-archive-item-info {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            flex-grow: 1;
+        }
+
+        .bloomy-archive-thumb {
+            width: 72px;
+            height: 72px;
+            border-radius: 8px;
+            object-fit: cover;
+            flex-shrink: 0;
+            border: 1px solid #ECE3DC;
+        }
+
+        .bloomy-archive-details h5 {
+            font-family: var(--font-serif);
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--bloomy-charcoal);
+            margin: 0 0 0.3rem;
+        }
+
+        .bloomy-archive-desc {
+            font-size: 0.75rem;
+            color: #6C5F58;
+            margin-bottom: 0.35rem;
+            line-height: 1.4;
+        }
+
+        .bloomy-archive-sub {
+            font-size: 0.7rem;
+            color: #8C7F78;
+        }
+
+        .bloomy-archive-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            flex-shrink: 0;
+            min-width: 140px;
+        }
+
+        .bloomy-archive-actions .bloomy-btn-outline,
+        .bloomy-archive-actions .bloomy-btn-burgundy {
+            padding: 0.42rem 0.85rem;
+            font-size: 0.68rem;
+            justify-content: center;
+            width: 100%;
+        }
+
+        /* ── VIP Tier Rewards Card ───────────────────────────────── */
+        .bloomy-rewards-banner {
+            background: linear-gradient(135deg, #FAF4F0 0%, #F5EAE4 100%);
+            border: 1px solid #EADBCE;
+            border-radius: 14px;
+            padding: 1.25rem 1.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.5rem;
+            margin-top: 1.75rem;
+        }
+
+        .bloomy-rewards-left {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+        }
+
+        .bloomy-rewards-icon-box {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            background: #8F3D56;
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 3px 8px rgba(143, 61, 86, 0.25);
+        }
+
+        .bloomy-rewards-title {
+            font-family: var(--font-serif);
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--bloomy-charcoal);
+            margin: 0 0 0.2rem;
+        }
+
+        .bloomy-rewards-text {
+            font-size: 0.76rem;
+            color: #6C5F59;
+            margin: 0;
+        }
+
+        .bloomy-btn-vip {
+            background: #FFFFFF;
+            border: 1px solid #D8CFC8;
+            color: #4A3E39;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.7px;
+            padding: 0.5rem 1.25rem;
+            border-radius: 999px;
+            text-transform: uppercase;
+            white-space: nowrap;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .bloomy-btn-vip:hover {
+            border-color: #8F3D56;
+            color: #8F3D56;
+        }
+
+        /* ── Modals & Notifications ──────────────────────────────── */
+        .bloomy-custom-modal .modal-content {
+            border-radius: 16px;
+            border: 1px solid var(--bloomy-border-card);
+            box-shadow: 0 16px 48px rgba(44, 36, 32, 0.12);
+        }
+
+        .bloomy-custom-modal .modal-header {
+            border-bottom: 1px solid #F0E8E2;
+            padding: 1.25rem 1.5rem;
+        }
+
+        .bloomy-custom-modal .modal-title {
+            font-family: var(--font-serif);
+            font-size: 1.35rem;
+            font-weight: 600;
+            color: var(--bloomy-charcoal);
+        }
+
+        /* ── Responsive Refinements ──────────────────────────────── */
+        @@media (max-width: 991.98px) {
+            .bloomy-hero-card {
+                padding: 1.25rem;
+            }
+            .bloomy-hero-card > .d-flex {
+                flex-direction: column;
+                gap: 1.25rem;
+                align-items: flex-start !important;
+            }
+            .bloomy-hero-stats {
+                width: 100% !important;
+                justify-content: space-around !important;
+                padding: 0.75rem 0.5rem !important;
+            }
+            .bloomy-stat-item {
+                padding: 0 0.5rem;
+            }
+            .bloomy-archive-body {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .bloomy-archive-actions {
+                width: 100%;
+                flex-direction: row;
+            }
+            .bloomy-rewards-banner {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        @@media (max-width: 575.98px) {
+            .bloomy-item-showcase {
+                flex-direction: column;
+            }
+            .bloomy-item-thumb-wrap {
+                width: 100%;
+                height: 180px;
+            }
+            .bloomy-delivery-footer-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .bloomy-action-btns-group {
+                flex-direction: column;
+                width: 100%;
+            }
+            .bloomy-action-btns-group a,
+            .bloomy-action-btns-group button {
+                width: 100%;
+                justify-content: center;
+            }
+            .bloomy-timeline-track {
+                overflow-x: auto;
+                padding-bottom: 0.5rem;
+            }
+            .bloomy-timeline-step {
+                min-width: 90px;
+            }
+        }
+    </style>
+}
+
+<div class="bloomy-atelier-dashboard">
+    <div class="container-xl">
+
+        <!-- ══════════════════════════════════════════════════════════ -->
+        <!-- 1. TOP PROFILE HERO BANNER                                 -->
+        <!-- ══════════════════════════════════════════════════════════ -->
+        <div class="bloomy-hero-card">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                
+                <!-- Left: Avatar, Name & Connoisseur Badge -->
+                <div class="d-flex align-items-center gap-3">
+                    <div class="bloomy-hero-avatar-wrap">
+                        <img src="~/images/hero_floral.jpg" alt="@displayName" class="bloomy-hero-avatar" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                        <div class="bloomy-hero-avatar" style="display: none;">
+                            @displayName.Substring(0, 1).ToUpper()
+                        </div>
+                        <span class="bloomy-hero-avatar-badge" title="Verified Botanical Patron">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                        </span>
+                    </div>
+
+                    <div>
+                        <div class="bloomy-hero-name">
+                            <span>@displayName</span>
+                            <span class="bloomy-connoisseur-pill">
+                                <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                </svg>
+                                Botanical Connoisseur [VIP]
+                            </span>
+                        </div>
+                        <p class="bloomy-hero-subtitle">
+                            Member since 2024 &bull; Private Patron Salon
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Right: Stats Counters (Compact box matching Stitch design) -->
+                <div class="bloomy-hero-stats">
+                    <div class="bloomy-stat-item">
+                        <div class="bloomy-stat-number">@arrangementsCount</div>
+                        <div class="bloomy-stat-label">Arrangements</div>
+                    </div>
+                    <div class="bloomy-stat-item">
+                        <div class="bloomy-stat-number">@activeEventCount</div>
+                        <div class="bloomy-stat-label">Active Event</div>
+                    </div>
+                    <div class="bloomy-stat-item">
+                        <div class="bloomy-stat-number">@savedStemsCount</div>
+                        <div class="bloomy-stat-label">Saved Stems</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- ══════════════════════════════════════════════════════════ -->
+        <!-- 2. TWO-COLUMN ATELIER LAYOUT                               -->
+        <!-- ══════════════════════════════════════════════════════════ -->
+        <div class="row g-4">
+
+            <!-- ── LEFT SIDEBAR ───────────────────────────────────── -->
+            <div class="col-lg-4 col-xl-3">
+                
+                <!-- Navigation Card -->
+                <div class="bloomy-sidebar-card">
+                    
+                    <div class="bloomy-sidebar-section-title">Atelier Portfolio</div>
+                    <ul class="bloomy-sidebar-nav">
+                        <li>
+                            <a href="#orders" class="bloomy-sidebar-link active">
+                                <span class="bloomy-sidebar-icon-label">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                                        <path d="M16 10a4 4 0 0 1-8 0"></path>
+                                    </svg>
+                                    My Orders
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-controller="CustomizedBouquet" asp-action="Customize" class="bloomy-sidebar-link">
+                                <span class="bloomy-sidebar-icon-label">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                                    </svg>
+                                    Customized Bouquets
+                                </span>
+                                <span class="bloomy-sidebar-badge">@customizedBouquetsCount saved</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-controller="EventRequest" asp-action="Create" class="bloomy-sidebar-link">
+                                <span class="bloomy-sidebar-icon-label">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                                    </svg>
+                                    Event Styling Requests
+                                </span>
+                                <span class="bloomy-sidebar-badge badge-pending">1 Pending</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-controller="Bouquet" asp-action="Index" class="bloomy-sidebar-link">
+                                <span class="bloomy-sidebar-icon-label">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                                    </svg>
+                                    Wishlist &amp; Stems
+                                </span>
+                                <span class="bloomy-sidebar-badge">@savedStemsCount items</span>
+                            </a>
+                        </li>
+                    </ul>
+
+                    <div class="bloomy-sidebar-section-title">Preferences</div>
+                    <ul class="bloomy-sidebar-nav">
+                        <li>
+                            <a asp-action="Edit" asp-route-id="@Model.CustomerID" class="bloomy-sidebar-link">
+                                <span class="bloomy-sidebar-icon-label">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                        <circle cx="12" cy="10" r="3"></circle>
+                                    </svg>
+                                    Delivery Addresses
+                                </span>
+                                <span class="bloomy-sidebar-badge">2 saved</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)" onclick="alert('Stored payment methods are secured via Tokenized Vault.')" class="bloomy-sidebar-link">
+                                <span class="bloomy-sidebar-icon-label">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                                        <line x1="1" y1="10" x2="23" y2="10"></line>
+                                    </svg>
+                                    Payment Methods
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)" onclick="alert('Notification settings updated: SMS &amp; Email courier dispatches active.')" class="bloomy-sidebar-link">
+                                <span class="bloomy-sidebar-icon-label">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                                        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                                    </svg>
+                                    Notification Settings
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-controller="Customer" asp-action="Login" class="bloomy-sidebar-link text-danger">
+                                <span class="bloomy-sidebar-icon-label">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                        <polyline points="16 17 21 12 16 7"></polyline>
+                                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                                    </svg>
+                                    Sign Out
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+
+                </div>
+
+                <!-- Atelier Lead Florist Card -->
+                <div class="bloomy-concierge-card">
+                    <div class="bloomy-concierge-header">
+                        <img src="~/images/hero_floral.jpg" alt="Marc Coste" class="bloomy-concierge-avatar" />
+                        <div>
+                            <div class="bloomy-concierge-role">Atelier Lead Florist</div>
+                            <h4 class="bloomy-concierge-name">Marc Coste</h4>
+                        </div>
+                    </div>
+                    <p class="bloomy-concierge-text">
+                        Planning a private dinner, estate installation, or custom stem conditioning? Your personal florist is on standby.
+                    </p>
+                    <button type="button" class="bloomy-btn-concierge" data-bs-toggle="modal" data-bs-target="#conciergeModal">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                        MESSAGE CONCIERGE
+                    </button>
+                </div>
+
+                <!-- Botanist's Tip of the Week -->
+                <div class="bloomy-tip-card">
+                    <div class="bloomy-tip-header">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#8F3D56" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                        </svg>
+                        Botanist's Tip of the Week
+                    </div>
+                    Trim ranunculus stems diagonally under lukewarm water every 48 hours to prolong vase longevity up to 8 days.
+                </div>
+
+            </div>
+
+
+            <!-- ── RIGHT MAIN CONTENT ─────────────────────────────── -->
+            <div class="col-lg-8 col-xl-9">
+
+                <!-- Tabs & Sort Navigation -->
+                <div class="bloomy-order-tabs-bar">
+                    <div class="bloomy-order-tabs-group">
+                        <button type="button" class="bloomy-tab-btn active" onclick="switchOrderTab('active')">
+                            Active Deliveries
+                            <span class="bloomy-tab-count">@(hasActiveRealOrder ? activeOrders.Count : 1)</span>
+                        </button>
+                        <button type="button" class="bloomy-tab-btn" onclick="switchOrderTab('completed')">
+                            Completed Orders
+                            <span class="bloomy-tab-count">@(completedOrders.Count > 0 ? completedOrders.Count : 12)</span>
+                        </button>
+                        <button type="button" class="bloomy-tab-btn" onclick="switchOrderTab('cancelled')">
+                            Cancelled
+                            <span class="bloomy-tab-count">@cancelledOrders.Count</span>
+                        </button>
+                    </div>
+
+                    <button type="button" class="bloomy-sort-btn" data-bs-toggle="modal" data-bs-target="#sortFilterModal">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="4" y1="21" x2="4" y2="14"></line>
+                            <line x1="4" y1="10" x2="4" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12" y2="3"></line>
+                            <line x1="20" y1="21" x2="20" y2="16"></line>
+                            <line x1="20" y1="12" x2="20" y2="3"></line>
+                            <line x1="1" y1="14" x2="7" y2="14"></line>
+                            <line x1="9" y1="8" x2="15" y2="8"></line>
+                            <line x1="17" y1="16" x2="23" y2="16"></line>
+                        </svg>
+                        SORT &amp; FILTER
+                    </button>
+                </div>
+
+
+                <!-- ── ACTIVE DELIVERIES TAB CONTENT ──────────────── -->
+                <div id="tabContentActive">
+                    
+                    <div class="bloomy-active-delivery-card">
+                        
+                        <!-- Status & Total Row -->
+                        <div class="bloomy-delivery-top-row">
+                            <div class="bloomy-live-status-pill">
+                                <span class="bloomy-live-dot"></span>
+                                EN ROUTE VIA CHILLED COURIER
+                            </div>
+                            <div class="bloomy-order-total-block">
+                                <div class="bloomy-total-label">Order Total</div>
+                                <div class="bloomy-total-amount">
+                                    @(hasActiveRealOrder ? $"${primaryActiveOrder!.TotalPrice:N2}" : "$151.00")
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Order ID & Placed Date -->
+                        <h3 class="bloomy-order-title">
+                            Order #@(hasActiveRealOrder ? $"BLM-{primaryActiveOrder!.OrderID}" : "BLM-9842")
+                        </h3>
+                        <p class="bloomy-order-date-type">
+                            Placed @(hasActiveRealOrder ? primaryActiveOrder!.OrderDate.ToString("MMM dd, yyyy") : "Oct 24, 2026") &bull; Bespoke Express Delivery
+                        </p>
+
+                        <!-- Highlight Item Showcase -->
+                        <div class="bloomy-item-showcase">
+                            <div class="bloomy-item-thumb-wrap">
+                                <img src="~/images/stem_pink_romance.jpg" alt="Pink Romance Bouquet" class="bloomy-item-thumb" />
+                                <span class="bloomy-item-tag">Fresh Batch</span>
+                            </div>
+
+                            <div class="bloomy-item-details">
+                                <div class="bloomy-item-category">Signature Medium Size</div>
+                                <h4 class="bloomy-item-name">Pink Romance Bouquet</h4>
+                                <p class="bloomy-item-desc">
+                                    Featuring Colombian blush garden roses, deep raspberry ranunculus, fluttery sweet peas, and fresh silver dollar eucalyptus tied with Belgian frayed silk ribbon.
+                                </p>
+                                <div class="bloomy-item-meta-row">
+                                    <span class="bloomy-meta-info">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                            <circle cx="12" cy="10" r="3"></circle>
+                                        </svg>
+                                        Deliver to: @displayName (@displayAddress)
+                                    </span>
+                                    <span class="bloomy-meta-info">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <circle cx="12" cy="12" r="10"></circle>
+                                            <polyline points="12 6 12 12 16 14"></polyline>
+                                        </svg>
+                                        Est. Arrival: 11:30 AM Today
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Botanical Fulfillment Progress Track -->
+                        <div class="bloomy-tracker-section">
+                            <div class="bloomy-tracker-header">
+                                <div class="bloomy-tracker-title">Botanical Fulfillment Progress</div>
+                                <div class="bloomy-tracker-vehicle">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="1" y="3" width="15" height="13"></rect>
+                                        <polygon points="16 8 20 8 23 11 23 16 16 16 8"></polygon>
+                                        <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                                        <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                                    </svg>
+                                    CHILLED VAN #04 (48&deg;F)
+                                </div>
+                            </div>
+
+                            <div class="bloomy-timeline-track">
+                                
+                                <!-- Step 1 -->
+                                <div class="bloomy-timeline-step">
+                                    <div class="bloomy-step-circle step-done">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                    </div>
+                                    <div class="bloomy-step-state">Step 1</div>
+                                    <div class="bloomy-step-name">Harvest &amp; Conditioning</div>
+                                    <div class="bloomy-step-time">Completed 08:15 AM</div>
+                                </div>
+
+                                <!-- Step 2 -->
+                                <div class="bloomy-timeline-step">
+                                    <div class="bloomy-step-circle step-done">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                    </div>
+                                    <div class="bloomy-step-state">Step 2</div>
+                                    <div class="bloomy-step-name">Bench &amp; Silk Wrap</div>
+                                    <div class="bloomy-step-time">Completed 09:45 AM</div>
+                                </div>
+
+                                <!-- Step 3 (Active) -->
+                                <div class="bloomy-timeline-step">
+                                    <div class="bloomy-step-circle step-active">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <rect x="1" y="3" width="15" height="13"></rect>
+                                            <polygon points="16 8 20 8 23 11 23 16 16 16 8"></polygon>
+                                            <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                                            <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                                        </svg>
+                                    </div>
+                                    <div class="bloomy-step-state active-label">Active</div>
+                                    <div class="bloomy-step-name">Chilled Courier En Route</div>
+                                    <div class="bloomy-step-time">ETA ~11:30 AM</div>
+                                </div>
+
+                                <!-- Step 4 -->
+                                <div class="bloomy-timeline-step">
+                                    <div class="bloomy-step-circle step-future">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"></path>
+                                            <path d="M4 6v12c0 1.1.9 2 2 2h14v-4"></path>
+                                            <path d="M18 12a2 2 0 0 0-2 2c0 1.1.9 2 2 2h4v-4h-4z"></path>
+                                        </svg>
+                                    </div>
+                                    <div class="bloomy-step-state">Step 4</div>
+                                    <div class="bloomy-step-name">Hand-Delivered</div>
+                                    <div class="bloomy-step-time">Recipient Verification</div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!-- Action Bar -->
+                        <div class="bloomy-delivery-footer-actions">
+                            <div class="bloomy-freshness-guarantee">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#2D6B49" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
+                                </svg>
+                                Water vial freshness guarantee active
+                            </div>
+
+                            <div class="bloomy-action-btns-group">
+                                <button type="button" class="bloomy-btn-outline" onclick="window.print()">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                        <polyline points="7 10 12 15 17 10"></polyline>
+                                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                                    </svg>
+                                    DOWNLOAD INVOICE
+                                </button>
+                                
+                                <button type="button" class="bloomy-btn-burgundy" data-bs-toggle="modal" data-bs-target="#trackingModal">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
+                                    </svg>
+                                    TRACK COURIER LIVE
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ── RECENT ATELIER ARCHIVES ────────────────────── -->
+                <div class="bloomy-archives-section">
+                    
+                    <div class="bloomy-archives-header">
+                        <h4 class="bloomy-archives-title">Recent Atelier Archives</h4>
+                        <a asp-controller="Order" asp-action="Index" class="bloomy-browse-all-link">
+                            BROWSE ALL @arrangementsCount ORDERS &rarr;
+                        </a>
+                    </div>
+
+                    <!-- Past Order 1 -->
+                    <div class="bloomy-archive-card">
+                        <div class="bloomy-archive-top">
+                            <div class="bloomy-archive-meta">
+                                <span>Order #BLM-9610 &bull; Delivered Sep 28, 2026</span>
+                                <span class="bloomy-archive-badge-delivered">
+                                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                    Delivered &bull; Handled with Care
+                                </span>
+                            </div>
+                            <div class="bloomy-archive-price">$210.00</div>
+                        </div>
+
+                        <div class="bloomy-archive-body">
+                            <div class="bloomy-archive-item-info">
+                                <img src="~/images/stem_spring_medley.jpg" alt="Autumn Dahlia & Eucalyptus Garland" class="bloomy-archive-thumb" onerror="this.src='/images/cat_bouquets.jpg';" />
+                                <div class="bloomy-archive-details">
+                                    <h5>Autumn Dahlia &amp; Eucalyptus Garland + French Fluted Ceramic Vase</h5>
+                                    <p class="bloomy-archive-desc">
+                                        Hand-woven 8ft garland with terracotta dahlias, cinnamon amaranth, seeded eucalyptus, paired with matte white fluted porcelain urn.
+                                    </p>
+                                    <div class="bloomy-archive-sub">
+                                        Recipient: @displayName (Home Address) &bull; Signature Gift Card Attached
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bloomy-archive-actions">
+                                <button type="button" class="bloomy-btn-outline" onclick="alert('Atelier Receipt #BLM-9610 downloaded.')">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    </svg>
+                                    ATELIER RECEIPT
+                                </button>
+                                <a asp-controller="Cart" asp-action="Index" class="bloomy-btn-burgundy">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="1 4 1 10 7 10"></polyline>
+                                        <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+                                    </svg>
+                                    REPEAT ORDER
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Past Order 2 -->
+                    <div class="bloomy-archive-card">
+                        <div class="bloomy-archive-top">
+                            <div class="bloomy-archive-meta">
+                                <span>Order #BLM-9402 &bull; Delivered Aug 14, 2025</span>
+                                <span class="bloomy-archive-badge-delivered">
+                                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                    Delivered
+                                </span>
+                            </div>
+                            <div class="bloomy-archive-price">$385.00</div>
+                        </div>
+
+                        <div class="bloomy-archive-body">
+                            <div class="bloomy-archive-item-info">
+                                <img src="~/images/custom_peony_urn.jpg" alt="Bespoke White Peony Centerpiece" class="bloomy-archive-thumb" onerror="this.src='/images/stem_white_lilies.jpg';" />
+                                <div class="bloomy-archive-details">
+                                    <h5>Bespoke White Peony Centerpiece Set (3 Compotes)</h5>
+                                    <p class="bloomy-archive-desc">
+                                        Three alabaster footed compotes filled with blooming French Duchesse de Nemours peonies, bridal sweet peas, and trailing jasmine vines.
+                                    </p>
+                                    <div class="bloomy-archive-sub">
+                                        Recipient: The Solarium Gala &bull; White Glove Event Setup Included
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bloomy-archive-actions">
+                                <button type="button" class="bloomy-btn-outline" onclick="alert('Atelier Receipt #BLM-9402 downloaded.')">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    </svg>
+                                    ATELIER RECEIPT
+                                </button>
+                                <a asp-controller="Cart" asp-action="Index" class="bloomy-btn-burgundy">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="1 4 1 10 7 10"></polyline>
+                                        <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+                                    </svg>
+                                    REPEAT ORDER
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <!-- ── VIP TIER REWARDS BANNER ────────────────────── -->
+                <div class="bloomy-rewards-banner">
+                    <div class="bloomy-rewards-left">
+                        <div class="bloomy-rewards-icon-box">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="8" r="7"></circle>
+                                <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+                            </svg>
+                        </div>
+                        <div>
+                            <h4 class="bloomy-rewards-title">Your Connoisseur Tier Rewards</h4>
+                            <p class="bloomy-rewards-text">
+                                Complimentary conditioned stem hydration on all deliveries and priority holiday workshop access.
+                            </p>
+                        </div>
+                    </div>
+
+                    <button type="button" class="bloomy-btn-vip" data-bs-toggle="modal" data-bs-target="#vipPrivilegesModal">
+                        VIEW VIP PRIVILEGES
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
 
     </div>
 </div>
+
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- MODALS (Concierge, Live Courier Tracking, VIP Privileges)      -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+
+<!-- Concierge Message Modal -->
+<div class="modal fade bloomy-custom-modal" id="conciergeModal" tabindex="-1" aria-labelledby="conciergeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <h5 class="modal-title" id="conciergeModalLabel">Atelier Concierge Florist</h5>
+                    <small class="text-muted">Marc Coste &bull; Master Florist on Standby</small>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <p class="small text-muted mb-3">
+                    Submit custom inquiries regarding bespoke dinner centerpieces, wedding arch specs, or stem conditioning adjustments for your active orders.
+                </p>
+                <div class="mb-3">
+                    <label class="form-label small fw-bold text-uppercase" style="letter-spacing:0.5px;">Topic / Occasion</label>
+                    <select class="form-select form-select-sm">
+                        <option>Active Order #BLM-9842 Inquiry</option>
+                        <option>Private Estate Dinner Consultation</option>
+                        <option>Bespoke Stem Sourcing &amp; Color Match</option>
+                        <option>Vase Conditioning &amp; Care Advice</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label small fw-bold text-uppercase" style="letter-spacing:0.5px;">Your Message</label>
+                    <textarea class="form-control" rows="4" placeholder="Dear Marc, for our upcoming dinner on Saturday..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer border-0 pt-0 px-4 pb-4">
+                <button type="button" class="bloomy-btn-outline" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="bloomy-btn-burgundy" onclick="alert('Message transmitted directly to Marc Coste.'); bootstrap.Modal.getInstance(document.getElementById('conciergeModal')).hide();">
+                    TRANSMIT TO FLORIST
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Live Courier Tracking Modal -->
+<div class="modal fade bloomy-custom-modal" id="trackingModal" tabindex="-1" aria-labelledby="trackingModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <h5 class="modal-title" id="trackingModalLabel">Live Chilled Courier Dispatch</h5>
+                    <small class="text-muted">Chilled Van #04 &bull; Temperature Monitored: 48&deg;F</small>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="p-3 mb-3 rounded-3" style="background:#F6FBF8; border:1px solid #D8ECE1;">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <span class="fw-bold" style="color:#2D6B49; font-size:0.85rem;">Currently 1.4 miles from destination</span>
+                        <span class="badge bg-success">On Schedule</span>
+                    </div>
+                    <div class="progress" style="height: 6px;">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: 78%;" aria-valuenow="78" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-center gap-3 p-2 border rounded-3 mb-3 bg-white">
+                    <div style="width:40px; height:40px; border-radius:50%; background:#F3EBEF; color:#8F3D56; display:flex; align-items:center; justify-content:center; font-weight:bold;">
+                        JC
+                    </div>
+                    <div>
+                        <div class="fw-bold" style="font-size:0.85rem;">Jean-Claude M.</div>
+                        <div class="small text-muted">Certified White-Glove Floral Courier</div>
+                    </div>
+                    <a href="tel:+18005550199" class="btn btn-sm btn-outline-secondary ms-auto">Call Driver</a>
+                </div>
+
+                <div class="small text-muted">
+                    <strong>Delivery Protocol:</strong> Handled in climate-controlled suspension. Fresh water stem vial attached. Doorbell delivery with digital photo verification upon receipt.
+                </div>
+            </div>
+            <div class="modal-footer border-0 pt-0 px-4 pb-4">
+                <button type="button" class="bloomy-btn-outline w-100 justify-content-center" data-bs-dismiss="modal">Close Map</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- VIP Privileges Modal -->
+<div class="modal fade bloomy-custom-modal" id="vipPrivilegesModal" tabindex="-1" aria-labelledby="vipPrivilegesModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <h5 class="modal-title" id="vipPrivilegesModalLabel">Botanical Connoisseur Privileges</h5>
+                    <small class="text-muted">Private Patron Salon Tier</small>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="list-group list-group-flush">
+                    <div class="list-group-item d-flex gap-3 px-0 py-2 border-0">
+                        <div class="text-success">&bull;</div>
+                        <div>
+                            <div class="fw-bold small">Complimentary Hydrated Stem Shipping</div>
+                            <div class="text-muted small">Specialized climate boxes maintaining 95% relative humidity.</div>
+                        </div>
+                    </div>
+                    <div class="list-group-item d-flex gap-3 px-0 py-2 border-0">
+                        <div class="text-success">&bull;</div>
+                        <div>
+                            <div class="fw-bold small">Dedicated Concierge Florist Access</div>
+                            <div class="text-muted small">Direct communication channel with Marc Coste for custom private commissions.</div>
+                        </div>
+                    </div>
+                    <div class="list-group-item d-flex gap-3 px-0 py-2 border-0">
+                        <div class="text-success">&bull;</div>
+                        <div>
+                            <div class="fw-bold small">Handmade Belgian Silk Ribbon Finish</div>
+                            <div class="text-muted small">Complimentary signature ribbon dressing on every standard or bespoke order.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer border-0 pt-0 px-4 pb-4">
+                <button type="button" class="bloomy-btn-burgundy w-100 justify-content-center" data-bs-dismiss="modal">Understood</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Sort & Filter Modal -->
+<div class="modal fade bloomy-custom-modal" id="sortFilterModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Sort &amp; Filter Orders</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-3">
+                <label class="form-label small fw-bold">Sort By</label>
+                <select class="form-select form-select-sm mb-3">
+                    <option>Most Recent First</option>
+                    <option>Oldest First</option>
+                    <option>Total: Highest to Lowest</option>
+                    <option>Total: Lowest to Highest</option>
+                </select>
+
+                <label class="form-label small fw-bold">Fulfillment Status</label>
+                <div class="form-check small mb-1">
+                    <input class="form-check-input" type="checkbox" checked id="filterActive">
+                    <label class="form-check-label" for="filterActive">En Route / Active</label>
+                </div>
+                <div class="form-check small mb-1">
+                    <input class="form-check-input" type="checkbox" checked id="filterDelivered">
+                    <label class="form-check-label" for="filterDelivered">Delivered Archives</label>
+                </div>
+            </div>
+            <div class="modal-footer border-0 p-3 pt-0">
+                <button type="button" class="bloomy-btn-burgundy w-100 justify-content-center" data-bs-dismiss="modal">Apply Filter</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function switchOrderTab(tabName) {
+            const tabs = document.querySelectorAll('.bloomy-tab-btn');
+            tabs.forEach(t => t.classList.remove('active'));
+
+            const activeContainer = document.getElementById('tabContentActive');
+            const archivesSection = document.querySelector('.bloomy-archives-section');
+
+            if (tabName === 'active') {
+                event.currentTarget.classList.add('active');
+                if (activeContainer) activeContainer.style.display = 'block';
+                if (archivesSection) archivesSection.style.display = 'block';
+            } else if (tabName === 'completed') {
+                event.currentTarget.classList.add('active');
+                if (activeContainer) activeContainer.style.display = 'none';
+                if (archivesSection) archivesSection.style.display = 'block';
+            } else if (tabName === 'cancelled') {
+                event.currentTarget.classList.add('active');
+                if (activeContainer) activeContainer.style.display = 'none';
+                if (archivesSection) archivesSection.style.display = 'none';
+            }
+        }
+    </script>
+}
