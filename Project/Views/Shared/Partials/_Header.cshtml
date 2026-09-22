@@ -1,8 +1,23 @@
 @using Microsoft.AspNetCore.Http
+@using Microsoft.EntityFrameworkCore
+@using Project.DAL.Entities.Data
+
+@inject BloomyShopDbContext _context
+
 @{
     var customerName = Context.Session.GetString("CustomerName");
     var customerId = Context.Session.GetInt32("CustomerID");
     var isLoggedIn = customerId.HasValue;
+
+    var cartCount = 0;
+
+    if (customerId.HasValue)
+    {
+        cartCount = _context.CartItems
+            .Include(ci => ci.Cart)
+            .Where(ci => ci.Cart != null && ci.Cart.CustomerID == customerId.Value)
+            .Sum(ci => ci.Quantity);
+    }
 }
 
 <header class="bloomy-header sticky-top">
@@ -56,13 +71,27 @@
             </a>
 
             <!-- Cart Button -->
-            <a asp-controller="Cart" asp-action="Index" class="bloomy-icon-btn position-relative" aria-label="Cart">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <a asp-controller="Cart"
+               asp-action="Index"
+               class="bloomy-icon-btn position-relative"
+               aria-label="Cart">
+
+                <svg width="20"
+                     height="20"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="1.8"
+                     stroke-linecap="round"
+                     stroke-linejoin="round">
+
                     <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
                     <line x1="3" y1="6" x2="21" y2="6"></line>
                     <path d="M16 10a4 4 0 0 1-8 0"></path>
+
                 </svg>
-                <span class="bloomy-badge-count">0</span>
+
+                <span class="bloomy-badge-count">@cartCount</span>
             </a>
 
             <!-- Account Button -->

@@ -15,7 +15,6 @@ namespace Project.Controllers
             _context = context;
         }
 
-
         // GET: CustomizedBouquet/Customize
         [HttpGet]
         public async Task<IActionResult> Customize()
@@ -25,11 +24,17 @@ namespace Project.Controllers
             return View(new CustomizedBouquetViewModel());
         }
 
-
         // POST: CustomizedBouquet/Customize
         [HttpPost]
         public async Task<IActionResult> Customize(CustomizedBouquetViewModel model)
         {
+            int? customerId = HttpContext.Session.GetInt32("CustomerID");
+
+            if (customerId == null)
+            {
+                return RedirectToAction("Login", "Customer");
+            }
+
             if (model.FlowerIDs == null || model.FlowerIDs.Count == 0)
             {
                 ModelState.AddModelError(
@@ -37,7 +42,6 @@ namespace Project.Controllers
                     "Please select at least one flower."
                 );
             }
-
 
             // Color Validation
             if (model.FlowerColorIDs != null &&
@@ -59,14 +63,12 @@ namespace Project.Controllers
                 }
             }
 
-
             if (!ModelState.IsValid)
             {
                 await LoadData();
 
                 return View(model);
             }
-
 
             // Get Size
             var size = await _context.BouquetSizes
@@ -77,7 +79,6 @@ namespace Project.Controllers
                 return NotFound();
             }
 
-
             // Get Wrapping
             var wrapping = await _context.Wrappings
                 .FirstOrDefaultAsync(w => w.WrappingID == model.WrappingID);
@@ -87,18 +88,15 @@ namespace Project.Controllers
                 return NotFound();
             }
 
-
             // Get Flowers
             var flowers = await _context.Flowers
                 .Where(f => model.FlowerIDs.Contains(f.FlowerID))
                 .ToListAsync();
 
-
             // Get AddOns
             var addOns = await _context.AddOns
                 .Where(a => model.AddOnIDs.Contains(a.AddOnID))
                 .ToListAsync();
-
 
             // Dynamic Pricing
             decimal totalPrice = size.BasePrice;
@@ -115,14 +113,12 @@ namespace Project.Controllers
                 totalPrice += addOn.Price;
             }
 
-
             // Preparation Time
             int preparationTime = 30;
 
             preparationTime += flowers.Count * 10;
 
             preparationTime += addOns.Count * 5;
-
 
             // Create Customized Bouquet
             var customizedBouquet = new CustomizedBouquet
@@ -131,18 +127,16 @@ namespace Project.Controllers
 
                 PreparationTime = preparationTime,
 
-                CustomerID = model.CustomerID,
+                CustomerID = customerId.Value,
 
                 SizeID = model.SizeID,
 
                 WrappingID = model.WrappingID
             };
 
-
             _context.CustomizedBouquets.Add(customizedBouquet);
 
             await _context.SaveChangesAsync();
-
 
             // Add Flowers
             foreach (var flowerID in model.FlowerIDs)
@@ -156,7 +150,6 @@ namespace Project.Controllers
 
                 _context.CustomizedBouquetFlowers.Add(item);
             }
-
 
             // Add Colors
             if (model.FlowerColorIDs != null)
@@ -174,7 +167,6 @@ namespace Project.Controllers
                 }
             }
 
-
             // Add AddOns
             if (model.AddOnIDs != null)
             {
@@ -191,9 +183,7 @@ namespace Project.Controllers
                 }
             }
 
-
             await _context.SaveChangesAsync();
-
 
             return RedirectToAction(
                 "Preview",
@@ -203,7 +193,6 @@ namespace Project.Controllers
                 }
             );
         }
-
 
         // GET: CustomizedBouquet/Preview/5
         [HttpGet]
@@ -229,12 +218,10 @@ namespace Project.Controllers
                     c => c.CustomizationID == id
                 );
 
-
             if (customizedBouquet == null)
             {
                 return NotFound();
             }
-
 
             ViewBag.TotalPrice =
                 customizedBouquet.BouquetSize.BasePrice
@@ -246,10 +233,8 @@ namespace Project.Controllers
                 + customizedBouquet.CustomizedBouquetAddOns
                     .Sum(x => x.AddOn.Price);
 
-
             return View(customizedBouquet);
         }
-
 
         private async Task LoadData()
         {

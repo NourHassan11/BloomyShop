@@ -19,8 +19,11 @@
                 <span class="shop-breadcrumb-sep">/</span>
                 <span class="shop-breadcrumb-current">All Flowers</span>
             </div>
+
             <div class="shop-hero-eyebrow">Fresh Morning Harvest</div>
+
             <h1 class="shop-title">Shop Flowers</h1>
+
             <p class="shop-desc">
                 Explore our artisanal collection of freshly harvested blooms and luxury bouquets crafted for life's poetic moments.
             </p>
@@ -31,26 +34,77 @@
     <div class="shop-controls-bar">
         <div class="bloomy-container">
             <div class="shop-controls-inner">
+
                 <div class="shop-result-count">
                     Showing <strong>@Model.Count()</strong> of <strong>@Model.Count()</strong> Bouquets
                 </div>
+
                 <div class="shop-controls-right">
-                    <form id="shopFilterForm" asp-action="Index" method="get" class="shop-sort-wrap m-0">
-                        <input type="hidden" name="searchString" value="@ViewBag.SearchString" />
+
+                    <form id="shopFilterForm"
+                          asp-action="Index"
+                          method="get"
+                          class="shop-sort-wrap m-0">
+
+                        <input type="hidden"
+                               name="searchString"
+                               value="@ViewBag.SearchString" />
+
                         <span class="shop-sort-label">Sort:</span>
-                        <select name="sortOrder" class="shop-sort-select" onchange="this.form.submit()">
+
+                        <select name="sortOrder"
+                                class="shop-sort-select"
+                                onchange="this.form.submit()">
+
                             <option value="">Featured</option>
                             <option value="price_asc">Price: Low to High</option>
                             <option value="price_desc">Price: High to Low</option>
+
                         </select>
                     </form>
+
                     <div class="shop-view-toggles d-none d-sm-flex">
+
                         <button class="shop-view-btn active" title="Grid View">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                            <svg width="16"
+                                 height="16"
+                                 viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="2"
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round">
+
+                                <rect x="3" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="14" width="7" height="7"></rect>
+                                <rect x="3" y="14" width="7" height="7"></rect>
+
+                            </svg>
                         </button>
+
                         <button class="shop-view-btn" title="List View">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+
+                            <svg width="16"
+                                 height="16"
+                                 viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="2"
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round">
+
+                                <line x1="8" y1="6" x2="21" y2="6"></line>
+                                <line x1="8" y1="12" x2="21" y2="12"></line>
+                                <line x1="8" y1="18" x2="21" y2="18"></line>
+                                <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                                <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                                <line x1="3" y1="18" x2="3.01" y2="18"></line>
+
+                            </svg>
+
                         </button>
+
                     </div>
                 </div>
             </div>
@@ -59,263 +113,722 @@
 
     <!-- Layout: Sidebar + Grid -->
     <div class="shop-layout">
+
         <!-- Sidebar Filter -->
         <aside class="shop-sidebar">
+
             <div class="shop-sidebar-header">
-                <h2 class="shop-sidebar-title">Refine<br>Selection</h2>
-                <a asp-action="Index" class="shop-sidebar-reset">
-                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><polyline points="3 3 3 8 8 8"></polyline></svg>
+
+                <h2 class="shop-sidebar-title">
+                    Refine<br>Selection
+                </h2>
+
+                <a asp-action="Index"
+                   class="shop-sidebar-reset">
+
+                    <svg width="10"
+                         height="10"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="2.5"
+                         stroke-linecap="round"
+                         stroke-linejoin="round">
+
+                        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                        <polyline points="3 3 3 8 8 8"></polyline>
+
+                    </svg>
+
                     Reset All
                 </a>
+
             </div>
 
             <div class="shop-filter-group">
-                <span class="shop-filter-label">Arrangement Style</span>
+
+                <span class="shop-filter-label">
+                    Arrangement Style
+                </span>
+
                 <ul class="shop-filter-style-list">
+
                     <li class="shop-filter-style-item active">
+
                         <span class="shop-filter-style-name">
                             <span class="shop-filter-style-dot"></span>
                             All Flowers
                         </span>
-                        <span class="shop-filter-style-count">@Model.Count()</span>
+
+                        <span class="shop-filter-style-count">
+                            @Model.Count()
+                        </span>
+
                     </li>
+
                     <li class="shop-filter-style-item">
+
                         <span class="shop-filter-style-name">
                             <span class="shop-filter-style-dot"></span>
                             Bouquets
                         </span>
-                        <span class="shop-filter-style-count">62</span>
+
+                        <span class="shop-filter-style-count">
+                            62
+                        </span>
+
                     </li>
+
                     <li class="shop-filter-style-item">
+
                         <span class="shop-filter-style-name">
                             <span class="shop-filter-style-dot"></span>
                             Single Stems
                         </span>
-                        <span class="shop-filter-style-count">24</span>
+
+                        <span class="shop-filter-style-count">
+                            24
+                        </span>
+
                     </li>
+
                     <li class="shop-filter-style-item">
+
                         <span class="shop-filter-style-name">
                             <span class="shop-filter-style-dot"></span>
                             Luxury Boxes
                         </span>
-                        <span class="shop-filter-style-count">19</span>
+
+                        <span class="shop-filter-style-count">
+                            19
+                        </span>
+
                     </li>
+
                     <li class="shop-filter-style-item">
+
                         <span class="shop-filter-style-name">
                             <span class="shop-filter-style-dot"></span>
                             Dried Flowers
                         </span>
-                        <span class="shop-filter-style-count">27</span>
+
+                        <span class="shop-filter-style-count">
+                            27
+                        </span>
+
                     </li>
+
                     <li class="shop-filter-style-item">
+
                         <span class="shop-filter-style-name">
                             <span class="shop-filter-style-dot"></span>
                             Living Plants
                         </span>
-                        <span class="shop-filter-style-count">16</span>
+
+                        <span class="shop-filter-style-count">
+                            16
+                        </span>
+
                     </li>
+
                 </ul>
+
             </div>
 
             <div class="shop-filter-group">
-                <span class="shop-filter-label">Occasion</span>
+
+                <span class="shop-filter-label">
+                    Occasion
+                </span>
+
                 <div class="shop-filter-checks">
+
                     <label class="shop-filter-check">
                         <input type="checkbox" checked />
-                        <span class="shop-filter-check-label">Birthday Celebration</span>
+                        <span class="shop-filter-check-label">
+                            Birthday Celebration
+                        </span>
                     </label>
+
                     <label class="shop-filter-check">
                         <input type="checkbox" checked />
-                        <span class="shop-filter-check-label">Anniversary & Love</span>
+                        <span class="shop-filter-check-label">
+                            Anniversary & Love
+                        </span>
                     </label>
+
                     <label class="shop-filter-check">
                         <input type="checkbox" />
-                        <span class="shop-filter-check-label">Romance & Dating</span>
+                        <span class="shop-filter-check-label">
+                            Romance & Dating
+                        </span>
                     </label>
+
                     <label class="shop-filter-check">
                         <input type="checkbox" />
-                        <span class="shop-filter-check-label">Sympathy & Grace</span>
+                        <span class="shop-filter-check-label">
+                            Sympathy & Grace
+                        </span>
                     </label>
+
                     <label class="shop-filter-check">
                         <input type="checkbox" />
-                        <span class="shop-filter-check-label">Celebration & Banquets</span>
+                        <span class="shop-filter-check-label">
+                            Celebration & Banquets
+                        </span>
                     </label>
+
                     <label class="shop-filter-check">
                         <input type="checkbox" />
-                        <span class="shop-filter-check-label">Congratulation Milestones</span>
+                        <span class="shop-filter-check-label">
+                            Congratulation Milestones
+                        </span>
                     </label>
+
                 </div>
+
             </div>
 
             <div class="shop-filter-group">
-                <span class="shop-filter-label">Price Range</span>
+
+                <span class="shop-filter-label">
+                    Price Range
+                </span>
+
                 <div class="shop-price-range-values">
-                    <span class="shop-price-val">$ 30</span>
-                    <span style="font-size:0.6875rem;color:var(--bloomy-warm-gray);">to</span>
-                    <span class="shop-price-val">$ 250</span>
+
+                    <span class="shop-price-val">
+                        $ 30
+                    </span>
+
+                    <span style="font-size:0.6875rem;color:var(--bloomy-warm-gray);">
+                        to
+                    </span>
+
+                    <span class="shop-price-val">
+                        $ 250
+                    </span>
+
                 </div>
+
                 <div class="shop-price-range-track">
                     <div class="shop-price-range-fill"></div>
                 </div>
+
                 <!-- Visual only sliders -->
-                <input type="range" class="shop-range-input" style="position:absolute;top:-9999px;" />
+                <input type="range"
+                       class="shop-range-input"
+                       style="position:absolute;top:-9999px;" />
+
             </div>
 
             <div class="shop-filter-group">
-                <span class="shop-filter-label">Flower Species</span>
+
+                <span class="shop-filter-label">
+                    Flower Species
+                </span>
+
                 <div class="shop-filter-tags">
-                    <button class="shop-filter-tag active">Roses</button>
-                    <button class="shop-filter-tag">Peonies</button>
-                    <button class="shop-filter-tag active">Orchids</button>
-                    <button class="shop-filter-tag">Lilies</button>
-                    <button class="shop-filter-tag">Tulips</button>
-                    <button class="shop-filter-tag">Hydrangeas</button>
-                    <button class="shop-filter-tag">Eucalyptus</button>
+
+                    <button class="shop-filter-tag active">
+                        Roses
+                    </button>
+
+                    <button class="shop-filter-tag">
+                        Peonies
+                    </button>
+
+                    <button class="shop-filter-tag active">
+                        Orchids
+                    </button>
+
+                    <button class="shop-filter-tag">
+                        Lilies
+                    </button>
+
+                    <button class="shop-filter-tag">
+                        Tulips
+                    </button>
+
+                    <button class="shop-filter-tag">
+                        Hydrangeas
+                    </button>
+
+                    <button class="shop-filter-tag">
+                        Eucalyptus
+                    </button>
+
                 </div>
+
             </div>
 
             <div class="shop-filter-group">
-                <span class="shop-filter-label">Palette Shade</span>
+
+                <span class="shop-filter-label">
+                    Palette Shade
+                </span>
+
                 <div class="shop-palette-swatches">
-                    <div class="shop-swatch active" style="background:#6B2D40;"></div>
-                    <div class="shop-swatch" style="background:#E8A4B8;"></div>
-                    <div class="shop-swatch" style="background:#7C9B8A;"></div>
-                    <div class="shop-swatch" style="background:#F8F4EF;"></div>
-                    <div class="shop-swatch" style="background:#C4A96A;"></div>
-                    <div class="shop-swatch" style="background:#F2A154;"></div>
-                    <div class="shop-swatch" style="background:#A6B1E1;"></div>
+
+                    <div class="shop-swatch active"
+                         style="background:#6B2D40;">
+                    </div>
+
+                    <div class="shop-swatch"
+                         style="background:#E8A4B8;">
+                    </div>
+
+                    <div class="shop-swatch"
+                         style="background:#7C9B8A;">
+                    </div>
+
+                    <div class="shop-swatch"
+                         style="background:#F8F4EF;">
+                    </div>
+
+                    <div class="shop-swatch"
+                         style="background:#C4A96A;">
+                    </div>
+
+                    <div class="shop-swatch"
+                         style="background:#F2A154;">
+                    </div>
+
+                    <div class="shop-swatch"
+                         style="background:#A6B1E1;">
+                    </div>
+
                 </div>
+
             </div>
 
-            <div class="shop-filter-group" style="border-bottom:none; margin-bottom: var(--space-md);">
-                <span class="shop-filter-label">Bouquet Dimension</span>
+            <div class="shop-filter-group"
+                 style="border-bottom:none; margin-bottom: var(--space-md);">
+
+                <span class="shop-filter-label">
+                    Bouquet Dimension
+                </span>
+
                 <div class="shop-filter-chips">
-                    <a asp-action="Index" asp-route-sizeId="1" class="shop-filter-chip @(ViewBag.SelectedSize == 1 ? "active" : "")">Petite</a>
-                    <a asp-action="Index" asp-route-sizeId="2" class="shop-filter-chip @(ViewBag.SelectedSize == 2 ? "active" : "")">Signature</a>
-                    <a asp-action="Index" asp-route-sizeId="3" class="shop-filter-chip @(ViewBag.SelectedSize == 3 ? "active" : "")">Grand</a>
+
+                    <a asp-action="Index"
+                       asp-route-sizeId="1"
+                       class="shop-filter-chip @(ViewBag.SelectedSize == 1 ? "active" : "")">
+                        Petite
+                    </a>
+
+                    <a asp-action="Index"
+                       asp-route-sizeId="2"
+                       class="shop-filter-chip @(ViewBag.SelectedSize == 2 ? "active" : "")">
+                        Signature
+                    </a>
+
+                    <a asp-action="Index"
+                       asp-route-sizeId="3"
+                       class="shop-filter-chip @(ViewBag.SelectedSize == 3 ? "active" : "")">
+                        Grand
+                    </a>
+
                 </div>
+
             </div>
 
             <div class="shop-guarantee">
-                <div class="shop-guarantee-icon">?</div>
-                <div>
-                    <div class="shop-guarantee-title">Atelier Guarantee</div>
-                    <div class="shop-guarantee-text">Every arrangement includes signature botanical hydration packs and cold-chain same-day arrival.</div>
+
+                <div class="shop-guarantee-icon">
+                    ?
                 </div>
+
+                <div>
+
+                    <div class="shop-guarantee-title">
+                        Atelier Guarantee
+                    </div>
+
+                    <div class="shop-guarantee-text">
+                        Every arrangement includes signature botanical hydration packs and cold-chain same-day arrival.
+                    </div>
+
+                </div>
+
             </div>
+
         </aside>
 
         <!-- Product Grid -->
         <div class="shop-grid-area">
+
             @if (!Model.Any())
             {
                 <div class="shop-empty">
-                    <div class="shop-empty-icon">??</div>
-                    <h3>No blooms found</h3>
-                    <p>Try adjusting your filters or search terms.</p>
+
+                    <div class="shop-empty-icon">
+                        ??
+                    </div>
+
+                    <h3>
+                        No blooms found
+                    </h3>
+
+                    <p>
+                        Try adjusting your filters or search terms.
+                    </p>
+
                 </div>
             }
             else
             {
                 <div class="shop-grid">
+
                     @{
-                        string[] badges = { "BESTSELLER", "LIMITED EDITION", "STAFF PICK", "NEW BLOOM" };
-                        string[] badgeClasses = { "shop-badge-bestseller", "shop-badge-limited", "shop-badge-staffpick", "shop-badge-new" };
+                        string[] badges =
+                        {
+                                "BESTSELLER",
+                                "LIMITED EDITION",
+                                "STAFF PICK",
+                                "NEW BLOOM"
+                                };
+
+                        string[] badgeClasses =
+                        {
+                                "shop-badge-bestseller",
+                                "shop-badge-limited",
+                                "shop-badge-staffpick",
+                                "shop-badge-new"
+                                };
                     }
+
                     @foreach (var bouquet in Model)
                     {
                         int badgeIdx = bouquet.BouquetID % 4;
+
                         string badge = badges[badgeIdx];
                         string badgeCls = badgeClasses[badgeIdx];
-                        string imgSrc = !string.IsNullOrEmpty(bouquet.Image) ? Url.Content("~/images/" + bouquet.Image) : Url.Content("~/images/romantic-roses.jpg");
-                        int stemCount = (bouquet.BouquetID * 3) + 12; // fake stem count for UI
+
+                        string imgSrc =
+                        !string.IsNullOrEmpty(bouquet.Image)
+                        ? Url.Content("~/images/" + bouquet.Image)
+                        : Url.Content("~/images/romantic-roses.jpg");
+
+                        int stemCount =
+                        (bouquet.BouquetID * 3) + 12;
 
                         <article class="shop-card">
-                            <div class="shop-card-badge @badgeCls">@badge</div>
-                            <button class="shop-card-heart" aria-label="Add to wishlist">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+
+                            <div class="shop-card-badge @badgeCls">
+                                @badge
+                            </div>
+
+                            <button class="shop-card-heart"
+                                    aria-label="Add to wishlist">
+
+                                <svg width="14"
+                                     height="14"
+                                     viewBox="0 0 24 24"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     stroke-width="2.5"
+                                     stroke-linecap="round"
+                                     stroke-linejoin="round">
+
+                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                                    </path>
+
+                                </svg>
+
                             </button>
 
-                            <a asp-action="Details" asp-route-id="@bouquet.BouquetID" class="shop-card-img-wrap" style="display:block;">
-                                <img src="@imgSrc" alt="@bouquet.Name" loading="lazy" onerror="this.onerror=null;this.src='/images/romantic-roses.jpg';" />
+                            <a asp-action="Details"
+                               asp-route-id="@bouquet.BouquetID"
+                               class="shop-card-img-wrap"
+                               style="display:block;">
+
+                                <img src="@imgSrc"
+                                     alt="@bouquet.Name"
+                                     loading="lazy"
+                                     onerror="this.onerror=null;this.src='/images/romantic-roses.jpg';" />
+
                                 <div class="shop-card-quick">
+
                                     <span class="shop-card-quick-btn">
+
                                         View Details
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+
+                                        <svg width="14"
+                                             height="14"
+                                             viewBox="0 0 24 24"
+                                             fill="none"
+                                             stroke="currentColor"
+                                             stroke-width="2"
+                                             stroke-linecap="round"
+                                             stroke-linejoin="round">
+
+                                            <line x1="5"
+                                                  y1="12"
+                                                  x2="19"
+                                                  y2="12">
+                                            </line>
+
+                                            <polyline points="12 5 19 12 12 19">
+                                            </polyline>
+
+                                        </svg>
+
                                     </span>
+
                                 </div>
+
                             </a>
 
                             <div class="shop-card-body">
+
                                 <div class="shop-card-meta">
-                                    <span class="shop-card-spec">@(bouquet.BouquetSize?.Size?.ToUpper() ?? "BOUQUET") (@stemCount STEMS)</span>
+
+                                    <span class="shop-card-spec">
+                                        @(bouquet.BouquetSize?.Size?.ToUpper() ?? "BOUQUET")
+                                        (@stemCount STEMS)
+                                    </span>
+
                                     <div class="shop-card-rating">
+
                                         4.8
-                                        <span class="shop-card-stars">?????</span>
-                                        <span style="opacity:0.6;font-size:0.5rem;">(@(bouquet.BouquetID * 14))</span>
+
+                                        <span class="shop-card-stars">
+                                            ?????
+                                        </span>
+
+                                        <span style="opacity:0.6;font-size:0.5rem;">
+                                            (@(bouquet.BouquetID * 14))
+                                        </span>
+
                                     </div>
+
                                 </div>
-                                <h3 class="shop-card-name">@bouquet.Name</h3>
-                                <p class="shop-card-desc">@bouquet.Description</p>
+
+                                <h3 class="shop-card-name">
+                                    @bouquet.Name
+                                </h3>
+
+                                <p class="shop-card-desc">
+                                    @bouquet.Description
+                                </p>
+
                                 <div class="shop-card-footer">
-                                    <span class="shop-card-price">$@bouquet.Price.ToString("N2")</span>
-                                    <a asp-controller="Cart" asp-action="AddToCart" asp-route-bouquetId="@bouquet.BouquetID" class="shop-card-add" title="Add to Cart" aria-label="Add @bouquet.Name to cart">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                                    </a>
+
+                                    <span class="shop-card-price">
+                                        $@bouquet.Price.ToString("N2")
+                                    </span>
+
+                                    <!-- Add To Cart -->
+                                    <form asp-controller="Cart"
+                                          asp-action="AddToCart"
+                                          method="post"
+                                          style="display:inline;">
+
+                                        @Html.AntiForgeryToken()
+
+                                        <input type="hidden"
+                                               name="bouquetId"
+                                               value="@bouquet.BouquetID" />
+
+                                        <button type="submit"
+                                                class="shop-card-add"
+                                                title="Add to Cart"
+                                                aria-label="Add @bouquet.Name to cart">
+
+                                            <svg width="14"
+                                                 height="14"
+                                                 viewBox="0 0 24 24"
+                                                 fill="none"
+                                                 stroke="currentColor"
+                                                 stroke-width="2.5"
+                                                 stroke-linecap="round"
+                                                 stroke-linejoin="round">
+
+                                                <line x1="12"
+                                                      y1="5"
+                                                      x2="12"
+                                                      y2="19">
+                                                </line>
+
+                                                <line x1="5"
+                                                      y1="12"
+                                                      x2="19"
+                                                      y2="12">
+                                                </line>
+
+                                            </svg>
+
+                                        </button>
+
+                                    </form>
+
                                 </div>
+
                             </div>
+
                         </article>
                     }
+
                 </div>
 
                 <div class="shop-pagination-wrap">
+
                     <div class="shop-pagination-count">
-                        Showing 1 – @Model.Count() of <strong>@Model.Count()</strong> blooms
+                        Showing 1 – @Model.Count() of
+                        <strong>@Model.Count()</strong> blooms
                     </div>
+
                     <div class="shop-pagination">
-                        <a href="#" class="shop-page-btn nav-btn">&lt;</a>
-                        <a href="#" class="shop-page-btn active">1</a>
-                        <a href="#" class="shop-page-btn">2</a>
-                        <a href="#" class="shop-page-btn">3</a>
-                        <span class="shop-page-btn ellipsis">...</span>
-                        <a href="#" class="shop-page-btn">8</a>
-                        <a href="#" class="shop-page-btn nav-btn">&gt;</a>
+
+                        <a href="#" class="shop-page-btn nav-btn">
+                            &lt;
+                        </a>
+
+                        <a href="#" class="shop-page-btn active">
+                            1
+                        </a>
+
+                        <a href="#" class="shop-page-btn">
+                            2
+                        </a>
+
+                        <a href="#" class="shop-page-btn">
+                            3
+                        </a>
+
+                        <span class="shop-page-btn ellipsis">
+                            ...
+                        </span>
+
+                        <a href="#" class="shop-page-btn">
+                            8
+                        </a>
+
+                        <a href="#" class="shop-page-btn nav-btn">
+                            &gt;
+                        </a>
+
                     </div>
+
                 </div>
             }
+
         </div>
+
     </div>
+
 </div>
 
 <!-- Features Banner -->
 <div class="shop-features-banner">
+
     <div class="shop-features-inner">
+
         <div class="shop-feature">
+
             <div class="shop-feature-icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"></path><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+
+                <svg width="20"
+                     height="20"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round">
+
+                    <path d="M12 2v20"></path>
+
+                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6">
+                    </path>
+
+                </svg>
+
             </div>
+
             <div>
-                <h3 class="shop-feature-title">Morning Handpicked</h3>
-                <p class="shop-feature-desc">Sourced sustainably directly from regenerative botanical farms in Provence and Ecuador.</p>
+
+                <h3 class="shop-feature-title">
+                    Morning Handpicked
+                </h3>
+
+                <p class="shop-feature-desc">
+                    Sourced sustainably directly from regenerative botanical farms in Provence and Ecuador.
+                </p>
+
             </div>
+
         </div>
+
         <div class="shop-feature">
+
             <div class="shop-feature-icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"></path></svg>
+
+                <svg width="20"
+                     height="20"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round">
+
+                    <path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z">
+                    </path>
+
+                </svg>
+
             </div>
+
             <div>
-                <h3 class="shop-feature-title">Hydration Guaranteed</h3>
-                <p class="shop-feature-desc">Patented water-wick stem protection ensuring up to 10 days of radiant vase vibrancy.</p>
+
+                <h3 class="shop-feature-title">
+                    Hydration Guaranteed
+                </h3>
+
+                <p class="shop-feature-desc">
+                    Patented water-wick stem protection ensuring up to 10 days of radiant vase vibrancy.
+                </p>
+
             </div>
+
         </div>
+
         <div class="shop-feature">
+
             <div class="shop-feature-icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+
+                <svg width="20"
+                     height="20"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2.5"
+                     stroke-linecap="round"
+                     stroke-linejoin="round">
+
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                    </path>
+
+                </svg>
+
             </div>
+
             <div>
-                <h3 class="shop-feature-title">Artisan Calligraphy</h3>
-                <p class="shop-feature-desc">Complimentary letterpress wax-sealed stationery enclosed with your personalized message.</p>
+
+                <h3 class="shop-feature-title">
+                    Artisan Calligraphy
+                </h3>
+
+                <p class="shop-feature-desc">
+                    Complimentary letterpress wax-sealed stationery enclosed with your personalized message.
+                </p>
+
             </div>
+
         </div>
+
     </div>
+
 </div>

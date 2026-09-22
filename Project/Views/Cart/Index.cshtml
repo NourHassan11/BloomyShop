@@ -1,4 +1,5 @@
 ﻿@model Project.DAL.Entities.Cart
+
 @{
     ViewData["Title"] = "Shopping Cart";
 }
@@ -10,7 +11,6 @@
     <table class="table table-bordered table-striped mt-3">
         <thead class="table-dark">
             <tr>
-                <th>Product Image</th>
                 <th>Bouquet Name</th>
                 <th>Price</th>
                 <th>Quantity</th>
@@ -18,23 +18,92 @@
                 <th>Actions</th>
             </tr>
         </thead>
+
         <tbody>
             @foreach (var item in Model.CartItems)
             {
                 <tr>
                     <td>
-                        <img src="~/images/default-bouquet.png" alt="Bouquet" style="width: 50px; height: 50px;" />
+                        @if (item.Bouquet != null)
+                        {
+                            @item.Bouquet.Name
+                        }
+                        else if (item.CustomizedBouquet != null)
+                        {
+                            <span>Customized Bouquet</span>
+                        }
+                        else
+                        {
+                            <span>Unknown Item</span>
+                        }
                     </td>
+
                     <td>
-                        @(item.Bouquet != null ? item.Bouquet.Name : (item.CustomizedBouquet != null ? item.CustomizedBouquet.CustomizationID : "Custom Bouquet"))
+                        @item.UnitPrice EGP
                     </td>
-                    <td>@item.UnitPrice EGP</td>
-                    <td>@item.Quantity</td>
-                    <td>@(item.UnitPrice* item.Quantity) EGP</td>
+
+                    <td>
+                        <div class="d-flex align-items-center justify-content-center gap-2">
+
+                            <!-- Decrease Quantity -->
+                            <form asp-action="UpdateQuantity" method="post">
+                                @Html.AntiForgeryToken()
+
+                                <input type="hidden"
+                                       name="id"
+                                       value="@item.CartItemID" />
+
+                                <input type="hidden"
+                                       name="quantity"
+                                       value="@(item.Quantity - 1)" />
+
+                                <button type="submit"
+                                        class="btn btn-outline-secondary btn-sm">
+                                    −
+                                </button>
+                            </form>
+
+                            <span class="fw-bold">
+                                @item.Quantity
+                            </span>
+
+                            <!-- Increase Quantity -->
+                            <form asp-action="UpdateQuantity" method="post">
+                                @Html.AntiForgeryToken()
+
+                                <input type="hidden"
+                                       name="id"
+                                       value="@item.CartItemID" />
+
+                                <input type="hidden"
+                                       name="quantity"
+                                       value="@(item.Quantity + 1)" />
+
+                                <button type="submit"
+                                        class="btn btn-outline-secondary btn-sm">
+                                    +
+                                </button>
+                            </form>
+
+                        </div>
+                    </td>
+
+                    <td>
+                        @(item.UnitPrice* item.Quantity) EGP
+                    </td>
+
                     <td>
                         <form asp-action="RemoveFromCart" method="post">
-                            <input type="hidden" name="id" value="@item.CartItemID" />
-                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            @Html.AntiForgeryToken()
+
+                            <input type="hidden"
+                                   name="id"
+                                   value="@item.CartItemID" />
+
+                            <button type="submit"
+                                    class="btn btn-danger btn-sm">
+                                Delete
+                            </button>
                         </form>
                     </td>
                 </tr>
@@ -49,6 +118,10 @@
                 @Model.CartItems.Sum(i => i.UnitPrice * i.Quantity) EGP
             </span>
         </h4>
-        <a href="#" class="btn btn-success btn-lg mt-2">Checkout</a>
+
+        <a href="#"
+           class="btn btn-success btn-lg mt-2">
+            Checkout
+        </a>
     </div>
 </div>

@@ -4,104 +4,514 @@
     ViewData["Title"] = "Bouquet Preview";
 }
 
-<h1>Bouquet Preview</h1>
+@section Styles {
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@400;500;600&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
 
-<hr />
+    <style>
+        .preview-page {
+            background: #fff8f6;
+            min-height: calc(100vh - 80px);
+            padding: 50px 20px 80px;
+            font-family: 'Inter', sans-serif;
+            color: #1e1b1a;
+        }
 
+        .preview-container {
+            max-width: 1000px;
+            margin: auto;
+        }
 
-<h3>Size</h3>
+        .preview-hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
 
-<p>
-    @Model.BouquetSize.Size
-</p>
+        .preview-eyebrow {
+            color: #4e644a;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
 
-<p>
-    Base Price:
-    @Model.BouquetSize.BasePrice
-</p>
+        .preview-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 42px;
+            font-weight: 400;
+            color: #72263f;
+            margin-bottom: 12px;
+        }
 
+        .preview-subtitle {
+            max-width: 650px;
+            margin: auto;
+            color: #534246;
+            font-size: 15px;
+            line-height: 1.7;
+        }
 
-<hr />
+        .preview-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 22px;
+            box-shadow: 0 3px 16px rgba(41, 37, 36, .06);
+        }
 
+        .preview-section-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 22px;
+        }
 
-<h3>Wrapping</h3>
+        .preview-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #f5ecea;
+            color: #72263f;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-<p>
-    @Model.Wrapping.Name
-</p>
+        .preview-section-title h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 500;
+            margin: 0;
+        }
 
-<p>
-    Price:
-    @Model.Wrapping.Price
-</p>
+        .preview-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 0;
+            border-bottom: 1px solid #eee2df;
+        }
 
+            .preview-info:last-child {
+                border-bottom: none;
+            }
 
-<hr />
+        .preview-label {
+            color: #867276;
+            font-size: 13px;
+        }
 
+        .preview-value {
+            font-weight: 600;
+            color: #1e1b1a;
+        }
 
-<h3>Flowers</h3>
+        .preview-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
 
-@foreach (var item in Model.CustomizedBouquetFlowers)
-{
-    <p>
-        @item.Flower.Name
-        -
-        @item.Flower.BasePrice
-    </p>
+        .preview-chip {
+            background: #fff8f6;
+            border: 1px solid #d9c1c5;
+            border-radius: 10px;
+            padding: 12px 15px;
+            min-width: 150px;
+        }
+
+        .preview-chip-name {
+            display: block;
+            font-weight: 600;
+            color: #1e1b1a;
+        }
+
+        .preview-chip-price {
+            display: block;
+            margin-top: 4px;
+            font-size: 13px;
+            color: #4e644a;
+        }
+
+        .preview-total-card {
+            background: #72263f;
+            color: white;
+            border-radius: 16px;
+            padding: 28px 30px;
+            margin-top: 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .preview-total-label {
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            opacity: .85;
+        }
+
+        .preview-total {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            margin-top: 4px;
+        }
+
+        .preview-time {
+            text-align: right;
+        }
+
+        .preview-time-label {
+            font-size: 11px;
+            opacity: .75;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+        }
+
+        .preview-time-value {
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        .preview-actions {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 30px;
+        }
+
+        .preview-btn {
+            min-width: 220px;
+            height: 50px;
+            padding: 0 24px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all .2s ease;
+        }
+
+        .preview-btn-primary {
+            background: #72263f;
+            color: white;
+        }
+
+            .preview-btn-primary:hover {
+                background: #8f3d56;
+                color: white;
+                transform: translateY(-1px);
+            }
+
+        .preview-btn-secondary {
+            background: white;
+            color: #72263f;
+            border: 1px solid #d9c1c5;
+        }
+
+            .preview-btn-secondary:hover {
+                border-color: #72263f;
+                color: #72263f;
+            }
+
+        @@media (max-width: 600px) {
+            .preview-page {
+                padding: 35px 15px 60px;
+            }
+
+            .preview-title {
+                font-size: 34px;
+            }
+
+            .preview-card {
+                padding: 22px;
+            }
+
+            .preview-total-card {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 18px;
+            }
+
+            .preview-time {
+                text-align: left;
+            }
+
+            .preview-actions {
+                flex-direction: column;
+            }
+
+            .preview-btn {
+                width: 100%;
+            }
+        }
+    </style>
 }
 
+<div class="preview-page">
+    <div class="preview-container">
 
-<hr />
+        <!-- Hero -->
+        <div class="preview-hero">
+            <div class="preview-eyebrow">
+                Your Creation
+            </div>
 
+            <h1 class="preview-title">
+                Bouquet Preview
+            </h1>
 
-<h3>Colors</h3>
-
-@foreach (var item in Model.CustomizedBouquetFlowerColors)
-{
-    <p>
-        @item.FlowerColor.Color
-    </p>
-}
-
-
-<hr />
-
-
-<h3>Add Ons</h3>
-
-@foreach (var item in Model.CustomizedBouquetAddOns)
-{
-    <p>
-        @item.AddOn.Name
-        -
-        @item.AddOn.Price
-    </p>
-}
+            <p class="preview-subtitle">
+                Here is your customized bouquet. Review your choices before adding it to your cart.
+            </p>
+        </div>
 
 
-<hr />
+        <!-- Size & Wrapping -->
+        <div class="preview-card">
+
+            <div class="preview-section-title">
+                <div class="preview-icon">
+                    <span class="material-symbols-outlined">
+                        redeem
+                    </span>
+                </div>
+
+                <h2>
+                    Bouquet Details
+                </h2>
+            </div>
+
+            <div class="preview-info">
+                <span class="preview-label">
+                    Size
+                </span>
+
+                <span class="preview-value">
+                    @Model.BouquetSize.Size
+                </span>
+            </div>
+
+            <div class="preview-info">
+                <span class="preview-label">
+                    Base Price
+                </span>
+
+                <span class="preview-value">
+                    @Model.BouquetSize.BasePrice.ToString("N2") EGP
+                </span>
+            </div>
+
+            <div class="preview-info">
+                <span class="preview-label">
+                    Wrapping
+                </span>
+
+                <span class="preview-value">
+                    @Model.Wrapping.Name
+                </span>
+            </div>
+
+            <div class="preview-info">
+                <span class="preview-label">
+                    Wrapping Price
+                </span>
+
+                <span class="preview-value">
+                    @Model.Wrapping.Price.ToString("N2") EGP
+                </span>
+            </div>
+
+        </div>
 
 
-<h3>Total Price</h3>
+        <!-- Flowers -->
+        <div class="preview-card">
 
-<h2>
-    @ViewBag.TotalPrice
-</h2>
+            <div class="preview-section-title">
+                <div class="preview-icon">
+                    <span class="material-symbols-outlined">
+                        local_florist
+                    </span>
+                </div>
+
+                <h2>
+                    Selected Flowers
+                </h2>
+            </div>
+
+            <div class="preview-list">
+
+                @foreach (var item in Model.CustomizedBouquetFlowers)
+                {
+                    <div class="preview-chip">
+
+                        <span class="preview-chip-name">
+                            @item.Flower.Name
+                        </span>
+
+                        <span class="preview-chip-price">
+                            @item.Flower.BasePrice.ToString("N2") EGP
+                        </span>
+
+                    </div>
+                }
+
+            </div>
+
+        </div>
 
 
-<h3>Preparation Time</h3>
+        <!-- Colors -->
+        <div class="preview-card">
 
-<p>
-    @Model.PreparationTime minutes
-</p>
+            <div class="preview-section-title">
+                <div class="preview-icon">
+                    <span class="material-symbols-outlined">
+                        palette
+                    </span>
+                </div>
+
+                <h2>
+                    Flower Colors
+                </h2>
+            </div>
+
+            <div class="preview-list">
+
+                @if (Model.CustomizedBouquetFlowerColors.Any())
+                {
+                    @foreach (var item in Model.CustomizedBouquetFlowerColors)
+                    {
+                        <div class="preview-chip">
+
+                            <span class="preview-chip-name">
+                                @item.FlowerColor.Color
+                            </span>
+
+                        </div>
+                    }
+                }
+                else
+                {
+                    <span class="preview-label">
+                        No specific color selected.
+                    </span>
+                }
+
+            </div>
+
+        </div>
 
 
-<br />
+        <!-- Add Ons -->
+        <div class="preview-card">
+
+            <div class="preview-section-title">
+                <div class="preview-icon">
+                    <span class="material-symbols-outlined">
+                        add_circle_outline
+                    </span>
+                </div>
+
+                <h2>
+                    Special Touches
+                </h2>
+            </div>
+
+            <div class="preview-list">
+
+                @if (Model.CustomizedBouquetAddOns.Any())
+                {
+                    @foreach (var item in Model.CustomizedBouquetAddOns)
+                    {
+                        <div class="preview-chip">
+
+                            <span class="preview-chip-name">
+                                @item.AddOn.Name
+                            </span>
+
+                            <span class="preview-chip-price">
+                                @item.AddOn.Price.ToString("N2") EGP
+                            </span>
+
+                        </div>
+                    }
+                }
+                else
+                {
+                    <span class="preview-label">
+                        No add-ons selected.
+                    </span>
+                }
+
+            </div>
+
+        </div>
 
 
-<a asp-controller="CustomizedBouquet"
-   asp-action="Customize">
+        <!-- Total -->
+        <div class="preview-total-card">
 
-    Customize Another Bouquet
+            <div>
+                <div class="preview-total-label">
+                    Total Price
+                </div>
 
-</a>
+                <div class="preview-total">
+                    @ViewBag.TotalPrice.ToString("N2") EGP
+                </div>
+            </div>
+
+            <div class="preview-time">
+
+                <div class="preview-time-label">
+                    Preparation Time
+                </div>
+
+                <div class="preview-time-value">
+                    @Model.PreparationTime minutes
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Actions -->
+        <div class="preview-actions">
+
+            <a asp-controller="CustomizedBouquet"
+               asp-action="Customize"
+               class="preview-btn preview-btn-secondary">
+                Customize Again
+            </a>
+
+            <form asp-controller="Cart"
+                  asp-action="AddCustomizedToCart"
+                  method="post">
+
+                @Html.AntiForgeryToken()
+
+                <input type="hidden"
+                       name="customizationId"
+                       value="@Model.CustomizationID" />
+
+                <button type="submit"
+                        class="preview-btn preview-btn-primary">
+                    Add to Cart
+                </button>
+
+            </form>
+        </div>
+
+    </div>
+</div>
