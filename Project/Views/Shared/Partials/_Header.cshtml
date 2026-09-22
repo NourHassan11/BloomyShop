@@ -8,9 +8,10 @@
 <header class="bloomy-header sticky-top">
     <div class="bloomy-header-container">
         <!-- Logo -->
-        <!-- Logo -->
         <a asp-controller="Home" asp-action="Index" class="bloomy-brand">
-            <img src="~/images/bloomy_shop_logo.png" alt="Bloomy Shop Logo" style="height: 55px; width: auto; object-fit: contain;" />
+            <img src="~/images/bloomy_shop_logo.png"
+                 alt="Bloomy Shop Logo"
+                 style="height: 55px; width: auto; object-fit: contain;" />
         </a>
 
         <!-- Desktop Navigation Links -->
@@ -19,105 +20,235 @@
             var currentAction = ViewContext.RouteData.Values["Action"]?.ToString();
         }
 
-        <!-- Desktop Navigation Links -->
         <nav class="bloomy-nav d-none d-lg-flex" aria-label="Main Navigation">
-            <a asp-controller="Home" asp-action="Index"
-               class="bloomy-nav-link @(currentController == "Home" && currentAction == "Index" ? "active" : "")">HOME</a>
 
-            <a asp-controller="Bouquet" asp-action="Index"
-               class="bloomy-nav-link @(currentController == "Bouquet" && currentAction == "Index" ? "active" : "")">SHOP</a>
+            <!-- HOME -->
+            <a asp-controller="Home"
+               asp-action="Index"
+               class="bloomy-nav-link @(currentController == "Home" && currentAction == "Index" ? "active" : "")">
+                HOME
+            </a>
 
-            <a asp-controller="Bouquet" asp-action="Occasions"
-               class="bloomy-nav-link @(currentController == "Bouquet" && currentAction == "Occasions" ? "active" : "")">OCCASIONS</a>
+            <!-- SHOP -->
+            <a asp-controller="Bouquet"
+               asp-action="Index"
+               class="bloomy-nav-link @(currentController == "Bouquet" && currentAction == "Index" ? "active" : "")">
+                SHOP
+            </a>
 
-            <a asp-controller="EventRequest" asp-action="Create"
-               class="bloomy-nav-link @(currentController == "EventRequest" ? "active" : "")">EVENTS</a>
+            <!-- EVENTS -->
+            <a asp-controller="EventRequest"
+               asp-action="Create"
+               class="bloomy-nav-link @(currentController == "EventRequest" ? "active" : "")">
+                EVENTS
+            </a>
 
-            <a asp-controller="Home" asp-action="Privacy"
-               class="bloomy-nav-link @(currentController == "Home" && currentAction == "Privacy" ? "active" : "")">ABOUT</a>
+            <!-- CUSTOMIZE -->
+            <a asp-controller="CustomizedBouquet"
+               asp-action="Customize"
+               class="bloomy-nav-link @(currentController == "CustomizedBouquet" ? "active" : "")">
+                CUSTOMIZE
+            </a>
+
         </nav>
 
         <!-- Right Utility Actions -->
         <div class="bloomy-header-actions">
+
             <!-- Search Button -->
-            <button type="button" class="bloomy-icon-btn" aria-label="Search" onclick="toggleSearchModal()">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <button type="button"
+                    class="bloomy-icon-btn"
+                    aria-label="Search"
+                    onclick="toggleSearchModal()">
+                <svg width="20"
+                     height="20"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="1.8"
+                     stroke-linecap="round"
+                     stroke-linejoin="round">
                     <circle cx="11" cy="11" r="8"></circle>
-                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    <line x1="21"
+                          y1="21"
+                          x2="16.65"
+                          y2="16.65"></line>
                 </svg>
             </button>
 
             <!-- Wishlist Button -->
-            <a href="#beloved-stems" class="bloomy-icon-btn position-relative" aria-label="Wishlist">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <a href="#beloved-stems"
+               class="bloomy-icon-btn position-relative"
+               aria-label="Wishlist">
+                <svg width="20"
+                     height="20"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="1.8"
+                     stroke-linecap="round"
+                     stroke-linejoin="round">
                     <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
                 </svg>
+
                 <span class="bloomy-badge-count">0</span>
             </a>
 
             <!-- Cart Button -->
-            <a asp-controller="Cart" asp-action="Index" class="bloomy-icon-btn position-relative" aria-label="Cart">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <a asp-controller="Cart"
+               asp-action="Index"
+               class="bloomy-icon-btn position-relative"
+               aria-label="Cart">
+                <svg width="20"
+                     height="20"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="1.8"
+                     stroke-linecap="round"
+                     stroke-linejoin="round">
                     <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
                     <line x1="3" y1="6" x2="21" y2="6"></line>
                     <path d="M16 10a4 4 0 0 1-8 0"></path>
                 </svg>
+
                 <span class="bloomy-badge-count">0</span>
             </a>
 
             <!-- Account Button -->
             @if (isLoggedIn)
             {
-                <a asp-controller="Customer" asp-action="Profile" asp-route-id="@customerId" class="bloomy-account-btn">
+                <a asp-controller="Customer"
+                   asp-action="Profile"
+                   asp-route-id="@customerId"
+                   class="bloomy-account-btn">
+
                     <span class="bloomy-account-avatar">
-                        @(string.IsNullOrEmpty(customerName) ? "A" : customerName.Substring(0, 1).ToUpper())
+                        @(string.IsNullOrEmpty(customerName)
+                                            ? "A"
+                                            : customerName.Substring(0, 1).ToUpper())
+                </span>
+
+                    <span class="d-none d-md-inline bloomy-account-text">
+                        @customerName
                     </span>
-                    <span class="d-none d-md-inline bloomy-account-text">@customerName</span>
                 </a>
-            }
+                        }
             else
             {
-                <a asp-controller="Customer" asp-action="Login" class="bloomy-account-btn">
+                <a asp-controller="Customer"
+                   asp-action="Login"
+                   class="bloomy-account-btn">
+
                     <span class="bloomy-account-avatar">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <svg width="14"
+                             height="14"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="2"
+                             stroke-linecap="round"
+                             stroke-linejoin="round">
                             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                             <circle cx="12" cy="7" r="4"></circle>
                         </svg>
                     </span>
-                    <span class="d-none d-md-inline bloomy-account-text">My Account</span>
+
+                    <span class="d-none d-md-inline bloomy-account-text">
+                        My Account
+                    </span>
                 </a>
             }
 
             <!-- Mobile Hamburger Toggle -->
-            <button type="button" class="bloomy-menu-toggle d-lg-none" aria-label="Toggle navigation" onclick="toggleMobileMenu()">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <button type="button"
+                    class="bloomy-menu-toggle d-lg-none"
+                    aria-label="Toggle navigation"
+                    onclick="toggleMobileMenu()">
+                <svg width="24"
+                     height="24"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round">
                     <line x1="3" y1="12" x2="21" y2="12"></line>
                     <line x1="3" y1="6" x2="21" y2="6"></line>
                     <line x1="3" y1="18" x2="21" y2="18"></line>
                 </svg>
             </button>
+
         </div>
     </div>
 
     <!-- Mobile Drawer Navigation -->
-    <div id="bloomyMobileNav" class="bloomy-mobile-nav d-lg-none">
+    <div id="bloomyMobileNav"
+         class="bloomy-mobile-nav d-lg-none">
+
         <div class="bloomy-mobile-nav-content">
-            <a asp-controller="Home" asp-action="Index" class="bloomy-mobile-link active" onclick="toggleMobileMenu()">HOME</a>
-            <a asp-controller="Bouquet" asp-action="Index" class="bloomy-mobile-link" onclick="toggleMobileMenu()">SHOP</a>
-            <a asp-controller="Bouquet" asp-action="Index" class="bloomy-mobile-link" onclick="toggleMobileMenu()">OCCASIONS</a>
-            <a asp-controller="EventRequest" asp-action="Create" class="bloomy-mobile-link" onclick="toggleMobileMenu()">EVENTS</a>
-            <a asp-controller="Home" asp-action="Privacy" class="bloomy-mobile-link" onclick="toggleMobileMenu()">ABOUT</a>
+
+            <!-- HOME -->
+            <a asp-controller="Home"
+               asp-action="Index"
+               class="bloomy-mobile-link active"
+               onclick="toggleMobileMenu()">
+                HOME
+            </a>
+
+            <!-- SHOP -->
+            <a asp-controller="Bouquet"
+               asp-action="Index"
+               class="bloomy-mobile-link"
+               onclick="toggleMobileMenu()">
+                SHOP
+            </a>
+
+            <!-- EVENTS -->
+            <a asp-controller="EventRequest"
+               asp-action="Create"
+               class="bloomy-mobile-link"
+               onclick="toggleMobileMenu()">
+                EVENTS
+            </a>
+
+            <!-- CUSTOMIZE -->
+            <a asp-controller="CustomizedBouquet"
+               asp-action="Customize"
+               class="bloomy-mobile-link"
+               onclick="toggleMobileMenu()">
+                CUSTOMIZE
+            </a>
+
             <hr class="my-3 opacity-25" />
-            <a asp-controller="CustomizedBouquet" asp-action="Customize" class="bloomy-mobile-link" onclick="toggleMobileMenu()">CUSTOMIZE BOUQUET</a>
+
             @if (isLoggedIn)
             {
-                <a asp-controller="Customer" asp-action="Profile" asp-route-id="@customerId" class="bloomy-mobile-link" onclick="toggleMobileMenu()">MY PROFILE (@customerName)</a>
+                <a asp-controller="Customer"
+                   asp-action="Profile"
+                   asp-route-id="@customerId"
+                   class="bloomy-mobile-link"
+                   onclick="toggleMobileMenu()">
+                    MY PROFILE (@customerName)
+                </a>
             }
             else
             {
-                <a asp-controller="Customer" asp-action="Login" class="bloomy-mobile-link" onclick="toggleMobileMenu()">LOGIN</a>
-                <a asp-controller="Customer" asp-action="Register" class="bloomy-mobile-link" onclick="toggleMobileMenu()">REGISTER</a>
+                <a asp-controller="Customer"
+                   asp-action="Login"
+                   class="bloomy-mobile-link"
+                   onclick="toggleMobileMenu()">
+                    LOGIN
+                </a>
+
+                <a asp-controller="Customer"
+                   asp-action="Register"
+                   class="bloomy-mobile-link"
+                   onclick="toggleMobileMenu()">
+                    REGISTER
+                </a>
             }
+
         </div>
     </div>
 </header>

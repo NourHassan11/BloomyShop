@@ -16,6 +16,9 @@ namespace Project.ViewModels
 
         public List<int> AddOnIDs { get; set; } = new List<int>();
 
+        public Dictionary<int, int> FlowerQuantities { get; set; }
+            = new Dictionary<int, int>();
+
         public int CustomerID { get; set; }
     }
 }

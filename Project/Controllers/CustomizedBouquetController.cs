@@ -28,9 +28,26 @@ namespace Project.Controllers
 
         // POST: CustomizedBouquet/Customize
         [HttpPost]
-        public async Task<IActionResult> Customize(CustomizedBouquetViewModel model)
+        public async Task<IActionResult> Customize(
+            CustomizedBouquetViewModel model)
         {
-            if (model.FlowerIDs == null || model.FlowerIDs.Count == 0)
+            // Make sure lists are not null
+            model.FlowerIDs ??= new List<int>();
+            model.FlowerColorIDs ??= new List<int>();
+            model.AddOnIDs ??= new List<int>();
+            model.FlowerQuantities ??= new Dictionary<int, int>();
+
+
+            // =========================
+            // FLOWER VALIDATION
+            // =========================
+
+            var selectedFlowers = model.FlowerQuantities
+                .Where(x => x.Value > 0)
+                .Select(x => x.Key)
+                .ToList();
+
+            if (selectedFlowers.Count == 0)
             {
                 ModelState.AddModelError(
                     "FlowerIDs",
@@ -38,13 +55,20 @@ namespace Project.Controllers
                 );
             }
 
+            // Keep FlowerIDs synchronized with quantities
+            model.FlowerIDs = selectedFlowers;
 
-            // Color Validation
-            if (model.FlowerColorIDs != null &&
-                model.FlowerColorIDs.Count > 0)
+
+            // =========================
+            // COLOR VALIDATION
+            // =========================
+
+            if (model.FlowerColorIDs.Count > 0 &&
+                model.FlowerIDs.Count > 0)
             {
                 var colors = await _context.FlowerColors
-                    .Where(c => model.FlowerColorIDs.Contains(c.FlowerColorID))
+                    .Where(c =>
+                        model.FlowerColorIDs.Contains(c.FlowerColorID))
                     .ToListAsync();
 
                 foreach (var color in colors)
@@ -60,6 +84,10 @@ namespace Project.Controllers
             }
 
 
+            // =========================
+            // MODEL VALIDATION
+            // =========================
+
             if (!ModelState.IsValid)
             {
                 await LoadData();
@@ -68,9 +96,14 @@ namespace Project.Controllers
             }
 
 
-            // Get Size
+            // =========================
+            // GET SIZE
+            // =========================
+
             var size = await _context.BouquetSizes
-                .FirstOrDefaultAsync(s => s.SizeID == model.SizeID);
+                .FirstOrDefaultAsync(
+                    s => s.SizeID == model.SizeID
+                );
 
             if (size == null)
             {
@@ -78,9 +111,14 @@ namespace Project.Controllers
             }
 
 
-            // Get Wrapping
+            // =========================
+            // GET WRAPPING
+            // =========================
+
             var wrapping = await _context.Wrappings
-                .FirstOrDefaultAsync(w => w.WrappingID == model.WrappingID);
+                .FirstOrDefaultAsync(
+                    w => w.WrappingID == model.WrappingID
+                );
 
             if (wrapping == null)
             {
@@ -88,27 +126,47 @@ namespace Project.Controllers
             }
 
 
-            // Get Flowers
+            // =========================
+            // GET FLOWERS
+            // =========================
+
             var flowers = await _context.Flowers
                 .Where(f => model.FlowerIDs.Contains(f.FlowerID))
                 .ToListAsync();
 
 
-            // Get AddOns
+            // =========================
+            // GET ADDONS
+            // =========================
+
             var addOns = await _context.AddOns
                 .Where(a => model.AddOnIDs.Contains(a.AddOnID))
                 .ToListAsync();
 
 
-            // Dynamic Pricing
+            // =========================
+            // DYNAMIC PRICING
+            // =========================
+
             decimal totalPrice = size.BasePrice;
 
             totalPrice += wrapping.Price;
 
+
             foreach (var flower in flowers)
             {
-                totalPrice += flower.BasePrice;
+                int quantity = 1;
+
+                if (model.FlowerQuantities.ContainsKey(
+                    flower.FlowerID))
+                {
+                    quantity = model.FlowerQuantities[
+                        flower.FlowerID];
+                }
+
+                totalPrice += flower.BasePrice * quantity;
             }
+
 
             foreach (var addOn in addOns)
             {
@@ -116,22 +174,41 @@ namespace Project.Controllers
             }
 
 
-            // Preparation Time
+            // =========================
+            // PREPARATION TIME
+            // =========================
+
             int preparationTime = 30;
 
-            preparationTime += flowers.Count * 10;
+            foreach (var flower in flowers)
+            {
+                int quantity = 1;
+
+                if (model.FlowerQuantities.ContainsKey(
+                    flower.FlowerID))
+                {
+                    quantity = model.FlowerQuantities[
+                        flower.FlowerID];
+                }
+
+                preparationTime += quantity * 10;
+            }
 
             preparationTime += addOns.Count * 5;
 
 
-            // Create Customized Bouquet
+            // =========================
+            // CREATE CUSTOMIZED BOUQUET
+            // =========================
+
             var customizedBouquet = new CustomizedBouquet
             {
                 CreatedAt = DateTime.Now,
 
                 PreparationTime = preparationTime,
 
-                CustomerID = model.CustomerID,
+                // Temporary customer until real login is connected
+                CustomerID = 1,
 
                 SizeID = model.SizeID,
 
@@ -144,56 +221,75 @@ namespace Project.Controllers
             await _context.SaveChangesAsync();
 
 
-            // Add Flowers
+            // =========================
+            // ADD FLOWERS + QUANTITY
+            // =========================
+
             foreach (var flowerID in model.FlowerIDs)
             {
+                int quantity = 1;
+
+                if (model.FlowerQuantities.ContainsKey(flowerID))
+                {
+                    quantity = model.FlowerQuantities[flowerID];
+                }
+
                 var item = new CustomizedBouquetFlower
                 {
-                    CustomizationID = customizedBouquet.CustomizationID,
+                    CustomizationID =
+                        customizedBouquet.CustomizationID,
 
-                    FlowerID = flowerID
+                    FlowerID = flowerID,
+
+                    Quantity = quantity
                 };
 
                 _context.CustomizedBouquetFlowers.Add(item);
             }
 
 
-            // Add Colors
-            if (model.FlowerColorIDs != null)
+            // =========================
+            // ADD COLORS
+            // =========================
+
+            foreach (var colorID in model.FlowerColorIDs)
             {
-                foreach (var colorID in model.FlowerColorIDs)
+                var item = new CustomizedBouquetFlowerColor
                 {
-                    var item = new CustomizedBouquetFlowerColor
-                    {
-                        CustomizationID = customizedBouquet.CustomizationID,
+                    CustomizationID =
+                        customizedBouquet.CustomizationID,
 
-                        FlowerColorID = colorID
-                    };
+                    FlowerColorID = colorID
+                };
 
-                    _context.CustomizedBouquetFlowerColors.Add(item);
-                }
+                _context.CustomizedBouquetFlowerColors.Add(item);
             }
 
 
-            // Add AddOns
-            if (model.AddOnIDs != null)
+            // =========================
+            // ADD ADDONS
+            // =========================
+
+            foreach (var addOnID in model.AddOnIDs)
             {
-                foreach (var addOnID in model.AddOnIDs)
+                var item = new CustomizedBouquetAddOn
                 {
-                    var item = new CustomizedBouquetAddOn
-                    {
-                        CustomizationID = customizedBouquet.CustomizationID,
+                    CustomizationID =
+                        customizedBouquet.CustomizationID,
 
-                        AddOnID = addOnID
-                    };
+                    AddOnID = addOnID
+                };
 
-                    _context.CustomizedBouquetAddOns.Add(item);
-                }
+                _context.CustomizedBouquetAddOns.Add(item);
             }
 
 
             await _context.SaveChangesAsync();
 
+
+            // =========================
+            // REDIRECT TO PREVIEW
+            // =========================
 
             return RedirectToAction(
                 "Preview",
@@ -236,20 +332,40 @@ namespace Project.Controllers
             }
 
 
-            ViewBag.TotalPrice =
+            // =========================
+            // TOTAL PRICE
+            // =========================
+
+            decimal totalPrice =
                 customizedBouquet.BouquetSize.BasePrice
-                + customizedBouquet.Wrapping.Price
+                + customizedBouquet.Wrapping.Price;
 
-                + customizedBouquet.CustomizedBouquetFlowers
-                    .Sum(x => x.Flower.BasePrice)
 
-                + customizedBouquet.CustomizedBouquetAddOns
+            foreach (
+                var flower
+                in customizedBouquet.CustomizedBouquetFlowers)
+            {
+                totalPrice +=
+                    flower.Flower.BasePrice
+                    * flower.Quantity;
+            }
+
+
+            totalPrice +=
+                customizedBouquet.CustomizedBouquetAddOns
                     .Sum(x => x.AddOn.Price);
+
+
+            ViewBag.TotalPrice = totalPrice;
 
 
             return View(customizedBouquet);
         }
 
+
+        // =========================
+        // LOAD DATA
+        // =========================
 
         private async Task LoadData()
         {
@@ -270,3 +386,5 @@ namespace Project.Controllers
         }
     }
 }
+
+

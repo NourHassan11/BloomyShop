@@ -1,148 +1,2342 @@
 ﻿@model Project.ViewModels.CustomizedBouquetViewModel
 
 @{
-    ViewData["Title"] = "Customize Bouquet";
+    ViewData["Title"] = "Craft Your Bespoke Bouquet";
 }
 
-<h1>Customize Your Bouquet</h1>
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap');
 
-<form asp-action="Customize" method="post">
+    :root {
+        --rose: #8b1835;
+        --rose-dark: #681027;
+        --rose-light: #f7e8eb;
+        --cream: #fdf8f5;
+        --cream-dark: #f4ebe7;
+        --text: #332b2b;
+        --muted: #766b6b;
+        --border: #eaded9;
+        --white: #ffffff;
+        --green: #426b4e;
+        --green-light: #edf5ef;
+    }
 
-    <input type="hidden" asp-for="CustomerID" />
+    * {
+        box-sizing: border-box;
+    }
 
+    body {
+        background: var(--cream);
+        color: var(--text);
+        font-family: 'Inter', Arial, sans-serif;
+    }
 
-    <h3>Choose Size</h3>
+    .bouquet-page {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 25px 28px 60px;
+    }
 
-    <select asp-for="SizeID">
+    /* =========================
+           INTRO
+           ========================= */
 
-        <option value="">-- Select Size --</option>
+    .breadcrumb {
+        font-size: 9px;
+        color: #847878;
+        text-transform: uppercase;
+        letter-spacing: .5px;
+        margin-bottom: 15px;
+    }
 
-        @foreach (var size in ViewBag.Sizes)
-        {
-            <option value="@size.SizeID">
+    .hero-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 25px;
+        align-items: end;
+        margin-bottom: 22px;
+    }
 
-                @size.Size - @size.BasePrice
+    .eyebrow {
+        color: var(--rose);
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        font-weight: 600;
+        margin-bottom: 7px;
+    }
 
-            </option>
+    .hero-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 42px;
+        font-weight: 400;
+        margin: 0;
+        color: #492d32;
+    }
+
+    .hero-description {
+        margin: 7px 0 0;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.7;
+        max-width: 680px;
+    }
+
+    .fresh-box {
+        min-width: 270px;
+        background: var(--green-light);
+        border: 1px solid #d9e7dc;
+        padding: 12px 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .fresh-icon {
+        width: 27px;
+        height: 27px;
+        border-radius: 50%;
+        background: #d8ebdc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--green);
+    }
+
+    .fresh-title {
+        font-size: 9px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .6px;
+        color: var(--green);
+    }
+
+    .fresh-text {
+        font-size: 9px;
+        color: #637067;
+        margin-top: 3px;
+    }
+
+    /* =========================
+           STEPPER
+           ========================= */
+
+    .stepper {
+        background: white;
+        border: 1px solid var(--border);
+        padding: 15px 18px;
+        display: flex;
+        align-items: center;
+        margin-bottom: 25px;
+    }
+
+    .step {
+        display: flex;
+        align-items: center;
+        flex: 1;
+        min-width: 0;
+    }
+
+    .step-circle {
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        background: #eee5e2;
+        color: #766d6d;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        flex-shrink: 0;
+    }
+
+    .step.active .step-circle {
+        background: var(--rose);
+        color: white;
+    }
+
+    .step-info {
+        margin-left: 7px;
+        white-space: nowrap;
+    }
+
+    .step-number {
+        font-size: 8px;
+        text-transform: uppercase;
+        color: #8c8181;
+    }
+
+    .step-name {
+        font-size: 9px;
+        color: #4c4141;
+    }
+
+    .step-line {
+        height: 1px;
+        background: #b9a9a9;
+        flex: 1;
+        margin: 0 12px;
+    }
+
+    /* =========================
+           MAIN LAYOUT
+           ========================= */
+
+    .customize-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 330px;
+        gap: 25px;
+        align-items: start;
+    }
+
+    .main-content {
+        min-width: 0;
+    }
+
+    .section {
+        margin-bottom: 30px;
+    }
+
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        margin-bottom: 13px;
+    }
+
+    .section-number {
+        font-size: 10px;
+        color: var(--rose);
+        font-weight: 700;
+        margin-bottom: 3px;
+    }
+
+    .section-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 21px;
+        font-weight: 400;
+        margin: 0;
+        color: #493136;
+    }
+
+    .section-note {
+        font-size: 9px;
+        color: #857878;
+    }
+
+    /* =========================
+           SIZE CARDS
+           ========================= */
+
+    .size-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .choice-input {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .size-card {
+        position: relative;
+        background: white;
+        border: 1px solid var(--border);
+        padding: 15px;
+        cursor: pointer;
+        transition: .2s ease;
+        min-height: 145px;
+    }
+
+        .size-card:hover {
+            border-color: #c48b99;
+            transform: translateY(-1px);
         }
 
-    </select>
+    .choice-input:checked + .size-card {
+        border: 1.5px solid var(--rose);
+        box-shadow: 0 4px 14px rgba(105, 23, 50, .08);
+    }
 
-    <span asp-validation-for="SizeID"></span>
-
-
-    <br />
-    <br />
-
-
-    <h3>Choose Wrapping</h3>
-
-    <select asp-for="WrappingID">
-
-        <option value="">-- Select Wrapping --</option>
-
-        @foreach (var wrapping in ViewBag.Wrappings)
-        {
-            <option value="@wrapping.WrappingID">
-
-                @wrapping.Name - @wrapping.Price
-
-            </option>
+        .choice-input:checked + .size-card::after {
+            content: "✓ SELECTED";
+            position: absolute;
+            top: 9px;
+            right: 10px;
+            color: var(--rose);
+            font-size: 7px;
+            font-weight: 700;
+            letter-spacing: .5px;
         }
 
-    </select>
-
-    <span asp-validation-for="WrappingID"></span>
-
-
-    <br />
-    <br />
-
-
-    <h3>Choose Flowers</h3>
-
-    @foreach (var flower in ViewBag.Flowers)
-    {
-        <div>
-
-            <input type="checkbox"
-                   name="FlowerIDs"
-                   value="@flower.FlowerID" />
-
-            <label>
-                @flower.Name
-                -
-                @flower.BasePrice
-            </label>
-
-        </div>
+    .size-card-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 16px;
+        color: #402c30;
     }
 
-    <span asp-validation-for="FlowerIDs"></span>
-
-
-    <br />
-
-
-    <h3>Choose Colors</h3>
-
-    @foreach (var color in ViewBag.Colors)
-    {
-        <div>
-
-            <input type="checkbox"
-                   name="FlowerColorIDs"
-                   value="@color.FlowerColorID" />
-
-            <label>
-                @color.Color
-            </label>
-
-        </div>
+    .size-price {
+        float: right;
+        font-size: 13px;
+        color: var(--rose);
+        font-weight: 600;
     }
 
-
-    <br />
-
-
-    <h3>Choose Add Ons</h3>
-
-    @foreach (var addon in ViewBag.AddOns)
-    {
-        <div>
-
-            <input type="checkbox"
-                   name="AddOnIDs"
-                   value="@addon.AddOnID" />
-
-            <label>
-
-                @addon.Name
-                -
-                @addon.Price
-
-            </label>
-
-        </div>
+    .size-description {
+        clear: both;
+        font-size: 9px;
+        color: #756b6b;
+        line-height: 1.6;
+        margin-top: 9px;
     }
 
+    .size-capacity {
+        margin-top: 14px;
+        font-size: 8px;
+        color: #756b6b;
+    }
 
-    <br />
-    <br />
+    /* =========================
+           FLOWER GRID
+           ========================= */
+
+    .flower-capacity {
+        background: white;
+        border: 1px solid var(--border);
+        padding: 10px 13px;
+        margin-bottom: 13px;
+    }
+
+    .capacity-top {
+        display: flex;
+        justify-content: space-between;
+        font-size: 9px;
+        color: #645959;
+        margin-bottom: 7px;
+    }
+
+    .capacity-bar {
+        height: 5px;
+        background: #eee4e1;
+        overflow: hidden;
+    }
+
+    .capacity-fill {
+        width: 0%;
+        height: 100%;
+        background: var(--rose);
+        transition: width .2s ease;
+    }
+
+    .capacity-bottom {
+        font-size: 8px;
+        color: #8a7d7d;
+        margin-top: 6px;
+    }
+
+    .flower-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+    }
+
+    .flower-card {
+        background: white;
+        border: 1px solid var(--border);
+        overflow: hidden;
+        transition: .2s ease;
+    }
+
+        .flower-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 16px rgba(105, 23, 50, .08);
+        }
+
+        .flower-card.selected {
+            border: 1.5px solid var(--rose);
+            box-shadow: 0 4px 13px rgba(105, 23, 50, .08);
+        }
+
+    /* =========================
+           FLOWER IMAGES
+           ========================= */
+
+    .flower-image {
+        height: 210px;
+        background: #f3eeeb;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .flower-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform .35s ease;
+        }
+
+    .flower-card:hover .flower-image img {
+        transform: scale(1.04);
+    }
+
+    .flower-stock {
+        position: absolute;
+        top: 7px;
+        right: 7px;
+        z-index: 2;
+        background: rgba(255,255,255,.94);
+        border: 1px solid #c7d8c8;
+        color: #497153;
+        padding: 3px 6px;
+        font-size: 7px;
+        text-transform: uppercase;
+    }
+
+    .flower-body {
+        padding: 10px;
+    }
+
+    .flower-id {
+        font-size: 7px;
+        color: #968888;
+        text-transform: uppercase;
+        margin-bottom: 3px;
+    }
+
+    .flower-name {
+        font-family: 'Playfair Display', serif;
+        font-size: 14px;
+        color: #4a3036;
+    }
+
+    .flower-price {
+        font-size: 10px;
+        color: var(--rose);
+        margin-top: 3px;
+    }
+
+    .flower-botanical {
+        font-size: 7px;
+        color: #8b8080;
+        font-style: italic;
+        margin-top: 2px;
+    }
+
+    .quantity-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 12px;
+        padding-top: 9px;
+        border-top: 1px solid #eee6e3;
+    }
+
+    .quantity-label {
+        font-size: 8px;
+        color: #766b6b;
+    }
+
+    .quantity-control {
+        display: flex;
+        align-items: center;
+        border: 1px solid #ded1ce;
+        height: 28px;
+    }
+
+    .qty-btn {
+        width: 27px;
+        height: 26px;
+        border: 0;
+        background: #fff;
+        color: var(--rose);
+        font-size: 15px;
+        cursor: pointer;
+    }
+
+        .qty-btn:hover {
+            background: var(--rose-light);
+        }
+
+    .quantity-input {
+        width: 35px;
+        height: 26px;
+        border: 0;
+        border-left: 1px solid #eee4e1;
+        border-right: 1px solid #eee4e1;
+        text-align: center;
+        font-size: 10px;
+        outline: none;
+    }
+
+    /* =========================
+           COLORS
+           ========================= */
+
+    .color-list {
+        display: flex;
+        flex-direction: column;
+        gap: 9px;
+    }
+
+    .color-row {
+        background: white;
+        border: 1px solid var(--border);
+        padding: 11px 13px;
+        display: grid;
+        grid-template-columns: 180px 1fr;
+        gap: 15px;
+        align-items: center;
+    }
+
+    .color-flower {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 10px;
+        font-weight: 600;
+    }
+
+    .color-thumbnail {
+        width: 28px;
+        height: 28px;
+        background: linear-gradient(135deg, #ead7d7, #d8e1d5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 15px;
+    }
+
+    .color-options {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .color-option {
+        position: relative;
+    }
+
+        .color-option input {
+            position: absolute;
+            opacity: 0;
+        }
+
+    .color-pill {
+        display: block;
+        border: 1px solid #d8ccca;
+        padding: 6px 10px;
+        font-size: 8px;
+        cursor: pointer;
+        background: #fff;
+    }
+
+    .color-option input:checked + .color-pill {
+        border-color: var(--rose);
+        background: var(--rose-light);
+        color: var(--rose);
+        font-weight: 600;
+    }
+
+    /* =========================
+           WRAPPING
+           ========================= */
+
+    .wrapping-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .wrapping-card {
+        position: relative;
+        background: white;
+        border: 1px solid var(--border);
+        padding: 14px;
+        cursor: pointer;
+        min-height: 130px;
+    }
+
+        .wrapping-card:hover {
+            border-color: #c48b99;
+        }
+
+    .choice-input:checked + .wrapping-card {
+        border: 1.5px solid var(--rose);
+    }
+
+    .wrapping-name {
+        font-family: 'Playfair Display', serif;
+        font-size: 15px;
+        color: #463035;
+    }
+
+    .wrapping-price {
+        float: right;
+        color: var(--rose);
+        font-size: 11px;
+        font-weight: 600;
+    }
+
+    .wrapping-description {
+        clear: both;
+        font-size: 8px;
+        color: #766b6b;
+        line-height: 1.6;
+        margin-top: 8px;
+    }
+
+    .wrapping-note {
+        margin-top: 15px;
+        font-size: 8px;
+        color: #6e6868;
+    }
+
+    /* =========================
+           ADDONS
+           ========================= */
+
+    .addon-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .addon-card {
+        position: relative;
+        background: white;
+        border: 1px solid var(--border);
+        padding: 14px;
+        min-height: 110px;
+        cursor: pointer;
+    }
+
+        .addon-card:hover {
+            border-color: #c48b99;
+        }
+
+    .addon-checkbox {
+        position: absolute;
+        opacity: 0;
+    }
+
+        .addon-checkbox:checked + .addon-card {
+            border: 1.5px solid var(--rose);
+            background: #fffafa;
+        }
+
+    .addon-check {
+        position: absolute;
+        top: 11px;
+        left: 11px;
+        width: 14px;
+        height: 14px;
+        border: 1px solid #c8b9b5;
+        background: white;
+    }
+
+    .addon-checkbox:checked + .addon-card .addon-check {
+        background: var(--rose);
+        border-color: var(--rose);
+    }
+
+        .addon-checkbox:checked + .addon-card .addon-check::after {
+            content: "✓";
+            color: white;
+            font-size: 9px;
+            display: block;
+            text-align: center;
+            line-height: 13px;
+        }
+
+    .addon-name {
+        margin-left: 24px;
+        font-family: 'Playfair Display', serif;
+        font-size: 14px;
+        color: #473035;
+    }
+
+    .addon-price {
+        float: right;
+        color: var(--rose);
+        font-size: 10px;
+        font-weight: 600;
+    }
+
+    .addon-description {
+        font-size: 8px;
+        color: #786e6e;
+        line-height: 1.5;
+        margin-top: 10px;
+    }
+
+    /* =========================
+           SIDEBAR / SUMMARY
+           ========================= */
+
+    .summary-card {
+        background: white;
+        border: 1px solid var(--border);
+        position: sticky;
+        top: 20px;
+    }
+
+    .summary-header {
+        padding: 17px;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .summary-eyebrow {
+        color: var(--rose);
+        font-size: 8px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 700;
+    }
+
+    .summary-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 22px;
+        font-weight: 400;
+        color: #463035;
+        margin: 5px 0 0;
+    }
+
+    .preview-box {
+        margin: 15px;
+        height: 145px;
+        background: radial-gradient(circle at 40% 45%, #efd7d7 0 13%, transparent 14%), radial-gradient(circle at 65% 35%, #f3e0c9 0 11%, transparent 12%), radial-gradient(circle at 55% 60%, #d9e2d4 0 15%, transparent 16%), linear-gradient(135deg, #eee6e0, #d7ddd4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 58px;
+        color: #8b5363;
+        overflow: hidden;
+    }
+
+    .summary-content {
+        padding: 0 17px 17px;
+    }
+
+    .summary-line {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 8px 0;
+        border-bottom: 1px solid #f0e8e5;
+        font-size: 9px;
+    }
+
+    .summary-label {
+        color: #6d6262;
+    }
+
+    .summary-value {
+        color: #4d4040;
+        text-align: right;
+        font-weight: 500;
+    }
+
+    .summary-total {
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        margin-top: 18px;
+        padding-top: 15px;
+        border-top: 1px solid #ded2cf;
+    }
+
+    .total-label {
+        font-family: 'Playfair Display', serif;
+        font-size: 18px;
+        color: #4a3237;
+    }
+
+    .total-price {
+        font-family: 'Playfair Display', serif;
+        color: var(--rose);
+        font-size: 30px;
+    }
+
+    .summary-note {
+        font-size: 8px;
+        color: #817777;
+        text-align: right;
+        margin-top: 2px;
+    }
+
+    .create-button {
+        width: 100%;
+        border: 0;
+        background: var(--rose);
+        color: white;
+        padding: 14px;
+        margin-top: 17px;
+        cursor: pointer;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: .8px;
+        text-transform: uppercase;
+        transition: .2s;
+    }
+
+        .create-button:hover {
+            background: var(--rose-dark);
+        }
+
+    .reset-button {
+        display: block;
+        width: 100%;
+        border: 0;
+        background: transparent;
+        color: var(--rose);
+        padding: 10px;
+        font-size: 9px;
+        cursor: pointer;
+    }
+
+    .freshness-box {
+        margin-top: 14px;
+        background: #fff;
+        border: 1px solid var(--border);
+        padding: 13px;
+        font-size: 8px;
+        color: #716767;
+        line-height: 1.6;
+    }
+
+    .freshness-title {
+        color: var(--rose);
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+
+    .validation-message {
+        color: #a01835;
+        font-size: 10px;
+        margin: 8px 0;
+    }
+
+    /* =========================
+           FOOTER
+           ========================= */
+
+    .bouquet-footer {
+        border-top: 1px solid var(--border);
+        margin-top: 45px;
+        padding-top: 25px;
+        display: grid;
+        grid-template-columns: 1.5fr 1fr 1fr 1.4fr;
+        gap: 30px;
+    }
+
+    .footer-title {
+        font-family: 'Playfair Display', serif;
+        color: var(--rose);
+        font-size: 15px;
+        margin-bottom: 7px;
+    }
+
+    .footer-heading {
+        font-size: 9px;
+        text-transform: uppercase;
+        color: #655b5b;
+        letter-spacing: .7px;
+        margin-bottom: 9px;
+    }
+
+    .footer-text,
+    .footer-links {
+        font-size: 8px;
+        color: #827777;
+        line-height: 1.8;
+    }
+
+        .footer-links a {
+            color: inherit;
+            text-decoration: none;
+            display: block;
+        }
+
+    /* =========================
+           RESPONSIVE
+           ========================= */
+
+    @@media (max-width: 1000px) {
+
+        .customize-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .summary-card {
+            position: static;
+        }
+
+        .flower-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .nav-links {
+            display: none;
+        }
+    }
+
+    @@media (max-width: 700px) {
+
+        .bouquet-page {
+            padding: 15px;
+        }
+
+        .hero-row {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .hero-title {
+            font-size: 32px;
+        }
+
+        .stepper {
+            overflow-x: auto;
+        }
+
+        .step {
+            min-width: 145px;
+        }
+
+        .size-grid,
+        .wrapping-grid,
+        .addon-grid,
+        .flower-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .color-row {
+            grid-template-columns: 1fr;
+        }
+
+        .bouquet-footer {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+</style>
+
+<div class="bouquet-page">
+
+    <!-- =========================
+         BREADCRUMB
+         ========================= -->
+
+    <div class="breadcrumb">
+        HOME &nbsp;/&nbsp; CUSTOMIZE &nbsp;/&nbsp; BESPOKE BOUQUET STUDIO
+    </div>
 
 
-    <button type="submit">
-        Create Bouquet
-    </button>
+    <!-- =========================
+         HERO
+         ========================= -->
 
-</form>
+    <div class="hero-row">
+
+        <div>
+
+            <div class="eyebrow">
+                Atelier Bespoke Service
+            </div>
+
+            <h1 class="hero-title">
+                Craft Your Bespoke Bouquet
+            </h1>
+
+            <p class="hero-description">
+                Hand-select each stem, palette shade, artisanal wrapping,
+                and luxury keepsakes curated by master florists.
+                Designed in real time for you.
+            </p>
+
+        </div>
+
+        <div class="fresh-box">
+
+            <div class="fresh-icon">
+                ✓
+            </div>
+
+            <div>
+
+                <div class="fresh-title">
+                    Fresh Formulation
+                </div>
+
+                <div class="fresh-text">
+                    Atelier Prep · 45–60 mins · Fresh-picked
+                    preparation
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         STEPPER
+         ========================= -->
+
+    <div class="stepper">
+
+        <div class="step active">
+
+            <div class="step-circle">
+                1
+            </div>
+
+            <div class="step-info">
+
+                <div class="step-number">
+                    Step 1
+                </div>
+
+                <div class="step-name">
+                    Bouquet Size
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="step-line"></div>
+
+        <div class="step active">
+
+            <div class="step-circle">
+                2
+            </div>
+
+            <div class="step-info">
+
+                <div class="step-number">
+                    Step 2
+                </div>
+
+                <div class="step-name">
+                    Flora Stems
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="step-line"></div>
+
+        <div class="step active">
+
+            <div class="step-circle">
+                3
+            </div>
+
+            <div class="step-info">
+
+                <div class="step-number">
+                    Step 3
+                </div>
+
+                <div class="step-name">
+                    Color Palette
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="step-line"></div>
+
+        <div class="step active">
+
+            <div class="step-circle">
+                4
+            </div>
+
+            <div class="step-info">
+
+                <div class="step-number">
+                    Step 4
+                </div>
+
+                <div class="step-name">
+                    Artisanal Wrap
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="step-line"></div>
+
+        <div class="step">
+
+            <div class="step-circle">
+                5
+            </div>
+
+            <div class="step-info">
+
+                <div class="step-number">
+                    Step 5
+                </div>
+
+                <div class="step-name">
+                    Add-ons
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <form asp-action="Customize" method="post" id="customize-form">
+
+        <div class="customize-layout">
+
+            <!-- =====================================================
+                 LEFT SIDE
+                 ===================================================== -->
+
+            <main class="main-content">
+
+
+                <!-- =========================
+                     SIZE
+                     ========================= -->
+
+                <section class="section">
+
+                    <div class="section-header">
+
+                        <div>
+
+                            <div class="section-number">
+                                1. SELECT BOUQUET SILHOUETTE & SCALE
+                            </div>
+
+                            <h2 class="section-title">
+                                Bouquet Size
+                            </h2>
+
+                        </div>
+
+                        <div class="section-note">
+                            Choose your preferred scale
+                        </div>
+
+                    </div>
+
+
+                    <div class="size-grid">
+
+                        @foreach (var size in ViewBag.Sizes)
+                        {
+                            <label>
+
+                                <input class="choice-input size-radio"
+                                       type="radio"
+                                       asp-for="SizeID"
+                                       value="@size.SizeID"
+                                       data-price="@size.BasePrice"
+                                       data-name="@size.Size" />
+
+                                <div class="size-card">
+
+                                    <span class="size-card-title">
+                                        @size.Size
+                                    </span>
+
+                                    <span class="size-price">
+                                        $@size.BasePrice
+                                    </span>
+
+                                    <div class="size-description">
+                                        A carefully proportioned bouquet
+                                        designed for your selected style.
+                                    </div>
+
+                                    <div class="size-capacity">
+                                        ✦ Crafted for fresh seasonal stems
+                                    </div>
+
+                                </div>
+
+                            </label>
+                        }
+
+                    </div>
+
+                    <span asp-validation-for="SizeID"
+                          class="validation-message">
+                    </span>
+
+                </section>
+
+
+                <!-- =========================
+                     FLOWERS
+                     ========================= -->
+
+                <section class="section">
+
+                    <div class="section-header">
+
+                        <div>
+
+                            <div class="section-number">
+                                2. HAND-SELECT BOTANICAL STEMS
+                            </div>
+
+                            <h2 class="section-title">
+                                Choose Your Flowers
+                            </h2>
+
+                        </div>
+
+                        <div class="section-note">
+                            Select the flowers and quantities you love
+                        </div>
+
+                    </div>
+
+
+                    <!-- CAPACITY -->
+
+                    <div class="flower-capacity">
+
+                        <div class="capacity-top">
+
+                            <span>
+                                ✿ Stem Allocation Capacity
+                            </span>
+
+                            <span>
+                                <strong id="selected-stems">0</strong>
+                                Stems Selected
+                            </span>
+
+                        </div>
+
+                        <div class="capacity-bar">
+
+                            <div class="capacity-fill"
+                                 id="capacity-fill">
+                            </div>
+
+                        </div>
+
+                        <div class="capacity-bottom">
+                            Build your composition using the quantities
+                            below.
+                        </div>
+
+                    </div>
+
+
+                    <!-- FLOWER CARDS -->
+
+                    <div class="flower-grid">
+
+                        @foreach (var flower in ViewBag.Flowers)
+                        {
+                            var flowerColors = ((IEnumerable<dynamic>)ViewBag.Colors)
+                            .Where(c => c.FlowerID == flower.FlowerID)
+                            .ToList();
+
+                            var flowerName = flower.Name?.ToString()?.Trim().ToLowerInvariant() ?? "";
+
+                            var flowerImage = "";
+
+                            if (flowerName.Contains("rose"))
+                            {
+                                flowerImage = Url.Content("~/Flowers/rose.png");
+                            }
+                            else if (flowerName.Contains("tulip"))
+                            {
+                                flowerImage = Url.Content("~/Flowers/tulip.png");
+                            }
+                            else if (flowerName.Contains("lily"))
+                            {
+                                flowerImage = Url.Content("~/Flowers/lily.png");
+                            }
+                            else if (flowerName.Contains("sunflower"))
+                            {
+                                flowerImage = Url.Content("~/Flowers/sunflower.png");
+                            }
+
+                            <div class="flower-card"
+                                 data-flower-id="@flower.FlowerID"
+                                 data-flower-name="@flower.Name"
+                                 data-flower-price="@flower.BasePrice">
+
+                                <div class="flower-image">
+
+                                    @if (!string.IsNullOrEmpty(flowerImage))
+                                    {
+                                        <img src="@flowerImage"
+                                             alt="@flower.Name" />
+                                    }
+                                    else
+                                    {
+                                        <span style="font-size:42px;">
+                                            🌸
+                                        </span>
+                                    }
+
+                                    <span class="flower-stock">
+                                        FRESH
+                                    </span>
+
+                                </div>
+
+
+                                <div class="flower-body">
+
+                                    <div class="flower-id">
+                                        ID #@flower.FlowerID
+                                    </div>
+
+                                    <div class="flower-name">
+                                        @flower.Name
+                                    </div>
+
+                                    <div class="flower-price">
+                                        $@flower.BasePrice / stem
+                                    </div>
+
+                                    <div class="flower-botanical">
+                                        Seasonal botanical selection
+                                    </div>
+
+
+                                    <div class="quantity-row">
+
+                                        <span class="quantity-label">
+                                            Qty:
+                                        </span>
+
+                                        <div class="quantity-control">
+
+                                            <button type="button"
+                                                    class="qty-btn minus-btn">
+                                                −
+                                            </button>
+
+                                            <input type="number"
+                                                   class="quantity-input flower-quantity"
+                                                   name="FlowerQuantities[@flower.FlowerID]"
+                                                   value="0"
+                                                   min="0"
+                                                   max="50"
+                                                   data-flower-id="@flower.FlowerID"
+                                                   data-price="@flower.BasePrice" />
+
+                                            <button type="button"
+                                                    class="qty-btn plus-btn">
+                                                +
+                                            </button>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        }
+
+                    </div>
+
+                    <span asp-validation-for="FlowerIDs"
+                          class="validation-message">
+                    </span>
+
+                </section>
+
+
+                <!-- =========================
+                     FLOWER COLORS
+                     ========================= -->
+
+                <section class="section">
+
+                    <div class="section-header">
+
+                        <div>
+
+                            <div class="section-number">
+                                3. SPECIFY BOTANICAL NUANCE & SHADE
+                            </div>
+
+                            <h2 class="section-title">
+                                Flower Colors
+                            </h2>
+
+                        </div>
+
+                        <div class="section-note">
+                            Choose your preferred color expression
+                        </div>
+
+                    </div>
+
+
+                    <div class="color-list">
+
+                        @foreach (var flower in ViewBag.Flowers)
+                        {
+                            var flowerColors = ((IEnumerable<dynamic>)ViewBag.Colors)
+                            .Where(c => c.FlowerID == flower.FlowerID)
+                            .ToList();
+
+                            @if (flowerColors.Count > 0)
+                            {
+                                <div class="color-row">
+
+                                    <div class="color-flower">
+
+                                        <div class="color-thumbnail">
+                                            🌸
+                                        </div>
+
+                                        <span>
+                                            @flower.Name
+                                        </span>
+
+                                    </div>
+
+
+                                    <div class="color-options">
+
+                                        @foreach (var color in flowerColors)
+                                        {
+                                            <label class="color-option">
+
+                                                <input type="radio"
+                                                       name="FlowerColor_@flower.FlowerID"
+                                                       value="@color.FlowerColorID"
+                                                       data-flower-id="@flower.FlowerID"
+                                                       data-color-id="@color.FlowerColorID" />
+
+                                                <span class="color-pill">
+                                                    @color.Color
+                                                </span>
+
+                                            </label>
+                                        }
+
+                                    </div>
+
+                                </div>
+                            }
+                        }
+
+                    </div>
+
+                    <span asp-validation-for="FlowerColorIDs"
+                          class="validation-message">
+                    </span>
+
+                </section>
+
+
+                <!-- =========================
+                     WRAPPING
+                     ========================= -->
+
+                <section class="section">
+
+                    <div class="section-header">
+
+                        <div>
+
+                            <div class="section-number">
+                                4. CHOOSE ARTISANAL WRAPPING & PRESENTATION
+                            </div>
+
+                            <h2 class="section-title">
+                                Wrapping
+                            </h2>
+
+                        </div>
+
+                        <div class="section-note">
+                            Select one wrapping style
+                        </div>
+
+                    </div>
+
+
+                    <div class="wrapping-grid">
+
+                        @foreach (var wrapping in ViewBag.Wrappings)
+                        {
+                            <label>
+
+                                <input class="choice-input wrapping-radio"
+                                       type="radio"
+                                       asp-for="WrappingID"
+                                       value="@wrapping.WrappingID"
+                                       data-price="@wrapping.Price"
+                                       data-name="@wrapping.Name" />
+
+                                <div class="wrapping-card">
+
+                                    <span class="wrapping-name">
+                                        @wrapping.Name
+                                    </span>
+
+                                    <span class="wrapping-price">
+                                        $@wrapping.Price
+                                    </span>
+
+                                    <div class="wrapping-description">
+                                        Artisanal presentation prepared
+                                        specifically for your bouquet.
+                                    </div>
+
+                                    <div class="wrapping-note">
+                                        ♧ Carefully finished presentation
+                                    </div>
+
+                                </div>
+
+                            </label>
+                        }
+
+                    </div>
+
+                    <span asp-validation-for="WrappingID"
+                          class="validation-message">
+                    </span>
+
+                </section>
+
+
+                <!-- =========================
+                     ADD ONS
+                     ========================= -->
+
+                <section class="section">
+
+                    <div class="section-header">
+
+                        <div>
+
+                            <div class="section-number">
+                                5. CURATED KEEPSAKES & ADD-ONS
+                            </div>
+
+                            <h2 class="section-title">
+                                Add-ons
+                            </h2>
+
+                        </div>
+
+                        <div class="section-note">
+                            Optional botanical accompaniments
+                        </div>
+
+                    </div>
+
+
+                    <div class="addon-grid">
+
+                        @foreach (var addon in ViewBag.AddOns)
+                        {
+                            <label>
+
+                                <input type="checkbox"
+                                       class="addon-checkbox"
+                                       name="AddOnIDs"
+                                       value="@addon.AddOnID"
+                                       data-price="@addon.Price"
+                                       data-name="@addon.Name" />
+
+                                <div class="addon-card">
+
+                                    <span class="addon-check"></span>
+
+                                    <span class="addon-name">
+                                        @addon.Name
+                                    </span>
+
+                                    <span class="addon-price">
+                                        $@addon.Price
+                                    </span>
+
+                                    <div class="addon-description">
+                                        A curated finishing touch selected
+                                        to complement your bespoke bouquet.
+                                    </div>
+
+                                </div>
+
+                            </label>
+                        }
+
+                    </div>
+
+                </section>
+
+            </main>
+
+
+            <!-- =====================================================
+                 RIGHT SIDE - SUMMARY
+                 ===================================================== -->
+
+            <aside>
+
+                <div class="summary-card">
+
+                    <div class="summary-header">
+
+                        <div class="summary-eyebrow">
+                            Live Formulation
+                        </div>
+
+                        <h2 class="summary-title">
+                            Atelier Summary
+                        </h2>
+
+                    </div>
+
+
+                    <div class="preview-box">
+                        🌸
+                    </div>
+
+
+                    <div class="summary-content">
+
+                        <div class="summary-line">
+
+                            <span class="summary-label">
+                                Bouquet Size
+                            </span>
+
+                            <span class="summary-value"
+                                  id="summary-size">
+                                Not selected
+                            </span>
+
+                        </div>
+
+
+                        <div class="summary-line">
+
+                            <span class="summary-label">
+                                Flowers
+                            </span>
+
+                            <span class="summary-value"
+                                  id="summary-flowers">
+                                0 stems
+                            </span>
+
+                        </div>
+
+
+                        <div class="summary-line">
+
+                            <span class="summary-label">
+                                Wrapping
+                            </span>
+
+                            <span class="summary-value"
+                                  id="summary-wrapping">
+                                Not selected
+                            </span>
+
+                        </div>
+
+
+                        <div class="summary-line">
+
+                            <span class="summary-label">
+                                Add-ons
+                            </span>
+
+                            <span class="summary-value"
+                                  id="summary-addons">
+                                None
+                            </span>
+
+                        </div>
+
+
+                        <div class="summary-line">
+
+                            <span class="summary-label">
+                                Preparation
+                            </span>
+
+                            <span class="summary-value">
+                                Fresh atelier preparation
+                            </span>
+
+                        </div>
+
+
+                        <div class="summary-total">
+
+                            <span class="total-label">
+                                Total
+                            </span>
+
+                            <span class="total-price"
+                                  id="total-price">
+                                $0.00
+                            </span>
+
+                        </div>
+
+
+                        <div class="summary-note">
+                            Taxes & checkout calculation handled at order.
+                        </div>
+
+
+                        <button type="submit"
+                                class="create-button">
+
+                            ✿ &nbsp; Create Customized Bouquet
+
+                        </button>
+
+
+                        <button type="reset"
+                                class="reset-button"
+                                id="reset-button">
+
+                            Reset Atelier Selection
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div class="freshness-box">
+
+                    <div class="freshness-title">
+                        ♡ The Bloomy Atelier Promise
+                    </div>
+
+                    Every bouquet is conditioned and prepared
+                    with carefully selected seasonal stems
+                    before it leaves our atelier.
+
+                </div>
+
+            </aside>
+
+        </div>
+
+    </form>
+
+
+    <!-- =========================
+         FOOTER
+         ========================= -->
+
+    <footer class="bouquet-footer">
+
+        <div>
+
+            <div class="footer-title">
+                🌸 Bloomy Shop
+            </div>
+
+            <div class="footer-text">
+                An artisanal botanical design studio dedicated
+                to creating thoughtful floral arrangements,
+                bespoke stem selections and elegant presentation.
+            </div>
+
+        </div>
+
+
+        <div>
+
+            <div class="footer-heading">
+                Explore
+            </div>
+
+            <div class="footer-links">
+                <a href="/">Home</a>
+                <a href="#">Shop Collections</a>
+                <a href="#">Event Curation</a>
+                <a href="#">Bespoke Studio</a>
+                <a href="#">About Bloomy</a>
+            </div>
+
+        </div>
+
+
+        <div>
+
+            <div class="footer-heading">
+                Customer Care
+            </div>
+
+            <div class="footer-links">
+                <a href="#">Studio Inquiry</a>
+                <a href="#">Flower Care & FAQ</a>
+                <a href="#">White-Glove Delivery</a>
+                <a href="#">Track Live Bouquet</a>
+            </div>
+
+        </div>
+
+
+        <div>
+
+            <div class="footer-heading">
+                The Botanical Gazette
+            </div>
+
+            <div class="footer-text">
+                Receive seasonal botanical stories,
+                workshop updates and private atelier notes.
+            </div>
+
+        </div>
+
+    </footer>
+
+</div>
 
 
 @section Scripts
 {
     @{
-        await Html.RenderPartialAsync(
-            "_ValidationScriptsPartial"
-        );
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const maxStems = 20;
+
+            const quantityInputs =
+                document.querySelectorAll(".flower-quantity");
+
+            const flowerCards =
+                document.querySelectorAll(".flower-card");
+
+            const sizeRadios =
+                document.querySelectorAll(".size-radio");
+
+            const wrappingRadios =
+                document.querySelectorAll(".wrapping-radio");
+
+            const addonCheckboxes =
+                document.querySelectorAll(".addon-checkbox");
+
+            const totalPriceElement =
+                document.getElementById("total-price");
+
+            const selectedStemsElement =
+                document.getElementById("selected-stems");
+
+            const capacityFill =
+                document.getElementById("capacity-fill");
+
+            const summarySize =
+                document.getElementById("summary-size");
+
+            const summaryFlowers =
+                document.getElementById("summary-flowers");
+
+            const summaryWrapping =
+                document.getElementById("summary-wrapping");
+
+            const summaryAddons =
+                document.getElementById("summary-addons");
+
+
+            function getFlowerTotal() {
+
+                let total = 0;
+
+                quantityInputs.forEach(function (input) {
+
+                    const quantity =
+                        parseInt(input.value) || 0;
+
+                    const price =
+                        parseFloat(input.dataset.price) || 0;
+
+                    total += quantity * price;
+
+                });
+
+                return total;
+            }
+
+
+            function getFlowerCount() {
+
+                let count = 0;
+
+                quantityInputs.forEach(function (input) {
+
+                    count += parseInt(input.value) || 0;
+
+                });
+
+                return count;
+            }
+
+
+            function getSelectedSizePrice() {
+
+                const selected =
+                    document.querySelector(
+                        ".size-radio:checked"
+                    );
+
+                if (!selected) {
+                    return 0;
+                }
+
+                return parseFloat(selected.dataset.price) || 0;
+            }
+
+
+            function getWrappingPrice() {
+
+                const selected =
+                    document.querySelector(
+                        ".wrapping-radio:checked"
+                    );
+
+                if (!selected) {
+                    return 0;
+                }
+
+                return parseFloat(selected.dataset.price) || 0;
+            }
+
+
+            function getAddonsTotal() {
+
+                let total = 0;
+
+                addonCheckboxes.forEach(function (checkbox) {
+
+                    if (checkbox.checked) {
+
+                        total +=
+                            parseFloat(checkbox.dataset.price) || 0;
+
+                    }
+
+                });
+
+                return total;
+            }
+
+
+            function updateSummary() {
+
+                const flowerCount =
+                    getFlowerCount();
+
+                const total =
+                    getSelectedSizePrice()
+                    + getFlowerTotal()
+                    + getWrappingPrice()
+                    + getAddonsTotal();
+
+
+                /* FLOWER COUNT */
+
+                selectedStemsElement.textContent =
+                    flowerCount;
+
+                summaryFlowers.textContent =
+                    flowerCount + " stems";
+
+
+                /* CAPACITY */
+
+                let percentage =
+                    (flowerCount / maxStems) * 100;
+
+                if (percentage > 100) {
+                    percentage = 100;
+                }
+
+                capacityFill.style.width =
+                    percentage + "%";
+
+
+                /* SIZE */
+
+                const selectedSize =
+                    document.querySelector(
+                        ".size-radio:checked"
+                    );
+
+                if (selectedSize) {
+
+                    summarySize.textContent =
+                        selectedSize.dataset.name;
+
+                }
+                else {
+
+                    summarySize.textContent =
+                        "Not selected";
+
+                }
+
+
+                /* WRAPPING */
+
+                const selectedWrapping =
+                    document.querySelector(
+                        ".wrapping-radio:checked"
+                    );
+
+                if (selectedWrapping) {
+
+                    summaryWrapping.textContent =
+                        selectedWrapping.dataset.name;
+
+                }
+                else {
+
+                    summaryWrapping.textContent =
+                        "Not selected";
+
+                }
+
+
+                /* ADDONS */
+
+                const selectedAddons = [];
+
+                addonCheckboxes.forEach(function (checkbox) {
+
+                    if (checkbox.checked) {
+
+                        selectedAddons.push(
+                            checkbox.dataset.name
+                        );
+
+                    }
+
+                });
+
+                if (selectedAddons.length === 0) {
+
+                    summaryAddons.textContent =
+                        "None";
+
+                }
+                else {
+
+                    summaryAddons.textContent =
+                        selectedAddons.length + " selected";
+
+                }
+
+
+                /* TOTAL */
+
+                totalPriceElement.textContent =
+                    "$" + total.toFixed(2);
+
+
+                /* FLOWER CARD STATE */
+
+                flowerCards.forEach(function (card) {
+
+                    const input =
+                        card.querySelector(
+                            ".flower-quantity"
+                        );
+
+                    const quantity =
+                        parseInt(input.value) || 0;
+
+                    if (quantity > 0) {
+
+                        card.classList.add("selected");
+
+                    }
+                    else {
+
+                        card.classList.remove("selected");
+
+                    }
+
+                });
+
+            }
+
+
+            /* =========================
+               PLUS BUTTON
+               ========================= */
+
+            document.querySelectorAll(".plus-btn")
+                .forEach(function (button) {
+
+                    button.addEventListener(
+                        "click",
+                        function () {
+
+                            const input =
+                                button.parentElement
+                                    .querySelector(
+                                        ".flower-quantity"
+                                    );
+
+                            let value =
+                                parseInt(input.value) || 0;
+
+                            if (value < 50) {
+
+                                value++;
+
+                                input.value =
+                                    value;
+
+                                updateSummary();
+
+                            }
+
+                        }
+                    );
+
+                });
+
+
+            /* =========================
+               MINUS BUTTON
+               ========================= */
+
+            document.querySelectorAll(".minus-btn")
+                .forEach(function (button) {
+
+                    button.addEventListener(
+                        "click",
+                        function () {
+
+                            const input =
+                                button.parentElement
+                                    .querySelector(
+                                        ".flower-quantity"
+                                    );
+
+                            let value =
+                                parseInt(input.value) || 0;
+
+                            if (value > 0) {
+
+                                value--;
+
+                                input.value =
+                                    value;
+
+                                updateSummary();
+
+                            }
+
+                        }
+                    );
+
+                });
+
+
+            /* =========================
+               MANUAL QUANTITY
+               ========================= */
+
+            quantityInputs.forEach(function (input) {
+
+                input.addEventListener(
+                    "input",
+                    function () {
+
+                        let value =
+                            parseInt(input.value) || 0;
+
+                        if (value < 0) {
+                            value = 0;
+                        }
+
+                        if (value > 50) {
+                            value = 50;
+                        }
+
+                        input.value =
+                            value;
+
+                        updateSummary();
+
+                    }
+                );
+
+            });
+
+
+            /* =========================
+               SIZE
+               ========================= */
+
+            sizeRadios.forEach(function (radio) {
+
+                radio.addEventListener(
+                    "change",
+                    updateSummary
+                );
+
+            });
+
+
+            /* =========================
+               WRAPPING
+               ========================= */
+
+            wrappingRadios.forEach(function (radio) {
+
+                radio.addEventListener(
+                    "change",
+                    updateSummary
+                );
+
+            });
+
+
+            /* =========================
+               ADDONS
+               ========================= */
+
+            addonCheckboxes.forEach(function (checkbox) {
+
+                checkbox.addEventListener(
+                    "change",
+                    updateSummary
+                );
+
+            });
+
+
+            /* =========================
+               FLOWER COLORS
+               ========================= */
+
+            const form =
+                document.getElementById("customize-form");
+
+            form.addEventListener(
+                "submit",
+                function () {
+
+                    form.querySelectorAll(
+                        ".flower-color-hidden"
+                    ).forEach(function (hiddenInput) {
+
+                        hiddenInput.remove();
+
+                    });
+
+
+                    const selectedColors =
+                        form.querySelectorAll(
+                            'input[type="radio"][data-flower-id]:checked'
+                        );
+
+
+                    selectedColors.forEach(function (radio) {
+
+                        const hiddenInput =
+                            document.createElement("input");
+
+                        hiddenInput.type =
+                            "hidden";
+
+                        hiddenInput.name =
+                            "FlowerColorIDs";
+
+                        hiddenInput.value =
+                            radio.value;
+
+                        hiddenInput.classList.add(
+                            "flower-color-hidden"
+                        );
+
+                        form.appendChild(
+                            hiddenInput
+                        );
+
+                    });
+
+                }
+            );
+
+
+            /* =========================
+               RESET
+               ========================= */
+
+            document.getElementById("reset-button")
+                .addEventListener(
+                    "click",
+                    function () {
+
+                        setTimeout(
+                            function () {
+
+                                document
+                                    .querySelectorAll(
+                                        ".flower-color-hidden"
+                                    )
+                                    .forEach(
+                                        function (hiddenInput) {
+
+                                            hiddenInput.remove();
+
+                                        }
+                                    );
+
+                                updateSummary();
+
+                            },
+                            50
+                        );
+
+                    }
+                );
+
+
+            /* INITIAL */
+
+            updateSummary();
+
+        });
+
+    </script>
 }
