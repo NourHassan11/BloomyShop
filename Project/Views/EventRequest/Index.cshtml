@@ -1,0 +1,168 @@
+﻿@model IEnumerable<Project.DAL.Entities.EventRequest>
+
+@{
+    ViewData["Title"] = "Event Requests";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/events.css" asp-append-version="true" />
+}
+
+<div class="event-page">
+
+    <!-- Header Section -->
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <div>
+            <h1 class="font-serif fw-bold display-5 mb-2" style="color: #2C2C2C;">
+                Event Requests
+            </h1>
+
+            <p class="text-muted">
+                Manage and review all incoming event decor & bouquet reservations.
+            </p>
+        </div>
+
+        <a asp-action="Create"
+           class="btn btn-dark rounded-pill px-4 py-2"
+           style="background-color: #8B3A4A; border: none;">
+            + Request New Event
+        </a>
+    </div>
+
+    <!-- Requests Cards Grid -->
+    @if (Model == null || !Model.Any())
+    {
+        <div class="text-center py-5 my-5 bg-light rounded-4">
+            <h4 class="text-muted">
+                No event requests found yet.
+            </h4>
+
+            <a asp-action="Create"
+               class="btn btn-outline-dark mt-3 rounded-pill">
+                Create the first request
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+
+            @foreach (var item in Model)
+            {
+                <div class="col-md-6 col-lg-4">
+
+                    <div class="card h-100 border-0 shadow-sm rounded-4 p-3 style-event-card">
+
+                        <div class="card-body d-flex flex-column justify-content-between">
+
+                            <div>
+
+                                <!-- ID + Location -->
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+
+                                    <span class="badge bg-light text-dark rounded-pill px-3 py-2 border">
+                                        ID: #@item.EventRequestID
+                                    </span>
+
+                                    <span class="badge rounded-pill px-3 py-2"
+                                          style="background-color: #FDF3F5; color: #8B3A4A;">
+                                        @(string.IsNullOrEmpty(item.LocationType)
+                                                                        ? "Not specified"
+                                                                        : item.LocationType)
+                                                                                        </span>
+
+                                </div>
+
+                                <!-- Theme -->
+                                <h5 class="card-title fw-bold mb-3" style="color: #2C2C2C;">
+                                    @(string.IsNullOrEmpty(item.Theme)
+                                                                ? "Standard Event"
+                                                                : item.Theme)
+                                                                         </h5>
+
+                                <!-- Event Details -->
+                                <div class="event-details-list mb-3">
+
+                                    <!-- Date -->
+                                    <div class="d-flex align-items-center gap-2 mb-2 text-muted small">
+                                        <span>📅</span>
+                                        <span>
+                                            @item.EventDate.ToString("MMM dd, yyyy")
+                                        </span>
+                                    </div>
+
+                                    <!-- Number Of Guests -->
+                                    <div class="d-flex align-items-center gap-2 mb-2 text-muted small">
+                                        <span>👥</span>
+                                        <span>
+                                            @item.NumberOfGuests Guests
+                                        </span>
+                                    </div>
+
+                                    <!-- Budget -->
+                                    <div class="d-flex align-items-center gap-2 mb-2 text-muted small">
+                                        <span>💰</span>
+                                        <span class="fw-bold text-dark">
+                                            $@item.Budget.ToString("N2")
+                                        </span>
+                                    </div>
+
+                                    <!-- Status -->
+                                    <div class="d-flex align-items-center gap-2 mb-2 text-muted small">
+                                        <span>📌</span>
+
+                                        <span>
+                                            Status:
+                                            <strong>
+                                                @(string.IsNullOrEmpty(item.Status)
+                                                                                        ? "Pending"
+                                                                                        : item.Status)
+                                    </strong>
+                                </span>
+                            </div>
+
+                                </div>
+
+                            </div>
+
+                            <!-- Actions -->
+                            <div class="border-top pt-3 mt-3 d-flex justify-content-between align-items-center">
+
+                                <!-- Details -->
+                                <a asp-action="Details"
+                                   asp-route-id="@item.EventRequestID"
+                                   class="btn btn-sm btn-link text-decoration-none p-0"
+                                   style="color: #8B3A4A;">
+                                    View Details &rarr;
+                                </a>
+
+                                <!-- Edit / Delete -->
+                                <div class="dropdown">
+
+                                    <a asp-action="Edit"
+                                       asp-route-id="@item.EventRequestID"
+                                       class="btn btn-sm btn-outline-secondary rounded-pill me-1">
+                                        Edit
+                                    </a>
+
+                                    <a asp-action="Delete"
+                                       asp-route-id="@item.EventRequestID"
+                                       class="btn btn-sm btn-outline-danger rounded-pill">
+                                        Delete
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+                }
+
+        </div>
+    }
+
+</div>

@@ -1,0 +1,77 @@
+﻿@model IEnumerable<Project.DAL.Entities.EventRequest>
+
+@{
+    ViewData["Title"] = "Event Requests";
+}
+
+<h1>Event Requests</h1>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Customer</th>
+            <th>Occasion</th>
+            <th>Event Date</th>
+            <th>Location</th>
+            <th>Guests</th>
+            <th>Theme</th>
+            <th>Budget</th>
+            <th>Admin Response</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var request in Model)
+        {
+            <tr>
+                <td>@request.EventRequestID</td>
+
+                <td>
+                    @request.Customer?.FullName
+                </td>
+
+                <td>
+                    @request.Occasion?.Name
+                </td>
+
+                <td>
+                    @request.EventDate.ToString("dd/MM/yyyy")
+                </td>
+
+                <td>
+                    @request.LocationType
+                </td>
+
+                <td>
+                    @request.NumberOfGuests
+                </td>
+
+                <td>
+                    @request.Theme
+                </td>
+
+                <td>
+                    @request.Budget
+                </td>
+
+                <td>
+                    @request.AdminResponse
+                </td>
+
+                <td>
+                    <a asp-action="ReviewEventRequest"
+                       asp-route-id="@request.EventRequestID"
+                       class="btn btn-primary">
+                        Review
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Index" class="btn btn-secondary">
+    Back to Admins
+</a>

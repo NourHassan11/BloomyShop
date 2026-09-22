@@ -1,0 +1,86 @@
+﻿@model Project.ViewModels.EventRequestReviewViewModel
+
+@{
+    ViewData["Title"] = "Admin Review";
+}
+
+<h1>Admin Review</h1>
+
+<form asp-action="AdminReview" method="post">
+
+    <input type="hidden" asp-for="EventRequestID" />
+
+    <h3>Event Request Information</h3>
+
+    <p>
+        <strong>Location:</strong>
+        @Model.LocationType
+    </p>
+
+    <p>
+        <strong>Number of Guests:</strong>
+        @Model.NumberOfGuests
+    </p>
+
+    <p>
+        <strong>Event Date:</strong>
+        @Model.EventDate.ToShortDateString()
+    </p>
+
+    <p>
+        <strong>Theme:</strong>
+        @Model.Theme
+    </p>
+
+    <p>
+        <strong>Budget:</strong>
+        @Model.Budget
+    </p>
+
+    <hr />
+
+    <div>
+        <label asp-for="Status">Status</label>
+
+        <select asp-for="Status">
+            <option value="Pending">Pending</option>
+            <option value="Approved">Approved</option>
+            <option value="Rejected">Rejected</option>
+        </select>
+
+        <span asp-validation-for="Status"></span>
+    </div>
+
+    <br />
+
+    <div>
+        <label asp-for="AdminID">Admin</label>
+
+        <select asp-for="AdminID" asp-items="Model.Admins">
+            <option value="">-- Select Admin --</option>
+        </select>
+
+        <span asp-validation-for="AdminID"></span>
+    </div>
+
+    <br />
+
+    <div>
+        <label asp-for="AdminResponse">Admin Response</label>
+
+        <textarea asp-for="AdminResponse"
+                  rows="5"
+                  cols="40"></textarea>
+
+        <span asp-validation-for="AdminResponse"></span>
+    </div>
+
+    <br />
+
+    <button type="submit">Save Review</button>
+
+</form>
+
+<br />
+
+<a asp-action="Index">Back to Event Requests</a>

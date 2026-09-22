@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using Project.DAL.Entities.Data;
+
 namespace Project
 {
     public class Program
@@ -9,22 +12,33 @@ namespace Project
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
+            // Enable Session
+            builder.Services.AddSession();
+
+            builder.Services.AddDbContext<BloomyShopDbContext>(options =>
+                options.UseSqlServer(
+                    builder.Configuration.GetConnectionString("DefaultConnection")));
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
             app.UseHttpsRedirection();
+
             app.UseRouting();
+
+            // Enable Session
+            app.UseSession();
 
             app.UseAuthorization();
 
             app.MapStaticAssets();
+
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}")

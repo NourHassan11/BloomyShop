@@ -8,10 +8,16 @@ namespace Project.DAL.Entities
 {
     public class BouquetSize
     {
-        public int BouquetSizeID { get; set; }
+        public int SizeID { get; set; }
 
-        public string Name { get; set; } = string.Empty;
+        public string Size { get; set; } = null!;
 
-        public decimal AdditionalPrice { get; set; }
+        public decimal BasePrice { get; set; }
+
+        public ICollection<Bouquet> Bouquets { get; set; }
+            = new List<Bouquet>();
+
+        public ICollection<CustomizedBouquet> CustomizedBouquets { get; set; }
+            = new List<CustomizedBouquet>();
     }
 }

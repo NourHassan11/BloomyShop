@@ -10,6 +10,16 @@ namespace Project.DAL.Entities
     {
         public int FlowerColorID { get; set; }
 
-        public string ColorName { get; set; } = string.Empty;
+        public string Color { get; set; } = null!;
+
+        // FK
+        public int FlowerID { get; set; }
+
+        public Flower Flower { get; set; } = null!;
+
+        //public ICollection<CustomizedBouquet> CustomizedBouquets { get; set; }
+        //    = new List<CustomizedBouquet>();
+        public ICollection<CustomizedBouquetFlowerColor> CustomizedBouquetFlowerColors { get; set; }
+    = new List<CustomizedBouquetFlowerColor>();
     }
 }

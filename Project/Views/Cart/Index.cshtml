@@ -1,0 +1,127 @@
+﻿@model Project.DAL.Entities.Cart
+
+@{
+    ViewData["Title"] = "Shopping Cart";
+}
+
+<div class="container mt-5">
+    <h2>Your Shopping Cart</h2>
+    <hr />
+
+    <table class="table table-bordered table-striped mt-3">
+        <thead class="table-dark">
+            <tr>
+                <th>Bouquet Name</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Total</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model.CartItems)
+            {
+                <tr>
+                    <td>
+                        @if (item.Bouquet != null)
+                        {
+                            @item.Bouquet.Name
+                        }
+                        else if (item.CustomizedBouquet != null)
+                        {
+                            <span>Customized Bouquet</span>
+                        }
+                        else
+                        {
+                            <span>Unknown Item</span>
+                        }
+                    </td>
+
+                    <td>
+                        @item.UnitPrice EGP
+                    </td>
+
+                    <td>
+                        <div class="d-flex align-items-center justify-content-center gap-2">
+
+                            <!-- Decrease Quantity -->
+                            <form asp-action="UpdateQuantity" method="post">
+                                @Html.AntiForgeryToken()
+
+                                <input type="hidden"
+                                       name="id"
+                                       value="@item.CartItemID" />
+
+                                <input type="hidden"
+                                       name="quantity"
+                                       value="@(item.Quantity - 1)" />
+
+                                <button type="submit"
+                                        class="btn btn-outline-secondary btn-sm">
+                                    −
+                                </button>
+                            </form>
+
+                            <span class="fw-bold">
+                                @item.Quantity
+                            </span>
+
+                            <!-- Increase Quantity -->
+                            <form asp-action="UpdateQuantity" method="post">
+                                @Html.AntiForgeryToken()
+
+                                <input type="hidden"
+                                       name="id"
+                                       value="@item.CartItemID" />
+
+                                <input type="hidden"
+                                       name="quantity"
+                                       value="@(item.Quantity + 1)" />
+
+                                <button type="submit"
+                                        class="btn btn-outline-secondary btn-sm">
+                                    +
+                                </button>
+                            </form>
+
+                        </div>
+                    </td>
+
+                    <td>
+                        @(item.UnitPrice* item.Quantity) EGP
+                    </td>
+
+                    <td>
+                        <form asp-action="RemoveFromCart" method="post">
+                            @Html.AntiForgeryToken()
+
+                            <input type="hidden"
+                                   name="id"
+                                   value="@item.CartItemID" />
+
+                            <button type="submit"
+                                    class="btn btn-danger btn-sm">
+                                Delete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="text-end mt-4">
+        <h4>
+            Grand Total:
+            <span class="text-success">
+                @Model.CartItems.Sum(i => i.UnitPrice * i.Quantity) EGP
+            </span>
+        </h4>
+
+        <a href="#"
+           class="btn btn-success btn-lg mt-2">
+            Checkout
+        </a>
+    </div>
+</div>

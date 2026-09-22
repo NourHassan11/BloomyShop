@@ -10,14 +10,39 @@ namespace Project.DAL.Entities
     {
         public int BouquetID { get; set; }
 
-        public string Name { get; set; } = string.Empty;
+        public string Name { get; set; } = null!;
 
-        public string Description { get; set; } = string.Empty;
+        public string Description { get; set; } = null!;
+
+        public string Image { get; set; } = null!;
+
+        //public string Size { get; set; } = null!;
+
+        public string PreparationTime { get; set; } = null!;
 
         public decimal Price { get; set; }
 
-        public string PreparationTime { get; set; } = string.Empty;
-
         public bool IsActive { get; set; }
+
+        // FK
+        public int SizeID { get; set; }
+
+        public BouquetSize BouquetSize { get; set; } = null!;
+
+        // M:N with Flower
+        public ICollection<BouquetFlower> BouquetFlowers { get; set; }
+            = new List<BouquetFlower>();
+
+        // M:N with Customer
+        public ICollection<CustomerBouquet> CustomerBouquets { get; set; }
+            = new List<CustomerBouquet>();
+
+        // OrderItem
+        public ICollection<OrderItem> OrderItems { get; set; }
+            = new List<OrderItem>();
+
+        // CartItem
+        public ICollection<CartItem> CartItems { get; set; }
+            = new List<CartItem>();
     }
 }
