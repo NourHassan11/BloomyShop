@@ -4,104 +4,1826 @@
     ViewData["Title"] = "Bouquet Preview";
 }
 
-<h1>Bouquet Preview</h1>
+<style>
+    :root {
+        --rose: #7b1831;
+        --rose-light: #f7eeee;
+        --rose-soft: #fbf4f2;
+        --cream: #fffaf8;
+        --beige: #f4efec;
+        --sage: #66775f;
+        --text: #2d2827;
+        --muted: #756b68;
+        --border: #eadfdb;
+        --white: #ffffff;
+    }
 
-<hr />
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        background: #fdf8f6;
+        color: var(--text);
+    }
+
+    .preview-page {
+        width: 100%;
+        min-height: 100vh;
+        background: linear-gradient(180deg, #fffaf8 0%, #fdf7f4 55%, #fffaf8 100%);
+        padding-bottom: 70px;
+    }
+
+    /* =========================
+           MAIN
+           ========================= */
+
+    .preview-container {
+        width: min(1180px, 92%);
+        margin: 0 auto;
+    }
+
+    .breadcrumbs {
+        padding-top: 28px;
+        display: flex;
+        gap: 7px;
+        flex-wrap: wrap;
+        color: #827672;
+        font-size: 9px;
+        letter-spacing: .5px;
+    }
+
+        .breadcrumbs span:last-child {
+            color: var(--rose);
+        }
+
+    .page-top {
+        margin-top: 10px;
+        margin-bottom: 28px;
+    }
+
+    .eyebrow-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 10px;
+    }
+
+    .eyebrow {
+        display: inline-flex;
+        background: #f8e9eb;
+        color: #68172b;
+        padding: 6px 10px;
+        font-size: 8px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+
+    .fresh-badge {
+        background: #eaf3e8;
+        color: #496449;
+        padding: 7px 12px;
+        font-size: 8px;
+        letter-spacing: .6px;
+        text-transform: uppercase;
+    }
+
+    .page-title {
+        font-family: Georgia, "Times New Roman", serif;
+        font-weight: 400;
+        font-size: clamp(30px, 4vw, 46px);
+        line-height: 1.08;
+        margin: 0;
+        color: #211d1c;
+    }
+
+    .page-description {
+        max-width: 780px;
+        margin: 10px 0 0;
+        color: #685f5c;
+        font-size: 13px;
+        line-height: 1.7;
+    }
+
+    /* =========================
+           HERO
+           ========================= */
+
+    .hero-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.65fr) minmax(320px, .95fr);
+        gap: 24px;
+        align-items: start;
+        margin-bottom: 25px;
+    }
+
+    .hero-card {
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: 7px;
+        overflow: hidden;
+        box-shadow: 0 5px 18px rgba(77, 49, 40, .06);
+    }
+
+    .hero-visual {
+        min-height: 315px;
+        position: relative;
+        overflow: hidden;
+        background: radial-gradient(circle at 20% 20%, rgba(255,255,255,.9), transparent 28%), radial-gradient(circle at 80% 25%, rgba(255,255,255,.7), transparent 30%), linear-gradient(135deg, #eadfd9, #f7efeb 48%, #e6ddd7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .hero-visual::before {
+            content: "";
+            position: absolute;
+            width: 330px;
+            height: 330px;
+            border-radius: 50%;
+            background: rgba(255,255,255,.32);
+            top: -100px;
+            left: -80px;
+        }
+
+        .hero-visual::after {
+            content: "";
+            position: absolute;
+            width: 260px;
+            height: 260px;
+            border-radius: 50%;
+            background: rgba(255,255,255,.25);
+            bottom: -110px;
+            right: -70px;
+        }
+
+    .bouquet-collage {
+        width: min(520px, 90%);
+        height: 285px;
+        position: relative;
+        z-index: 2;
+    }
+
+    .bouquet-center {
+        position: absolute;
+        width: 180px;
+        height: 180px;
+        border-radius: 50%;
+        left: 50%;
+        top: 48%;
+        transform: translate(-50%, -50%);
+        background: rgba(255,255,255,.72);
+        border: 1px solid rgba(255,255,255,.8);
+        box-shadow: 0 15px 40px rgba(80, 50, 42, .12);
+    }
+
+    .flower-bubble {
+        position: absolute;
+        width: 105px;
+        height: 105px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 7px solid rgba(255,255,255,.85);
+        box-shadow: 0 8px 20px rgba(72, 45, 38, .15);
+        background: #f5efec;
+    }
+
+        .flower-bubble img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+    .bubble-1 {
+        left: 14%;
+        top: 18%;
+    }
+
+    .bubble-2 {
+        right: 13%;
+        top: 12%;
+    }
+
+    .bubble-3 {
+        left: 24%;
+        bottom: 2%;
+    }
+
+    .bubble-4 {
+        right: 24%;
+        bottom: 0;
+    }
+
+    .hero-label {
+        position: absolute;
+        left: 18px;
+        bottom: 16px;
+        z-index: 5;
+        background: rgba(75, 25, 42, .92);
+        color: white;
+        padding: 7px 11px;
+        font-size: 8px;
+        letter-spacing: .8px;
+        text-transform: uppercase;
+    }
+
+    .hero-details {
+        padding: 18px 20px 20px;
+    }
+
+        .hero-details h2 {
+            margin: 0;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 22px;
+            font-weight: 400;
+        }
+
+        .hero-details p {
+            margin: 7px 0 0;
+            font-size: 11px;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+    .verification {
+        border-top: 1px solid #eee4e0;
+        margin-top: 15px;
+        padding-top: 14px;
+        display: flex;
+        gap: 9px;
+        font-size: 9px;
+        color: #655d5a;
+        line-height: 1.5;
+    }
+
+    .verification-icon {
+        color: var(--sage);
+        font-size: 14px;
+    }
+
+    /* =========================
+           SUMMARY
+           ========================= */
+
+    .summary-card {
+        background: white;
+        border: 1px solid var(--border);
+        border-radius: 7px;
+        padding: 21px;
+        box-shadow: 0 5px 18px rgba(77, 49, 40, .06);
+        position: sticky;
+        top: 92px;
+    }
+
+    .summary-label {
+        color: var(--sage);
+        font-size: 8px;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        margin-bottom: 6px;
+    }
+
+    .summary-title {
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 22px;
+        font-weight: 400;
+        margin: 0 0 18px;
+    }
+
+    .summary-line {
+        display: flex;
+        justify-content: space-between;
+        gap: 15px;
+        padding: 8px 0;
+        border-bottom: 1px solid #f0e8e5;
+        font-size: 10px;
+        color: #625a57;
+    }
+
+        .summary-line strong {
+            color: #332b29;
+            font-weight: 500;
+        }
+
+    .total-box {
+        margin-top: 18px;
+        padding-top: 14px;
+        border-top: 1px solid #dcd0cc;
+    }
+
+    .total-label {
+        font-size: 8px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #786f6c;
+    }
+
+    .total-price {
+        color: var(--rose);
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 34px;
+        line-height: 1;
+        margin-top: 5px;
+    }
+
+    .preparation {
+        font-size: 9px;
+        color: var(--sage);
+        margin-top: 6px;
+    }
+
+    .primary-button {
+        width: 100%;
+        border: 0;
+        background: var(--rose);
+        color: white;
+        min-height: 43px;
+        margin-top: 17px;
+        font-size: 10px;
+        letter-spacing: .8px;
+        text-transform: uppercase;
+        cursor: pointer;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: .2s ease;
+    }
+
+        .primary-button:hover {
+            background: #5f1126;
+            color: white;
+        }
+
+    .secondary-button {
+        width: 100%;
+        min-height: 38px;
+        margin-top: 9px;
+        background: #f6edeb;
+        color: #69162b;
+        border: 0;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 9px;
+        letter-spacing: .6px;
+        text-transform: uppercase;
+    }
+
+        .secondary-button:hover {
+            background: #efe1dd;
+            color: #5d1125;
+        }
+
+    /* =========================
+           CONTENT GRID
+           ========================= */
+
+    .content-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.65fr) minmax(320px, .95fr);
+        gap: 24px;
+        align-items: start;
+    }
+
+    .left-column,
+    .right-column {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .section-card {
+        background: white;
+        border: 1px solid var(--border);
+        border-radius: 7px;
+        padding: 20px;
+        box-shadow: 0 4px 15px rgba(77, 49, 40, .045);
+    }
+
+    .section-heading {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+        margin-bottom: 16px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #eee5e1;
+    }
+
+        .section-heading h3 {
+            margin: 0;
+            font-family: Georgia, "Times New Roman", serif;
+            font-weight: 400;
+            font-size: 20px;
+        }
+
+    .section-meta {
+        font-size: 8px;
+        color: #766c68;
+        text-transform: uppercase;
+        letter-spacing: .6px;
+    }
+
+    /* =========================
+           FLOWERS
+           ========================= */
+
+    .flower-item {
+        background: #fcf5f3;
+        border: 1px solid #f1e5e1;
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        gap: 13px;
+        margin-bottom: 9px;
+        border-radius: 4px;
+    }
+
+    .flower-thumb {
+        width: 60px;
+        height: 60px;
+        flex: 0 0 60px;
+        border-radius: 3px;
+        overflow: hidden;
+        background: #eee7e3;
+    }
+
+        .flower-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+    .flower-info {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .flower-name {
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 15px;
+        color: #302a28;
+    }
+
+    .flower-sub {
+        font-size: 9px;
+        color: #817773;
+        margin-top: 4px;
+    }
+
+    .flower-quantity {
+        display: inline-block;
+        margin-top: 5px;
+        font-size: 8px;
+        color: #5e7359;
+        background: #eaf1e8;
+        padding: 3px 6px;
+    }
+
+    .flower-price {
+        text-align: right;
+        min-width: 90px;
+    }
+
+    .flower-unit {
+        font-size: 8px;
+        color: #807672;
+        margin-bottom: 3px;
+    }
+
+    .flower-total {
+        color: var(--rose);
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 16px;
+    }
+
+    .sub-total {
+        display: flex;
+        justify-content: space-between;
+        border-top: 1px solid #eadeda;
+        margin-top: 14px;
+        padding-top: 13px;
+        font-size: 10px;
+        color: #716864;
+    }
+
+        .sub-total strong {
+            color: #351c24;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 16px;
+        }
+
+    /* =========================
+           COLORS
+           ========================= */
+
+    .color-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 9px;
+    }
+
+    .color-chip {
+        border: 1px solid #e5d8d4;
+        background: #fffaf8;
+        padding: 8px 11px;
+        font-size: 9px;
+        color: #5d5451;
+        border-radius: 3px;
+    }
+
+    .color-dot {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #d7b7b5;
+        margin-right: 6px;
+        vertical-align: middle;
+    }
+
+    /* =========================
+           WRAPPING
+           ========================= */
+
+    .wrapping-box {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        background: #fcf6f3;
+        padding: 13px;
+        border: 1px solid #f0e3df;
+    }
+
+    .wrapping-icon {
+        width: 62px;
+        height: 62px;
+        background: #eaded8;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 27px;
+        flex: 0 0 62px;
+    }
+
+    .wrapping-info {
+        flex: 1;
+    }
+
+    .wrapping-name {
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 16px;
+    }
+
+    .wrapping-description {
+        margin-top: 5px;
+        font-size: 9px;
+        color: #766c68;
+        line-height: 1.5;
+    }
+
+    .wrapping-price {
+        color: var(--rose);
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 17px;
+    }
+
+    /* =========================
+           ADDONS
+           ========================= */
+
+    .addon-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .addon-item {
+        background: #fcf6f3;
+        border: 1px solid #f0e3df;
+        padding: 12px;
+    }
+
+    .addon-name {
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 14px;
+        color: #362e2b;
+    }
+
+    .addon-price {
+        color: var(--rose);
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 15px;
+        margin-top: 8px;
+    }
+
+    /* =========================
+           SIZE CARD
+           ========================= */
+
+    .detail-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 11px 0;
+        border-bottom: 1px solid #eee5e1;
+        font-size: 10px;
+    }
+
+        .detail-row:last-child {
+            border-bottom: 0;
+        }
+
+    .detail-label {
+        color: #786e6a;
+        text-transform: uppercase;
+        letter-spacing: .5px;
+        font-size: 8px;
+    }
+
+    .detail-value {
+        color: #342c2a;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 15px;
+    }
+
+    /* =========================
+           PROMISES
+           ========================= */
+
+    .promise-card {
+        background: #f8efec;
+        border: 1px solid #eee0dc;
+        border-radius: 7px;
+        padding: 19px;
+    }
+
+        .promise-card h3 {
+            margin: 0 0 14px;
+            font-family: Georgia, "Times New Roman", serif;
+            font-weight: 400;
+            font-size: 18px;
+        }
+
+    .promise {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 13px;
+    }
+
+        .promise:last-child {
+            margin-bottom: 0;
+        }
+
+    .promise-icon {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--sage);
+        flex: 0 0 22px;
+        font-size: 10px;
+    }
+
+    .promise strong {
+        display: block;
+        font-size: 9px;
+        color: #3e3735;
+        margin-bottom: 3px;
+    }
+
+    .promise p {
+        margin: 0;
+        font-size: 8px;
+        line-height: 1.45;
+        color: #716864;
+    }
+
+    /* =========================
+           FOOTER
+           ========================= */
+
+    .preview-footer {
+        margin-top: 55px;
+        background: #fbf1ee;
+        border-top: 1px solid #eee0dc;
+        padding: 38px 5% 25px;
+    }
+
+    .footer-inner {
+        width: min(1180px, 92%);
+        margin: auto;
+        display: grid;
+        grid-template-columns: 1.5fr 1fr 1fr 1.4fr;
+        gap: 35px;
+    }
+
+    .footer-brand {
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 18px;
+        color: #69172b;
+        margin-bottom: 9px;
+    }
+
+    .footer-description {
+        font-size: 9px;
+        color: #716864;
+        line-height: 1.6;
+        max-width: 280px;
+    }
+
+    .footer-heading {
+        font-size: 8px;
+        letter-spacing: 1.1px;
+        text-transform: uppercase;
+        color: var(--rose);
+        margin-bottom: 11px;
+    }
+
+    .footer-links {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+    }
+
+        .footer-links a {
+            text-decoration: none;
+            color: #665e5b;
+            font-size: 9px;
+        }
+
+            .footer-links a:hover {
+                color: var(--rose);
+            }
+
+    .newsletter-title {
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 18px;
+        margin-bottom: 7px;
+    }
+
+    .newsletter-text {
+        font-size: 9px;
+        line-height: 1.5;
+        color: #716864;
+        margin-bottom: 12px;
+    }
+
+    .newsletter-form {
+        display: flex;
+        height: 31px;
+    }
+
+        .newsletter-form input {
+            flex: 1;
+            min-width: 0;
+            border: 1px solid #e2d3cf;
+            background: white;
+            padding: 0 10px;
+            font-size: 8px;
+            outline: none;
+        }
+
+        .newsletter-form button {
+            width: 55px;
+            border: 0;
+            background: var(--rose);
+            color: white;
+            font-size: 8px;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+
+    .footer-bottom {
+        width: min(1180px, 92%);
+        margin: 28px auto 0;
+        padding-top: 18px;
+        border-top: 1px solid #e7d8d4;
+        display: flex;
+        justify-content: space-between;
+        gap: 15px;
+        font-size: 8px;
+        color: #817773;
+    }
+
+    .footer-bottom-links {
+        display: flex;
+        gap: 14px;
+    }
+
+    /* =========================
+           RESPONSIVE
+           ========================= */
+
+    @@media (max-width: 900px) {
+        .hero-grid, .content-grid
+
+    {
+        grid-template-columns: 1fr;
+    }
+
+    .summary-card {
+        position: static;
+    }
+
+    .footer-inner {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    }
+
+    @@media (max-width: 600px) {
+        .preview-container
+
+    {
+        width: 94%;
+    }
+
+    .eyebrow-row {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .hero-visual {
+        min-height: 270px;
+    }
+
+    .bouquet-collage {
+        transform: scale(.8);
+    }
+
+    .flower-item {
+        align-items: flex-start;
+    }
+
+    .flower-price {
+        min-width: 65px;
+    }
+
+    .addon-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .wrapping-box {
+        align-items: flex-start;
+    }
+
+    .footer-inner {
+        grid-template-columns: 1fr;
+        gap: 25px;
+    }
+
+    .footer-bottom {
+        flex-direction: column;
+    }
+
+    }
+</style>
 
 
-<h3>Size</h3>
+<div class="preview-page">
 
-<p>
-    @Model.BouquetSize.Size
-</p>
+    <main class="preview-container">
 
-<p>
-    Base Price:
-    @Model.BouquetSize.BasePrice
-</p>
+        <!-- =========================
+             BREADCRUMBS
+             ========================= -->
 
+        <div class="breadcrumbs">
 
-<hr />
+            <span>Home</span>
+            <span>›</span>
 
+            <span>Customize</span>
+            <span>›</span>
 
-<h3>Wrapping</h3>
+            <span>Bouquet Studio</span>
+            <span>›</span>
 
-<p>
-    @Model.Wrapping.Name
-</p>
+            <span>Preview &amp; Confirmation</span>
 
-<p>
-    Price:
-    @Model.Wrapping.Price
-</p>
+        </div>
 
 
-<hr />
+        <!-- =========================
+             PAGE TITLE
+             ========================= -->
+
+        <section class="page-top">
+
+            <div class="eyebrow-row">
+
+                <span class="eyebrow">
+                    ● Atelier Formulation Verification · Step 5 of 5
+                </span>
+
+                <span class="fresh-badge">
+                    ✽ Fresh formulation · Prepared with care
+                </span>
+
+            </div>
 
 
-<h3>Flowers</h3>
+            <h1 class="page-title">
+                Your Bespoke Creation, Beautifully Assembled
+            </h1>
 
-@foreach (var item in Model.CustomizedBouquetFlowers)
-{
-    <p>
-        @item.Flower.Name
-        -
-        @item.Flower.BasePrice
-    </p>
-}
+            <p class="page-description">
+                Review your handcrafted bouquet formulation before our master florists
+                prepare your arrangement. Every selection has been carefully recorded
+                for your bespoke creation.
+            </p>
 
-
-<hr />
+        </section>
 
 
-<h3>Colors</h3>
+        <!-- =========================
+             HERO + SUMMARY
+             ========================= -->
 
-@foreach (var item in Model.CustomizedBouquetFlowerColors)
-{
-    <p>
-        @item.FlowerColor.Color
-    </p>
-}
+        <section class="hero-grid">
 
+            <div class="hero-card">
 
-<hr />
+                <div class="hero-visual">
 
+                    <div class="bouquet-collage">
 
-<h3>Add Ons</h3>
+                        <div class="bouquet-center"></div>
 
-@foreach (var item in Model.CustomizedBouquetAddOns)
-{
-    <p>
-        @item.AddOn.Name
-        -
-        @item.AddOn.Price
-    </p>
-}
+                        @{
+                            var heroFlowers = Model.CustomizedBouquetFlowers
+                            .Take(4)
+                            .ToList();
+                        }
 
 
-<hr />
+                        @for (int i = 0; i < heroFlowers.Count; i++)
+                        {
+                            var heroFlower = heroFlowers[i];
+
+                            var heroFlowerName =
+                            heroFlower.Flower.Name?
+                            .ToString()
+                            .Trim()
+                            .ToLowerInvariant() ?? "";
+
+                            var heroImage = "";
+
+                            if (heroFlowerName.Contains("rose"))
+                            {
+                                heroImage = Url.Content("~/Flowers/rose.png");
+                            }
+                            else if (heroFlowerName.Contains("tulip"))
+                            {
+                                heroImage = Url.Content("~/Flowers/tulip.png");
+                            }
+                            else if (heroFlowerName.Contains("lily"))
+                            {
+                                heroImage = Url.Content("~/Flowers/lily.png");
+                            }
+                            else if (heroFlowerName.Contains("sunflower"))
+                            {
+                                heroImage = Url.Content("~/Flowers/sunflower.png");
+                            }
+
+                            var bubbleClass = "bubble-" + (i + 1);
 
 
-<h3>Total Price</h3>
+                            if (!string.IsNullOrEmpty(heroImage))
+                            {
+                                <div class="flower-bubble @bubbleClass">
 
-<h2>
-    @ViewBag.TotalPrice
-</h2>
+                                    <img src="@heroImage"
+                                         alt="@heroFlower.Flower.Name" />
 
+                                </div>
+                            }
+                        }
 
-<h3>Preparation Time</h3>
-
-<p>
-    @Model.PreparationTime minutes
-</p>
-
-
-<br />
+                    </div>
 
 
-<a asp-controller="CustomizedBouquet"
-   asp-action="Customize">
+                    <span class="hero-label">
+                        LIVE BOUQUET PREVIEW
+                    </span>
 
-    Customize Another Bouquet
+                </div>
 
-</a>
+
+                <div class="hero-details">
+
+                    <h2>
+                        Your Bespoke Bouquet
+                    </h2>
+
+                    <p>
+                        A handcrafted arrangement created from your selected
+                        flowers, colors, size, wrapping and finishing touches.
+                    </p>
+
+
+                    <div class="verification">
+
+                        <span class="verification-icon">
+                            ♧
+                        </span>
+
+                        <div>
+                            <strong>
+                                MASTER FLORIST VERIFICATION
+                            </strong>
+
+                            <br />
+
+                            Your bouquet selections have been recorded and are
+                            ready for preparation with fresh, carefully selected stems.
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- SUMMARY -->
+
+            <aside class="summary-card">
+
+                <div class="summary-label">
+                    Atelier Order Ledger
+                </div>
+
+                <h2 class="summary-title">
+                    Formulation Summary
+                </h2>
+
+
+                <div class="summary-line">
+
+                    <span>
+                        Bouquet Size
+                    </span>
+
+                    <strong>
+                        @Model.BouquetSize.Size
+                    </strong>
+
+                </div>
+
+
+                <div class="summary-line">
+
+                    <span>
+                        Bouquet Base
+                    </span>
+
+                    <strong>
+                        @Model.BouquetSize.BasePrice.ToString("C2")
+                    </strong>
+
+                </div>
+
+
+                <div class="summary-line">
+
+                    <span>
+                        Fresh Botanicals
+                    </span>
+
+                    <strong>
+                        @Model.CustomizedBouquetFlowers.Sum(x => x.Quantity)
+                        Stems
+                    </strong>
+
+                </div>
+
+
+                <div class="summary-line">
+
+                    <span>
+                        Wrapping
+                    </span>
+
+                    <strong>
+                        @Model.Wrapping.Price.ToString("C2")
+                    </strong>
+
+                </div>
+
+
+                <div class="summary-line">
+
+                    <span>
+                        Add-ons
+                    </span>
+
+                    <strong>
+                        @Model.CustomizedBouquetAddOns.Count()
+                    </strong>
+
+                </div>
+
+
+                <div class="total-box">
+
+                    <div class="total-label">
+                        Total Atelier Price
+                    </div>
+
+                    <div class="total-price">
+                        @ViewBag.TotalPrice
+                    </div>
+
+                    <div class="preparation">
+                        ✽ Preparation time: @Model.PreparationTime minutes
+                    </div>
+
+                </div>
+
+
+                <a class="primary-button"
+                   asp-controller="CustomizedBouquet"
+                   asp-action="Customize">
+
+                    ✿ &nbsp; Edit &amp; Customize Bouquet
+
+                </a>
+
+
+                <a class="secondary-button"
+                   asp-controller="CustomizedBouquet"
+                   asp-action="Customize">
+
+                    ♡ &nbsp; Customize Another Bouquet
+
+                </a>
+
+            </aside>
+
+        </section>
+
+
+        <!-- =========================
+             CONTENT
+             ========================= -->
+
+        <section class="content-grid">
+
+
+            <!-- =========================
+                 LEFT COLUMN
+                 ========================= -->
+
+            <div class="left-column">
+
+
+                <!-- FLOWERS -->
+
+                <div class="section-card">
+
+                    <div class="section-heading">
+
+                        <h3>
+                            ♧ Selected Flora &amp; Cultivars
+                        </h3>
+
+                        <span class="section-meta">
+
+                            @Model.CustomizedBouquetFlowers.Sum(x => x.Quantity)
+                            Botanical Stems
+
+                        </span>
+
+                    </div>
+
+
+                    @foreach (var item in Model.CustomizedBouquetFlowers)
+                    {
+                        var flowerName =
+                        item.Flower.Name?
+                        .ToString()
+                        .Trim()
+                        .ToLowerInvariant() ?? "";
+
+                        var imageName = "";
+
+                        if (flowerName.Contains("rose"))
+                        {
+                            imageName = "rose.png";
+                        }
+                        else if (flowerName.Contains("tulip"))
+                        {
+                            imageName = "tulip.png";
+                        }
+                        else if (flowerName.Contains("lily"))
+                        {
+                            imageName = "lily.png";
+                        }
+                        else if (flowerName.Contains("sunflower"))
+                        {
+                            imageName = "sunflower.png";
+                        }
+
+
+                        <div class="flower-item">
+
+                            <div class="flower-thumb">
+
+                                @if (!string.IsNullOrEmpty(imageName))
+                                {
+                                    <img src="~/Flowers/@imageName"
+                                         alt="@item.Flower.Name" />
+                                }
+                                else
+                                {
+                                    <span style="
+                                                width:100%;
+                                                height:100%;
+                                                display:flex;
+                                                align-items:center;
+                                                justify-content:center;
+                                                font-size:25px;">
+                                        🌸
+                                    </span>
+                                }
+
+                            </div>
+
+
+                            <div class="flower-info">
+
+                                <div class="flower-name">
+                                    @item.Flower.Name
+                                </div>
+
+                                <div class="flower-sub">
+                                    Fresh Botanical Selection
+                                </div>
+
+                                <span class="flower-quantity">
+                                    @item.Quantity stems
+                                </span>
+
+                            </div>
+
+
+                            <div class="flower-price">
+
+                                <div class="flower-unit">
+                                    @item.Flower.BasePrice.ToString("C2") each
+                                </div>
+
+                                <div class="flower-total">
+
+                                    @((item.Flower.BasePrice * item.Quantity).ToString("C2"))
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    }
+
+
+                    <div class="sub-total">
+
+                        <span>
+                            Flora Sub-total
+                        </span>
+
+                        <strong>
+
+                            @Model.CustomizedBouquetFlowers
+                            .Sum(x => x.Flower.BasePrice * x.Quantity)
+                            .ToString("C2")
+
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <!-- COLORS -->
+
+                <div class="section-card">
+
+                    <div class="section-heading">
+
+                        <h3>
+                            ◌ Color Cultivation
+                        </h3>
+
+                        <span class="section-meta">
+                            Selected Palette
+                        </span>
+
+                    </div>
+
+
+                    <div class="color-list">
+
+                        @foreach (var item in Model.CustomizedBouquetFlowerColors)
+                        {
+                            <div class="color-chip">
+
+                                <span class="color-dot"></span>
+
+                                @item.FlowerColor.Color
+
+                            </div>
+                        }
+
+                    </div>
+
+                </div>
+
+
+                <!-- WRAPPING -->
+
+                <div class="section-card">
+
+                    <div class="section-heading">
+
+                        <h3>
+                            ♧ Artisanal Wrapping &amp; Presentation
+                        </h3>
+
+                        <span class="section-meta">
+                            @Model.Wrapping.Price.ToString("C2")
+                        </span>
+
+                    </div>
+
+
+                    <div class="wrapping-box">
+
+                        <div class="wrapping-icon">
+                            ♡
+                        </div>
+
+
+                        <div class="wrapping-info">
+
+                            <div class="wrapping-name">
+                                @Model.Wrapping.Name
+                            </div>
+
+                            <div class="wrapping-description">
+                                Carefully selected wrapping presentation,
+                                prepared to complement the bouquet and protect
+                                the arrangement during handling.
+                            </div>
+
+                        </div>
+
+
+                        <div class="wrapping-price">
+                            @Model.Wrapping.Price.ToString("C2")
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ADD ONS -->
+
+                <div class="section-card">
+
+                    <div class="section-heading">
+
+                        <h3>
+                            ♡ Curated Keepsakes Included
+                        </h3>
+
+                        <span class="section-meta">
+
+                            @Model.CustomizedBouquetAddOns.Count()
+                            Studio Complements
+
+                        </span>
+
+                    </div>
+
+
+                    @if (Model.CustomizedBouquetAddOns.Any())
+                    {
+                        <div class="addon-grid">
+
+                            @foreach (var item in Model.CustomizedBouquetAddOns)
+                            {
+                                <div class="addon-item">
+
+                                    <div class="addon-name">
+                                        @item.AddOn.Name
+                                    </div>
+
+                                    <div style="
+                                                margin-top:6px;
+                                                font-size:9px;
+                                                color:#7b706c;
+                                                line-height:1.45;">
+                                        Selected bouquet add-on
+                                    </div>
+
+                                    <div class="addon-price">
+                                        @item.AddOn.Price.ToString("C2")
+                                    </div>
+
+                                </div>
+                            }
+
+                        </div>
+                    }
+                    else
+                    {
+                        <div style="
+                                padding:15px;
+                                background:#fcf6f3;
+                                color:#786e6a;
+                                font-size:10px;
+                                text-align:center;">
+
+                            No add-ons selected for this bouquet.
+
+                        </div>
+                    }
+
+                </div>
+
+            </div>
+
+
+            <!-- =========================
+                 RIGHT COLUMN
+                 ========================= -->
+
+            <div class="right-column">
+
+
+                <!-- BOUQUET DETAILS -->
+
+                <div class="section-card">
+
+                    <div class="section-heading">
+
+                        <h3>
+                            Bouquet Details
+                        </h3>
+
+                    </div>
+
+
+                    <div class="detail-row">
+
+                        <span class="detail-label">
+                            Size
+                        </span>
+
+                        <span class="detail-value">
+                            @Model.BouquetSize.Size
+                        </span>
+
+                    </div>
+
+
+                    <div class="detail-row">
+
+                        <span class="detail-label">
+                            Base Price
+                        </span>
+
+                        <span class="detail-value">
+                            @Model.BouquetSize.BasePrice.ToString("C2")
+                        </span>
+
+                    </div>
+
+
+                    <div class="detail-row">
+
+                        <span class="detail-label">
+                            Wrapping
+                        </span>
+
+                        <span class="detail-value">
+                            @Model.Wrapping.Name
+                        </span>
+
+                    </div>
+
+
+                    <div class="detail-row">
+
+                        <span class="detail-label">
+                            Preparation
+                        </span>
+
+                        <span class="detail-value">
+                            @Model.PreparationTime min
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- PROMISES -->
+
+                <div class="promise-card">
+
+                    <h3>
+                        Bloomy White-Glove Promises
+                    </h3>
+
+
+                    <div class="promise">
+
+                        <div class="promise-icon">
+                            ✓
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Freshly Prepared
+                            </strong>
+
+                            <p>
+                                Your bouquet is assembled with care from
+                                the selected flowers in your formulation.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="promise">
+
+                        <div class="promise-icon">
+                            ✽
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Carefully Handled
+                            </strong>
+
+                            <p>
+                                Each arrangement is prepared to preserve
+                                presentation and freshness.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="promise">
+
+                        <div class="promise-icon">
+                            ♡
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Artisan Preparation
+                            </strong>
+
+                            <p>
+                                Your selected formulation is prepared
+                                according to the chosen bouquet details.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- FINAL TOTAL -->
+
+                <div class="section-card"
+                     style="background:#fff7f5;">
+
+                    <div class="summary-label">
+                        Final Formulation
+                    </div>
+
+                    <div style="
+                        font-family:Georgia,serif;
+                        font-size:23px;
+                        margin-top:4px;">
+                        Ready for Preparation
+                    </div>
+
+                    <p style="
+                        font-size:9px;
+                        color:#746a66;
+                        line-height:1.55;
+                        margin:9px 0 0;">
+                        Your selected bouquet configuration has been
+                        assembled successfully and is ready for the
+                        next step.
+                    </p>
+
+
+                    <div style="
+                        margin-top:17px;
+                        padding-top:13px;
+                        border-top:1px solid #eadbd7;
+                        display:flex;
+                        justify-content:space-between;
+                        align-items:center;">
+
+                        <span style="
+                            font-size:8px;
+                            text-transform:uppercase;
+                            letter-spacing:.7px;
+                            color:#786e6a;">
+                            Total
+                        </span>
+
+                        <strong style="
+                            color:#7b1831;
+                            font-family:Georgia,serif;
+                            font-size:25px;">
+                            @ViewBag.TotalPrice
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =========================
+         FOOTER
+         ========================= -->
+
+    <footer class="preview-footer">
+
+        <div class="footer-inner">
+
+
+            <div>
+
+                <div class="footer-brand">
+                    Bloomy Shop
+                </div>
+
+                <p class="footer-description">
+                    An artisan botanical design studio dedicated to poetic
+                    floral arrangements, bespoke events, and thoughtful
+                    curated seasonal creations.
+                </p>
+
+                <div style="
+                    margin-top:14px;
+                    font-size:8px;
+                    color:#56664f;
+                    letter-spacing:.6px;
+                    text-transform:uppercase;">
+                    ✽ Slow stems &amp; ethical botanicals
+                </div>
+
+            </div>
+
+
+            <div>
+
+                <div class="footer-heading">
+                    Explore
+                </div>
+
+                <div class="footer-links">
+
+                    <a asp-controller="Home" asp-action="Index">
+                        Home
+                    </a>
+
+                    <a asp-controller="Flower" asp-action="Index">
+                        Shop Collections
+                    </a>
+
+                    <a asp-controller="Event" asp-action="Index">
+                        Event Curation
+                    </a>
+
+                    <a asp-controller="CustomizedBouquet" asp-action="Customize">
+                        Bespoke Bloom Studio
+                    </a>
+
+                    <a asp-controller="Home" asp-action="Index">
+                        About Bloomy
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <div>
+
+                <div class="footer-heading">
+                    Customer Care
+                </div>
+
+                <div class="footer-links">
+
+                    <a href="#">
+                        Studio Inquiry &amp; Contact
+                    </a>
+
+                    <a href="#">
+                        Flower Care &amp; FAQ
+                    </a>
+
+                    <a href="#">
+                        White-Glove Delivery
+                    </a>
+
+                    <a href="#">
+                        Track Live Bouquet
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <div>
+
+                <div class="newsletter-title">
+                    The Botanical Gazette
+                </div>
+
+                <p class="newsletter-text">
+                    Receive intimate seasonal catalogues,
+                    workshop dispatches, and private botanical
+                    salon invitations.
+                </p>
+
+                <div class="newsletter-form">
+
+                    <input type="email"
+                           placeholder="Your email for the dispatch..." />
+
+                    <button type="button">
+                        Join
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="footer-bottom">
+
+            <span>
+                © 2024 Bloomy Shop Atelier. Handcrafted with reverence for nature.
+            </span>
+
+            <div class="footer-bottom-links">
+
+                <span>
+                    Privacy Policy
+                </span>
+
+                <span>
+                    Terms of Service
+                </span>
+
+                <span>
+                    Botanical Ethics
+                </span>
+
+            </div>
+
+        </div>
+
+    </footer>
+
+</div>

@@ -15,5 +15,7 @@ namespace Project.DAL.Entities
         public int FlowerID { get; set; }
 
         public Flower Flower { get; set; } = null!;
+
+        public int Quantity { get; set; }
     }
 }
