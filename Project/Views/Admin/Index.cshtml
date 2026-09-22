@@ -1,59 +1,323 @@
-﻿@model IEnumerable<Project.DAL.Entities.Admin>
+﻿@model Project.ViewModels.AdminDashboardViewModel
 
 @{
-    ViewData["Title"] = "Admins";
+    Layout = null;
+    ViewData["Title"] = "Admin Dashboard - Bloomy";
 }
 
-<h1>Admins</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <!-- Fonts & Material Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">
-        Create New Admin
-    </a>
-</p>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>Admin ID</th>
-            <th>Full Name</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-
-    <tbody>
-        @foreach (var admin in Model)
-        {
-            <tr>
-                <td>@admin.AdminID</td>
-                <td>@admin.FullName</td>
-
-                <td>
-                    <a asp-action="Details"
-                       asp-route-id="@admin.AdminID"
-                       class="btn btn-info">
-                        Details
-                    </a>
-
-                    <a asp-action="Edit"
-                       asp-route-id="@admin.AdminID"
-                       class="btn btn-warning">
-                        Edit
-                    </a>
-
-                    <a asp-action="Delete"
-                       asp-route-id="@admin.AdminID"
-                       class="btn btn-danger">
-                        Delete
-                    </a>
-                </td>
-            </tr>
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#72263f",
+                        "primary-container": "#8f3d56",
+                        "primary-fixed": "#ffd9e0",
+                        "on-primary-fixed": "#3f001a",
+                        "secondary": "#4e644a",
+                        "secondary-container": "#d0eac8",
+                        "secondary-fixed": "#d0eac8",
+                        "on-secondary-fixed": "#0c200b",
+                        "tertiary": "#6c2b41",
+                        "tertiary-fixed": "#ffd9e1",
+                        "background": "#fff8f6",
+                        "surface": "#fff8f6",
+                        "surface-container": "#f5ecea",
+                        "surface-container-low": "#fbf2f0",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-high": "#efe6e4",
+                        "on-surface": "#1e1b1a",
+                        "on-surface-variant": "#534246",
+                        "outline": "#867276",
+                        "outline-variant": "#d9c1c5"
+                    },
+                    fontFamily: {
+                        'headline-md': ['Playfair Display', 'serif'],
+                        'headline-sm': ['Playfair Display', 'serif'],
+                        'body-md': ['Inter', 'sans-serif'],
+                        'label-md': ['Inter', 'sans-serif']
+                    }
+                }
+            }
         }
-    </tbody>
-</table>
+    </script>
+</head>
+<body class="bg-background font-body-md text-on-surface antialiased">
 
-<p>
-    <a asp-action="EventRequests" class="btn btn-success">
-        Manage Event Requests
-    </a>
-</p>
+    <!-- Sidebar Left -->
+    <aside class="fixed left-0 top-0 h-full w-72 bg-surface-container-low z-50 flex flex-col justify-between shadow-sm">
+        <div class="flex flex-col flex-1 overflow-y-auto">
+            <!-- Header Logo -->
+            <div class="p-6 flex items-center gap-3">
+                <span class="material-symbols-outlined text-primary text-3xl">local_florist</span>
+                <div class="flex flex-col">
+                    <span class="font-headline-sm text-xl text-primary font-bold tracking-tight">Bloomy Shop</span>
+                    <span class="text-xs text-on-surface-variant uppercase tracking-wider">Atelier Admin</span>
+                </div>
+            </div>
+
+            <!-- Status Indicator -->
+            <div class="px-4 py-2">
+                <div class="bg-surface-container-lowest px-3 py-1.5 rounded-xl flex items-center gap-2 shadow-sm">
+                    <span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+                    <span class="text-xs text-secondary font-semibold uppercase">Studio Harvest Active</span>
+                </div>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="flex-1 px-4 space-y-4 mt-2">
+                <div class="space-y-1">
+                    <p class="px-2 text-xs text-on-surface-variant uppercase tracking-widest font-semibold">Core Operations</p>
+                    <a asp-controller="Admin" asp-action="Index" class="flex items-center gap-3 px-3 py-2 bg-primary-container text-white rounded-xl shadow-sm">
+                        <span class="material-symbols-outlined">grid_view</span>
+                        <span class="text-sm font-medium">Dashboard</span>
+                    </a>
+                    <a href="#" class="flex items-center justify-between px-3 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high transition-colors">
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-outlined">local_florist</span>
+                            <span class="text-sm font-medium">Orders</span>
+                        </div>
+                        <span class="bg-primary-fixed text-on-primary-fixed text-xs px-2 py-0.5 rounded-full font-bold">@Model.BouquetOrdersCount New</span>
+                    </a>
+                    <a asp-controller="Admin" asp-action="EventRequests" class="flex items-center justify-between px-3 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high transition-colors">
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-outlined">celebration</span>
+                            <span class="text-sm font-medium">Event Requests</span>
+                        </div>
+                        <span class="bg-secondary-fixed text-on-secondary-fixed text-xs px-2 py-0.5 rounded-full font-bold">@Model.PendingEventsCount Pending</span>
+                    </a>
+                </div>
+
+                <div class="space-y-1">
+                    <p class="px-2 text-xs text-on-surface-variant uppercase tracking-widest font-semibold">Botanical Catalog</p>
+                    <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high transition-colors">
+                        <span class="material-symbols-outlined">spa</span>
+                        <span class="text-sm font-medium">Bouquets & Gifts</span>
+                    </a>
+                    <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high transition-colors">
+                        <span class="material-symbols-outlined">inventory_2</span>
+                        <span class="text-sm font-medium">Stems & Inventory</span>
+                    </a>
+                </div>
+
+                <div class="space-y-1">
+                    <p class="px-2 text-xs text-on-surface-variant uppercase tracking-widest font-semibold">Patrons</p>
+                    <a asp-controller="Admin" asp-action="AdminList" class="flex items-center gap-3 px-3 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high transition-colors">
+                        <span class="material-symbols-outlined">contacts</span>
+                        <span class="text-sm font-medium">Customer Registry</span>
+                    </a>
+                </div>
+            </nav>
+        </div>
+
+        <!-- Admin Profile -->
+        <div class="p-4 border-t border-outline-variant/30 bg-surface-container-low">
+            <div class="bg-surface-container-lowest p-2 rounded-xl flex items-center justify-between shadow-sm">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold">A</div>
+                    <div class="flex flex-col">
+                        <span class="text-xs font-bold text-on-surface">Shimaa Reda</span>
+                        <span class="text-[10px] text-on-surface-variant">Atelier Director</span>
+                    </div>
+                </div>
+                <a asp-controller="Home" asp-action="Index" class="p-1 text-on-surface-variant hover:text-primary">
+                    <span class="material-symbols-outlined text-lg">logout</span>
+                </a>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="pl-72">
+        <!-- Top Navbar Header -->
+        <header class="fixed top-0 left-72 right-0 h-16 bg-surface/80 backdrop-blur-xl shadow-sm z-40 flex items-center justify-between px-6">
+            <div class="flex items-center gap-4">
+                <div class="flex items-center gap-2 text-sm text-on-surface-variant">
+                    <span class="text-primary font-bold">Bloomy Studio</span>
+                    <span>/</span>
+                    <span class="text-on-surface">Overview</span>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="relative w-64">
+                    <span class="material-symbols-outlined absolute left-3 top-2 text-gray-400 text-sm">search</span>
+                    <input type="text" placeholder="Search orders, brides..." class="w-full pl-9 pr-4 py-1.5 bg-surface-container-lowest text-sm rounded-full outline-none border border-transparent focus:border-primary shadow-sm" />
+                </div>
+                <a asp-controller="Home" asp-action="Index" class="bg-primary text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-primary-container shadow-sm transition-all flex items-center gap-1">
+                    <span class="material-symbols-outlined text-sm">store</span>
+                    <span>الموقع الرئيسي</span>
+                </a>
+            </div>
+        </header>
+
+        <!-- Main Body -->
+        <main class="w-full pt-20 px-8 pb-12">
+            <!-- Header Title -->
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+                <div>
+                    <div class="flex items-center gap-2 text-secondary text-xs uppercase tracking-widest font-semibold mb-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-secondary inline-block"></span>
+                        <span>Atelier Dispatch Console • Salon Central</span>
+                    </div>
+                    <h1 class="text-3xl font-headline-md font-bold text-primary tracking-tight">Florist Operations & Executive Ledger</h1>
+                    <p class="text-sm text-on-surface-variant mt-1">Real-time inventory levels, bridal commissions, and boutique fulfillment.</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button class="bg-primary text-white text-sm font-medium px-4 py-2 rounded-xl shadow-sm hover:bg-primary-container transition-all flex items-center gap-2">
+                        <span class="material-symbols-outlined text-sm">print</span>
+                        <span>Manifest Export</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- KPI Cards Section -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
+                <!-- Card 1 -->
+                <div class="bg-surface-container-lowest rounded-xl p-5 flex flex-col justify-between shadow-sm">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <span class="text-xs text-on-surface-variant uppercase font-semibold">Total Atelier Revenue</span>
+                            <span class="text-2xl font-bold text-on-surface mt-1 block">$@Model.TotalRevenue.ToString("N2")</span>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-primary-fixed/50 flex items-center justify-center text-primary">
+                            <span class="material-symbols-outlined">payments</span>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex items-center justify-between text-xs">
+                        <span class="bg-secondary-fixed/50 text-on-secondary-fixed px-2 py-0.5 rounded-full font-semibold">+14.8% vs lm</span>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="bg-surface-container-lowest rounded-xl p-5 flex flex-col justify-between shadow-sm">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <span class="text-xs text-on-surface-variant uppercase font-semibold">Bouquet Orders</span>
+                            <span class="text-2xl font-bold text-on-surface mt-1 block">@Model.BouquetOrdersCount Stems</span>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-secondary-fixed/60 flex items-center justify-center text-secondary">
+                            <span class="material-symbols-outlined">local_florist</span>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex items-center justify-between text-xs">
+                        <span class="bg-secondary-fixed/50 text-on-secondary-fixed px-2 py-0.5 rounded-full font-semibold">+8.2% weekly</span>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="bg-surface-container-lowest rounded-xl p-5 flex flex-col justify-between shadow-sm">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <span class="text-xs text-on-surface-variant uppercase font-semibold">Pending Events</span>
+                            <span class="text-2xl font-bold text-on-surface mt-1 block">@Model.PendingEventsCount Architectural</span>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-tertiary-fixed/60 flex items-center justify-center text-tertiary">
+                            <span class="material-symbols-outlined">celebration</span>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex items-center justify-between text-xs">
+                        <span class="text-primary font-semibold">@Model.PendingEventsCount Actionable</span>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="bg-surface-container-lowest rounded-xl p-5 flex flex-col justify-between shadow-sm">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <span class="text-xs text-on-surface-variant uppercase font-semibold">Active Patrons</span>
+                            <span class="text-2xl font-bold text-on-surface mt-1 block">@Model.TotalClientsCount Clients</span>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-primary-fixed/50 flex items-center justify-center text-primary">
+                            <span class="material-symbols-outlined">group</span>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex items-center justify-between text-xs">
+                        <span class="text-secondary font-semibold">88% Repurchase Rate</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Event Requests Table -->
+            <div class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/20">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h2 class="text-lg font-bold text-primary font-headline-sm">Recent Event Requests</h2>
+                        <p class="text-xs text-on-surface-variant mt-0.5">Overview of latest event requests submitted by clients.</p>
+                    </div>
+                    <a asp-controller="Admin" asp-action="EventRequests" class="text-xs text-primary font-semibold hover:underline flex items-center gap-1">
+                        <span>View All Requests</span>
+                        <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                    </a>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm">
+                        <thead>
+                            <tr class="border-b border-outline-variant/30 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">
+                                <th class="pb-3 px-4">Request ID</th>
+                                <th class="pb-3 px-4">Location Type</th>
+                                <th class="pb-3 px-4">Theme</th>
+                                <th class="pb-3 px-4">Guests</th>
+                                <th class="pb-3 px-4">Date</th>
+                                <th class="pb-3 px-4">Budget</th>
+                                <th class="pb-3 px-4 text-right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-outline-variant/20">
+                            @if (Model.RecentEventRequests != null && Model.RecentEventRequests.Any())
+                            {
+                                @foreach (var item in Model.RecentEventRequests)
+                                {
+                                    <tr class="hover:bg-surface-container-low/50 transition-colors">
+                                        <td class="py-3.5 px-4 font-bold text-primary">#@item.EventRequestID</td>
+                                        <td class="py-3.5 px-4">@(item.LocationType ?? "N/A")</td>
+                                        <td class="py-3.5 px-4">
+                                            <span class="bg-surface-container-high text-on-surface-variant px-2.5 py-1 rounded-full text-xs font-medium">
+                                                @(item.Theme ?? "Standard")
+                                            </span>
+                                        </td>
+                                        <td class="py-3.5 px-4 font-medium">@item.NumberOfGuests</td>
+                                        <td class="py-3.5 px-4 text-on-surface-variant">@item.EventDate.ToString("MMM dd, yyyy")</td>
+                                        <td class="py-3.5 px-4 font-bold text-secondary">$@item.Budget.ToString("N2")</td>
+                                        <td class="py-3.5 px-4 text-right">
+                                            <a asp-controller="Admin" asp-action="ReviewEventRequest" asp-route-id="@item.EventRequestID" class="inline-flex items-center gap-1 px-3 py-1 bg-primary/10 text-primary hover:bg-primary hover:text-white text-xs font-semibold rounded-lg transition-all">
+                                                <span class="material-symbols-outlined text-sm">visibility</span>
+                                                <span>Review</span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="7" class="py-8 text-center text-on-surface-variant text-sm">
+                                        No event requests found at the moment.
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+</body>
+</html>
